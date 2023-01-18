@@ -1,5 +1,5 @@
 # RecipeReviews
-Final project in Android Course
+Final project in Android Course: Recipe Reviews.
 
 #### Tech Stack:
 * Android (using Java)
