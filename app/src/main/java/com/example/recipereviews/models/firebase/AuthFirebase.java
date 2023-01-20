@@ -6,7 +6,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.function.Consumer;
 
-public class AuthFirebaseModel {
+public class AuthFirebase {
 
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
