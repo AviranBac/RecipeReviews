@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">RecipeReviews</string>
+    <string name="app_name">Recipe Reviews</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Log In</string>
+    <string name="register_question"><u>Register?</u></string>
+    <string name="invalid_email">This is not an email format</string>
+    <string name="invalid_password">The password should be at least 6 characters long</string>
 </resources>
