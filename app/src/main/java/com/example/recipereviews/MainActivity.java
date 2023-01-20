@@ -22,6 +22,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Model.getInstance().getExecutor().execute(() -> {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {}
+
             Runnable startActivityRunnable = Model.getInstance().isSignedIn() ?
                     () -> startActivityFromIntent(UserActivity.class) :
                     () -> startActivityFromIntent(GuestActivity.class);
