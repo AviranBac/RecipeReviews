@@ -22,20 +22,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Model.getInstance().getExecutor().execute(() -> {
-            if (Model.getInstance().isSignedIn()) {
-                mainHandler.post(this::startUserActivity);
-            } else {
-                mainHandler.post(this::startGuestActivity);
-            }
+            Runnable startActivityRunnable = Model.getInstance().isSignedIn() ?
+                    () -> startActivityFromIntent(UserActivity.class) :
+                    () -> startActivityFromIntent(GuestActivity.class);
+
+            mainHandler.post(startActivityRunnable);
         });
-    }
-
-    private void startGuestActivity() {
-        startActivityFromIntent(GuestActivity.class);
-    }
-
-    private void startUserActivity() {
-        startActivityFromIntent(UserActivity.class);
     }
 
     private void startActivityFromIntent(Class<? extends AppCompatActivity> clazz) {

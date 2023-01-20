@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "372363888249",
+    "project_id": "recipe-reviews-8ecbe",
+    "storage_bucket": "recipe-reviews-8ecbe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:372363888249:android:f6c3b41054cf775f82f6a8",
+        "android_client_info": {
+          "package_name": "com.example.recipereviews"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "372363888249-n4k1ffch8kkm5n5bbncltkrie7tec60r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBuWUlwy24IhaKEjFMnLGyjwtsQbWcwjU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "372363888249-n4k1ffch8kkm5n5bbncltkrie7tec60r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
