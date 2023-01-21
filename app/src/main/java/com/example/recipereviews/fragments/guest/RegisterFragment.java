@@ -125,7 +125,7 @@ public class RegisterFragment extends Fragment {
     }
 
     private void navigateToMainPageAfterRegister(View view) {
-        Navigation.findNavController(view).navigate(RegisterFragmentDirections.actionRegisterFragmentToUsersNavGraph());
+        Navigation.findNavController(view).navigate(RegisterFragmentDirections.actionRegisterFragmentToUserNavGraph());
     }
 
     private boolean isFormValid() {

@@ -70,7 +70,7 @@ public class LoginFragment extends Fragment {
                 Model.getInstance().login(
                         emailEditText.getText().toString(),
                         passwordEditText.getText().toString(),
-                        () -> Navigation.findNavController(view).navigate(LoginFragmentDirections.actionLoginFragmentToUsersNavGraph()),
+                        () -> Navigation.findNavController(view).navigate(LoginFragmentDirections.actionLoginFragmentToUserNavGraph()),
                         errorMessage -> {
                             Snackbar.make(view, errorMessage, Snackbar.LENGTH_SHORT).show();
                             loginButton.setEnabled(true);

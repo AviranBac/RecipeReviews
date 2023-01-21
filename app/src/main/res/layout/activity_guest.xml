@@ -9,7 +9,7 @@
     tools:context=".activities.GuestActivity">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/guests_nav_host"
+        android:id="@+id/guest_nav_host"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

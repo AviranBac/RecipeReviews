@@ -18,9 +18,9 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
-            android:id="@+id/action_loginFragment_to_users_nav_graph"
+            android:id="@+id/action_loginFragment_to_user_nav_graph"
             app:destination="@id/user_nav_graph"
-            app:popUpTo="@id/guest_nav_graph"
+            app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
@@ -38,9 +38,9 @@
             app:popUpTo="@id/guest_nav_graph"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_registerFragment_to_users_nav_graph"
+            android:id="@+id/action_registerFragment_to_user_nav_graph"
             app:destination="@id/user_nav_graph"
-            app:popUpTo="@id/guest_nav_graph"
+            app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
     </fragment>
 

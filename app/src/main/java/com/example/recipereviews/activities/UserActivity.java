@@ -1,16 +1,12 @@
 package com.example.recipereviews.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
-
 import com.example.recipereviews.R;
 
-public class UserActivity extends AppCompatActivity {
+public class UserActivity extends NavGraphActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user);
+    public UserActivity() {
+        super();
+        super.activityLayoutId = R.layout.activity_user;
+        super.navHostId = R.id.user_nav_host;
     }
 }

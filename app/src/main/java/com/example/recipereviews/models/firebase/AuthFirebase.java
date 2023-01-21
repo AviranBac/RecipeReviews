@@ -43,7 +43,7 @@ public class AuthFirebase {
     }
 
     public boolean isSignedIn() {
-        return firebaseAuth.getCurrentUser() != null;
+        return false;
     }
 
     public String getCurrentUserUid() {
