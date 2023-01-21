@@ -9,4 +9,8 @@
     <string name="invalid_password">The password should be at least 6 characters long</string>
     <string name="register">Register</string>
     <string name="main_page">Main Page</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="email_exists">This Email is already registered</string>
+    <string name="required_field">Required field</string>
 </resources>

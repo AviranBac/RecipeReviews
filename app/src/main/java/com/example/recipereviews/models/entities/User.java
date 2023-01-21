@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.example.recipereviews.ApplicationContext;
@@ -28,6 +29,13 @@ public class User {
     private String email;
     private String imageUrl;
     private Long lastUpdateTime;
+
+    @Ignore
+    public User(String firstName, String lastName, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
 
     public User(@NonNull String id, String firstName, String lastName, String email, String imageUrl, Long lastUpdateTime) {
         this.id = id;

@@ -51,10 +51,10 @@ public class LoginFragment extends Fragment {
     }
 
     private void setListeners(View view) {
-        this.setLoginButtonOnClickListener(view);
-        this.setRegisterButtonOnClickListener(view);
         this.setEmailEditTextOnKeyListener();
         this.setPasswordEditTextOnKeyListener();
+        this.setLoginButtonOnClickListener(view);
+        this.setRegisterButtonOnClickListener(view);
     }
 
     private void setLoginButtonOnClickListener(View view) {

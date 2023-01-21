@@ -3,6 +3,7 @@ package com.example.recipereviews.models.firebase;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.SignInMethodQueryResult;
 
 import java.util.function.Consumer;
 
@@ -28,6 +29,17 @@ public class AuthFirebase {
     public void logout(Runnable callback) {
         firebaseAuth.signOut();
         callback.run();
+    }
+
+    public void doesEmailExist(String email, Consumer<Boolean> onExistCallback, Consumer<String> onNotExistCallback) {
+        firebaseAuth.fetchSignInMethodsForEmail(email)
+                .addOnSuccessListener((SignInMethodQueryResult signInMethodQueryResult) -> {
+                    if (signInMethodQueryResult.getSignInMethods() != null) {
+                        boolean isNewUser = signInMethodQueryResult.getSignInMethods().isEmpty();
+                        onExistCallback.accept(!isNewUser);
+                    }
+                })
+                .addOnFailureListener((Exception e) -> onNotExistCallback.accept(e.getMessage()));
     }
 
     public boolean isSignedIn() {
