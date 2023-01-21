@@ -1,4 +1,4 @@
-package com.example.recipereviews;
+package com.example.recipereviews.fragments.user;
 
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -10,8 +10,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.recipereviews.model.Recipe;
+import com.example.recipereviews.R;
+import com.example.recipereviews.models.entities.Recipe;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -26,22 +29,18 @@ class RecipeViewHolder extends RecyclerView.ViewHolder {
         recipeNameTv = itemView.findViewById(R.id.recipe_name_tv);
         recipeImageIv = itemView.findViewById(R.id.recipe_image);
 
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int pos = getAdapterPosition();
-                listener.onItemClick(pos);
-            }
+        itemView.setOnClickListener(view -> {
+            int pos = getAdapterPosition();
+            listener.onItemClick(pos);
         });
     }
 
     public void bind(Recipe recipe, int pos) {
         recipeNameTv.setText(recipe.getName());
         System.out.println(recipe.getImg());
-        if(!recipe.getImg().equals("")) {
+        if (!recipe.getImg().equals("")) {
             Picasso.get().load(Uri.parse(recipe.getImg())).into(recipeImageIv);
-        }
-        else {
+        } else {
             recipeImageIv.setImageResource(R.drawable.recipe_background);
         }
     }
@@ -66,6 +65,11 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecipeViewHolder
         this.listener = listener;
     }
 
+    public void setData(List<Recipe> data) {
+        this.data = data;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -84,6 +88,5 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecipeViewHolder
         if (data == null) return 0;
         return data.size();
     }
-
 }
 

@@ -1,16 +1,30 @@
 package com.example.recipereviews;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.example.recipereviews.model.Model;
-import com.example.recipereviews.model.Recipe;
+import com.example.recipereviews.models.RecipeModel;
+import com.example.recipereviews.models.entities.Recipe;
 
 import java.util.List;
 
 public class MainPageFragmentViewModal extends ViewModel {
-    private List<Recipe> data = Model.instance().getAllRecipes();
+    private LiveData<List<Recipe>>  recipeListData = RecipeModel.getInstance().getAllRecipes();
+    private MutableLiveData<String> searchQueryLiveData = new MutableLiveData<>();
 
-    List<Recipe> getData(){
-        return data;
+    public LiveData<List<Recipe>> getRecipeListData() {
+        return this.recipeListData;
+    }
+
+    public LiveData<List<Recipe>> getSearchedRecipes() {
+        return Transformations.switchMap(
+                this.searchQueryLiveData,
+                search -> RecipeModel.getInstance().getRecipesBySearchText(search));
+    }
+
+    public void setNameQuery(String name) {
+        this.searchQueryLiveData.setValue(name);
     }
 }
