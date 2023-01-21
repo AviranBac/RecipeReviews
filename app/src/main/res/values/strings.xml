@@ -13,4 +13,6 @@
     <string name="last_name">Last name</string>
     <string name="email_exists">This Email is already registered</string>
     <string name="required_field">Required field</string>
+    <string name="open_camera">Open Camera</string>
+    <string name="open_gallery">Open Gallery</string>
 </resources>

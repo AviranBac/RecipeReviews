@@ -12,24 +12,22 @@ import android.widget.Button;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.recipereviews.R;
 import com.example.recipereviews.databinding.FragmentRegisterBinding;
+import com.example.recipereviews.fragments.common.CameraUtilsFragment;
 import com.example.recipereviews.models.Model;
 import com.example.recipereviews.models.entities.User;
 import com.example.recipereviews.validators.InputValidator;
-import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-public class RegisterFragment extends Fragment {
+public class RegisterFragment extends CameraUtilsFragment {
 
     private FragmentRegisterBinding binding;
-    private ShapeableImageView profileImageView;
     private TextInputLayout firstNameTextInput;
     private TextInputEditText firstNameEditText;
     private TextInputLayout lastNameTextInput;
@@ -60,7 +58,7 @@ public class RegisterFragment extends Fragment {
     }
 
     private void initializeMembers() {
-        profileImageView = binding.imageIcon;
+        super.avatarImg = binding.imageIcon;
         firstNameTextInput = binding.firstNameTextInput;
         firstNameEditText = binding.firstNameEt;
         lastNameTextInput = binding.lastNameTextInput;
@@ -111,7 +109,7 @@ public class RegisterFragment extends Fragment {
                              lastNameEditText.getText().toString(),
                              emailEditText.getText().toString());
 
-        Drawable profileImage = profileImageView.getDrawable();
+        Drawable profileImage = super.avatarImg.getDrawable();
         if (profileImage == null) {
             Model.getInstance().register(user, passwordEditText.getText().toString(), () -> this.navigateToMainPageAfterRegister(view));
         } else {
@@ -136,7 +134,7 @@ public class RegisterFragment extends Fragment {
     }
 
     private void setProfileImageViewOnClickListener() {
-        binding.imageIcon.setOnClickListener((View view1) -> cameraLauncher.launch(null));
+        binding.imageIcon.setOnClickListener(super::showCameraMenu);
     }
 
     private void setOnKeyListener(TextInputEditText editText, Runnable validator) {
