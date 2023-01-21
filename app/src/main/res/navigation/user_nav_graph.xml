@@ -10,5 +10,20 @@
         android:name="com.example.recipereviews.fragments.user.MainPageFragment"
         android:label="@string/main_page"
         tools:layout="@layout/fragment_main_page" >
+        <action
+            android:id="@+id/action_mainPageFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.recipereviews.fragments.user.ProfileFragment"
+        android:label="@string/user_profile"
+        tools:layout="@layout/fragment_profile" >
+        <argument android:name="userId" app:argType="string" />
     </fragment>
 </navigation>

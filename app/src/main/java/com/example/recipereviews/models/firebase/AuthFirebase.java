@@ -46,7 +46,7 @@ public class AuthFirebase {
         return firebaseAuth.getCurrentUser() != null;
     }
 
-    public String getCurrentUserUid() {
+    public String getCurrentUserId() {
         return this.isSignedIn() ?
                 firebaseAuth.getCurrentUser().getUid() :
                 null;

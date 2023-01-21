@@ -56,4 +56,8 @@ public class Model {
     public boolean isSignedIn() {
         return this.authFirebase.isSignedIn();
     }
+
+    public String getCurrentUserId() {
+        return this.authFirebase.getCurrentUserId();
+    }
 }
