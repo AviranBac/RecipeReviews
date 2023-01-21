@@ -141,6 +141,7 @@
                     android:indeterminate="true"
                     android:visibility="gone"
                     app:showAnimationBehavior="none"
+                    app:indicatorColor="@color/white"
                     app:indicatorSize="14dp" />
             </RelativeLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>
