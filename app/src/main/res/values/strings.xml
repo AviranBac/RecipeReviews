@@ -1,5 +1,21 @@
 <resources>
-    <string name="app_name">RecipeReviews</string>
+    <string name="app_name">Recipe Reviews</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login_single_word">Login</string>
+    <string name="login_two_words">Log In</string>
+    <string name="register_question"><u>Register?</u></string>
+    <string name="invalid_email">This is not an email format</string>
+    <string name="invalid_password">The password should be at least 6 characters long</string>
+    <string name="register">Register</string>
+    <string name="main_page">Main Page</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="email_exists">This Email is already registered</string>
+    <string name="required_field">Required field</string>
+    <string name="open_camera">Open Camera</string>
+    <string name="open_gallery">Open Gallery</string>
+    <string name="user_profile">User Profile</string>
     <string name="recipe_review">Recipe Review</string>
     <string name="search">search</string>
     <string name="recipe_name">Recipe Name</string>
