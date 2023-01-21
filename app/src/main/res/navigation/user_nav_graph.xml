@@ -5,9 +5,9 @@
     android:id="@+id/user_nav_graph">
 
     <fragment
-        android:id="@+id/feedFragment"
+        android:id="@+id/mainPageFragment"
         android:name="com.example.recipereviews.fragments.user.MainPageFragment"
-        android:label="fragment_main_page"
+        android:label="@string/main_page"
         tools:layout="@layout/fragment_main_page" >
     </fragment>
 </navigation>

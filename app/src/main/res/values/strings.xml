@@ -2,8 +2,11 @@
     <string name="app_name">Recipe Reviews</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="login">Log In</string>
+    <string name="login_single_word">Login</string>
+    <string name="login_two_words">Log In</string>
     <string name="register_question"><u>Register?</u></string>
     <string name="invalid_email">This is not an email format</string>
     <string name="invalid_password">The password should be at least 6 characters long</string>
+    <string name="register">Register</string>
+    <string name="main_page">Main Page</string>
 </resources>

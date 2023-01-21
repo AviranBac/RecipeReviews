@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.recipereviews.fragments.guest.LoginFragment"
-        android:label="fragment_login"
+        android:label="@string/login_single_word"
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
@@ -26,7 +26,7 @@
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.example.recipereviews.fragments.guest.RegisterFragment"
-        android:label="fragment_register"
+        android:label="@string/register"
         tools:layout="@layout/fragment_register" >
         <action
             android:id="@+id/action_registerFragment_to_loginFragment"

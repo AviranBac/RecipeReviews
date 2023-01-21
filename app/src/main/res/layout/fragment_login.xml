@@ -45,7 +45,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/emailTextInput"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/TextInputLayoutStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -65,7 +65,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/passwordTextInput"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/TextInputLayoutStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -79,6 +79,7 @@
                     android:layout_height="wrap_content"
                     android:drawableStart="@android:drawable/ic_lock_lock"
                     android:drawablePadding="10dp"
+                    android:drawableTint="@color/white"
                     android:hint="@string/password"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -96,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:backgroundTint="#3164f4"
-                    android:text="@string/login"
+                    android:text="@string/login_two_words"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     app:cornerRadius="10dp" />
@@ -112,7 +113,6 @@
                     app:showAnimationBehavior="none"
                     app:indicatorSize="14dp" />
             </RelativeLayout>
-
 
             <Button
                 android:id="@+id/registerBtn"
