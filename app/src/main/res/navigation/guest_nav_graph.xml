@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.recipereviews.fragments.guest.LoginFragment"
-        android:label="@string/login_single_word"
+        android:label=""
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
@@ -17,16 +17,11 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
-        <action
-            android:id="@+id/action_loginFragment_to_user_nav_graph"
-            app:destination="@id/user_nav_graph"
-            app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.example.recipereviews.fragments.guest.RegisterFragment"
-        android:label="@string/register"
+        android:label=""
         tools:layout="@layout/fragment_register" >
         <action
             android:id="@+id/action_registerFragment_to_loginFragment"
@@ -35,14 +30,7 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@id/guest_nav_graph"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_registerFragment_to_user_nav_graph"
-            app:destination="@id/user_nav_graph"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
     </fragment>
-
-    <include app:graph="@navigation/user_nav_graph" />
 </navigation>

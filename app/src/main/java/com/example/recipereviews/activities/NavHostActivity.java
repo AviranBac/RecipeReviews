@@ -9,7 +9,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-public abstract class NavGraphActivity extends AppCompatActivity {
+public abstract class NavHostActivity extends AppCompatActivity {
 
     protected int activityLayoutId;
     protected int navHostId;

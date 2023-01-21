@@ -1,5 +1,6 @@
 package com.example.recipereviews.fragments.guest;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.recipereviews.R;
+import com.example.recipereviews.activities.UserActivity;
 import com.example.recipereviews.databinding.FragmentLoginBinding;
 import com.example.recipereviews.models.Model;
 import com.example.recipereviews.validators.InputValidator;
@@ -70,7 +72,7 @@ public class LoginFragment extends Fragment {
                 Model.getInstance().login(
                         emailEditText.getText().toString(),
                         passwordEditText.getText().toString(),
-                        () -> Navigation.findNavController(view).navigate(LoginFragmentDirections.actionLoginFragmentToUserNavGraph()),
+                        this::startUserActivity,
                         errorMessage -> {
                             Snackbar.make(view, errorMessage, Snackbar.LENGTH_SHORT).show();
                             loginButton.setEnabled(true);
@@ -123,6 +125,14 @@ public class LoginFragment extends Fragment {
         } else {
             passwordTextInput.setError(getString(R.string.invalid_password));
             return false;
+        }
+    }
+
+    private void startUserActivity() {
+        if (getActivity() != null) {
+            Intent userActivityIntent = new Intent(getActivity(), UserActivity.class);
+            startActivity(userActivityIntent);
+            getActivity().finish();
         }
     }
 }

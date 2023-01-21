@@ -1,6 +1,6 @@
 package com.example.recipereviews.fragments.guest;
 
-import android.graphics.Bitmap;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -9,12 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
-import androidx.navigation.Navigation;
 
 import com.example.recipereviews.R;
+import com.example.recipereviews.activities.UserActivity;
 import com.example.recipereviews.databinding.FragmentRegisterBinding;
 import com.example.recipereviews.fragments.common.CameraUtilsFragment;
 import com.example.recipereviews.models.Model;
@@ -109,19 +107,15 @@ public class RegisterFragment extends CameraUtilsFragment {
 
         Drawable profileImage = super.avatarImg.getDrawable();
         if (profileImage == null) {
-            Model.getInstance().register(user, passwordEditText.getText().toString(), () -> this.navigateToMainPageAfterRegister(view));
+            Model.getInstance().register(user, passwordEditText.getText().toString(), this::startUserActivity);
         } else {
             binding.imageIcon.setDrawingCacheEnabled(true);
             binding.imageIcon.buildDrawingCache();
             Model.getInstance().uploadUserImage(((BitmapDrawable) profileImage).getBitmap(), user.getEmail(), (String url) -> {
                 user.setImageUrl(url);
-                Model.getInstance().register(user, passwordEditText.getText().toString(), () -> this.navigateToMainPageAfterRegister(view));
+                Model.getInstance().register(user, passwordEditText.getText().toString(), this::startUserActivity);
             });
         }
-    }
-
-    private void navigateToMainPageAfterRegister(View view) {
-        Navigation.findNavController(view).navigate(RegisterFragmentDirections.actionRegisterFragmentToUserNavGraph());
     }
 
     private boolean isFormValid() {
@@ -179,6 +173,14 @@ public class RegisterFragment extends CameraUtilsFragment {
         } else {
             passwordTextInput.setError(getString(R.string.invalid_password));
             return false;
+        }
+    }
+
+    private void startUserActivity() {
+        if (getActivity() != null) {
+            Intent userActivityIntent = new Intent(getActivity(), UserActivity.class);
+            startActivity(userActivityIntent);
+            getActivity().finish();
         }
     }
 }

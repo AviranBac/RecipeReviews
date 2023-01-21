@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import com.example.recipereviews.MainActivity;
+import com.example.recipereviews.activities.GuestActivity;
 import com.example.recipereviews.databinding.FragmentMainPageBinding;
 import com.example.recipereviews.models.Model;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -42,21 +42,21 @@ public class MainPageFragment extends Fragment {
     }
 
     private void setProfileImageClickListener(View view) {
-        profileImageView.setOnClickListener((View view1) ->
-                Navigation.findNavController(view).navigate(MainPageFragmentDirections.actionMainPageFragmentToProfileFragment(Model.getInstance().getCurrentUserId()))
-        );
+        profileImageView.setOnClickListener((View view1) -> {
+            Navigation.findNavController(view).navigate(MainPageFragmentDirections.actionMainPageFragmentToProfileFragment(Model.getInstance().getCurrentUserId()));
+        });
     }
 
     private void setLogoutButtonClickListener() {
         logoutImageView.setOnClickListener(view -> {
-            Model.getInstance().logout(this::startMainActivity);
+            Model.getInstance().logout(this::startGuestActivity);
         });
     }
 
-    private void startMainActivity() {
+    private void startGuestActivity() {
         if (getActivity() != null) {
-            Intent introActivityIntent = new Intent(getActivity(), MainActivity.class);
-            startActivity(introActivityIntent);
+            Intent guestActivityIntent = new Intent(getActivity(), GuestActivity.class);
+            startActivity(guestActivityIntent);
             getActivity().finish();
         }
     }

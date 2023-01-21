@@ -2,7 +2,7 @@ package com.example.recipereviews.activities;
 
 import com.example.recipereviews.R;
 
-public class GuestActivity extends NavGraphActivity {
+public class GuestActivity extends NavHostActivity {
 
     public GuestActivity() {
         super();
