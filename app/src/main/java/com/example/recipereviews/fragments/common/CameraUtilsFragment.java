@@ -19,8 +19,8 @@ import com.google.android.material.imageview.ShapeableImageView;
 public abstract class CameraUtilsFragment extends Fragment {
 
     protected ShapeableImageView avatarImg;
-    protected ActivityResultLauncher<Void> cameraLauncher;
-    protected ActivityResultLauncher<String> galleryLauncher;
+    private ActivityResultLauncher<Void> cameraLauncher;
+    private ActivityResultLauncher<String> galleryLauncher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -38,12 +38,10 @@ public class RegisterFragment extends CameraUtilsFragment {
     private TextInputEditText passwordEditText;
     private Button registerButton;
     private CircularProgressIndicator progressIndicator;
-    private ActivityResultLauncher<Void> cameraLauncher;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.registerForCameraLaunchEvent();
     }
 
     @Override
@@ -182,13 +180,5 @@ public class RegisterFragment extends CameraUtilsFragment {
             passwordTextInput.setError(getString(R.string.invalid_password));
             return false;
         }
-    }
-
-    private void registerForCameraLaunchEvent() {
-        cameraLauncher = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), (Bitmap result) -> {
-            if (result != null) {
-                binding.imageIcon.setImageBitmap(result);
-            }
-        });
     }
 }
