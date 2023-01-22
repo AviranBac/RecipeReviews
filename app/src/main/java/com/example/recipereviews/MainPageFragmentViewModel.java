@@ -10,7 +10,7 @@ import com.example.recipereviews.models.entities.Recipe;
 
 import java.util.List;
 
-public class MainPageFragmentViewModal extends ViewModel {
+public class MainPageFragmentViewModel extends ViewModel {
     private LiveData<List<Recipe>>  recipeListData = RecipeModel.getInstance().getAllRecipes();
     private MutableLiveData<String> searchQueryLiveData = new MutableLiveData<>();
 

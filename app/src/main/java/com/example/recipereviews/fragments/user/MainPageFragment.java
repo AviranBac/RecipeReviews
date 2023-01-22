@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.recipereviews.MainPageFragmentViewModal;
+import com.example.recipereviews.MainPageFragmentViewModel;
 import com.example.recipereviews.activities.GuestActivity;
 import com.example.recipereviews.databinding.FragmentMainPageBinding;
 import com.example.recipereviews.models.Model;
@@ -32,7 +32,7 @@ public class MainPageFragment extends Fragment {
     private ShapeableImageView logoutImageView;
     private EditText searchEditText;
     private RecipeRecyclerAdapter adapter;
-    private MainPageFragmentViewModal viewModel;
+    private MainPageFragmentViewModel viewModel;
     private FragmentMainPageBinding binding;
 
     @Override
@@ -120,7 +120,7 @@ public class MainPageFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        viewModel = new ViewModelProvider(this).get(MainPageFragmentViewModal.class);
+        viewModel = new ViewModelProvider(this).get(MainPageFragmentViewModel.class);
     }
 
     void reloadData() {
