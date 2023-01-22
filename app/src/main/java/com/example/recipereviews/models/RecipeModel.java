@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.recipereviews.models.entities.Recipe;
-import com.example.recipereviews.models.firebase.AuthFirebase;
 import com.example.recipereviews.models.firebase.ModelFirebase;
 import com.example.recipereviews.models.room.RecipeReviewsLocalDb;
 import com.example.recipereviews.models.room.RecipeReviewsLocalDbRepository;

@@ -2,7 +2,6 @@ package com.example.recipereviews.models.entities;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
