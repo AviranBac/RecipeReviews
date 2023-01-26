@@ -24,6 +24,8 @@ public class Model {
     private final ModelFirebase modelFirebase = new ModelFirebase();
     private final RecipeReviewsLocalDbRepository localDb = RecipeReviewsLocalDb.getLocalDb();
 
+    final public MutableLiveData<LoadingState> EventUserListLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
+
     private Model() {}
 
     public static Model getInstance() {
@@ -63,5 +65,20 @@ public class Model {
 
     public String getCurrentUserId() {
         return this.authFirebase.getCurrentUserId();
+    }
+
+    public void refreshUserList(Listener<Void> callback) {
+        EventUserListLoadingState.setValue(LoadingState.LOADING);
+
+        this.modelFirebase.getUsers(list->{
+            this.executor.execute(()->{
+                list.forEach(user -> {
+                    this.localDb.userDao().insertAll(user);
+                });
+
+                this.EventUserListLoadingState.postValue(LoadingState.NOT_LOADING);
+            });
+            callback.onComplete(null);
+        });
     }
 }

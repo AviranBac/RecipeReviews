@@ -16,8 +16,10 @@ public interface RecipeDao {
     LiveData<List<Recipe>> getAll();
 
     @Query("select * from Recipe where name LIKE :search")
-    LiveData<List<Recipe>> getAllByName(String search);
+    LiveData<List<Recipe>> getByName(String search);
 
+    @Query("select * from Recipe where id = :id")
+    Recipe getById(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Recipe... recipes);

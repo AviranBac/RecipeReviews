@@ -70,6 +70,10 @@ public class User {
         }};
     }
 
+    public String getFullName() {
+        return  this.firstName + " " + this.lastName;
+    }
+
     @NonNull
     public String getId() {
         return this.id;

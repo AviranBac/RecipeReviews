@@ -12,8 +12,10 @@ import com.example.recipereviews.models.room.daos.RecipeDao;
 import com.example.recipereviews.models.room.daos.ReviewDao;
 import com.example.recipereviews.models.room.daos.UserDao;
 
-@Database(entities = {User.class, Recipe.class}, version = 2)
+@Database(entities = {User.class, Recipe.class, Review.class}, version = 11)
+@TypeConverters({Converters.class})
 public abstract class RecipeReviewsLocalDbRepository extends RoomDatabase {
     public abstract UserDao userDao();
     public abstract RecipeDao recipeDao();
+    public abstract ReviewDao reviewDao();
 }

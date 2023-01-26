@@ -17,6 +17,9 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_mainPageFragment_to_recipeDetailsFragment"
+            app:destination="@id/recipeDetailsFragment" />
     </fragment>
 
     <fragment
@@ -25,5 +28,12 @@
         android:label="@string/user_profile"
         tools:layout="@layout/fragment_profile" >
         <argument android:name="userId" app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/recipeDetailsFragment"
+        android:name="com.example.recipereviews.fragments.user.RecipeDetailsFragment"
+        android:label="fragment_recipe"
+        tools:layout="@layout/fragment_recipe_details" >
+        <argument android:name="recipeId" app:argType="integer" />
     </fragment>
 </navigation>
