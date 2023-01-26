@@ -90,6 +90,7 @@ public class RecipeDetailsFragment extends Fragment {
         this.loadingSpinner = this.binding.loading;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     private void addObservers() {
         this.viewModel.getRecipeData().observe(getViewLifecycleOwner(), this::loadData);
         MediatorLiveData<LoadingState> liveDataMerger = new MediatorLiveData<>();
