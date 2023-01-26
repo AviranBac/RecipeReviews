@@ -1,7 +1,11 @@
-package com.example.recipereviews.models;
+package com.example.recipereviews.models.models;
 
 import android.graphics.Bitmap;
 
+import androidx.lifecycle.MutableLiveData;
+
+import com.example.recipereviews.enums.LoadingState;
+import com.example.recipereviews.interfaces.Listener;
 import com.example.recipereviews.models.entities.User;
 import com.example.recipereviews.models.firebase.AuthFirebase;
 import com.example.recipereviews.models.firebase.ModelFirebase;

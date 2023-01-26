@@ -2,6 +2,7 @@ package com.example.recipereviews.models.firebase.collections;
 
 import android.graphics.Bitmap;
 
+import com.example.recipereviews.interfaces.Listener;
 import com.example.recipereviews.models.entities.User;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;

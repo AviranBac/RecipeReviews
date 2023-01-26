@@ -16,12 +16,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.recipereviews.MainPageFragmentViewModel;
 import com.example.recipereviews.activities.GuestActivity;
 import com.example.recipereviews.databinding.FragmentMainPageBinding;
-import com.example.recipereviews.models.Model;
-import com.example.recipereviews.models.RecipeModel;
+import com.example.recipereviews.enums.LoadingState;
 import com.example.recipereviews.models.entities.Recipe;
+import com.example.recipereviews.models.models.Model;
+import com.example.recipereviews.models.models.RecipesListModel;
+import com.example.recipereviews.viewModels.MainPageFragmentViewModel;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.Objects;
@@ -37,27 +38,27 @@ public class MainPageFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentMainPageBinding.inflate(inflater, container, false);
-        this.initializeMembers(binding);
-        View view = binding.getRoot();
+        this.binding = FragmentMainPageBinding.inflate(inflater, container, false);
+        View view = this.binding.getRoot();
+        this.initializeMembers();
         this.setListeners(view);
         this.loadData();
         return view;
     }
 
     private void loadData() {
-        viewModel.getRecipeListData().observe(getViewLifecycleOwner(), list -> adapter.setData(list));
-        RecipeModel.getInstance().EventRecipesListLoadingState.observe(getViewLifecycleOwner(), status -> binding.swipeRefresh.setRefreshing(status == RecipeModel.LoadingState.LOADING));
+        this.viewModel.getRecipeListData().observe(getViewLifecycleOwner(), list -> this.adapter.setData(list));
+        RecipesListModel.getInstance().EventRecipesListLoadingState.observe(getViewLifecycleOwner(), status -> this.binding.swipeRefresh.setRefreshing(status == LoadingState.LOADING));
     }
 
-    private void initializeMembers(FragmentMainPageBinding binding) {
-        profileImageView = binding.profileImageView;
-        logoutImageView = binding.logoutImageView;
-        searchEditText = binding.searchEt;
-        binding.recyclerView.setHasFixedSize(true);
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new RecipeRecyclerAdapter(getLayoutInflater(), viewModel.getRecipeListData().getValue());
-        binding.recyclerView.setAdapter(adapter);
+    private void initializeMembers() {
+        this.profileImageView = this.binding.profileImageView;
+        this.logoutImageView = this.binding.logoutImageView;
+        this.searchEditText = this.binding.searchEt;
+        this.binding.recyclerView.setHasFixedSize(true);
+        this.binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        this.adapter = new RecipeRecyclerAdapter(getLayoutInflater(), this.viewModel.getRecipeListData().getValue());
+        this.binding.recyclerView.setAdapter(this.adapter);
     }
 
     private void setListeners(View view) {
@@ -65,12 +66,12 @@ public class MainPageFragment extends Fragment {
         this.setProfileImageClickListener(view);
         this.setLogoutButtonClickListener();
         this.setSearchEditTextChangeListener();
-        this.setOnRecipeClickListener();
+        this.setOnRecipeClickListener(view);
         this.setOnRefreshListener();
     }
 
     private void setSearchEditTextChangeListener() {
-        searchEditText.addTextChangedListener(new TextWatcher() {
+        this.searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
@@ -89,23 +90,24 @@ public class MainPageFragment extends Fragment {
     }
 
     private void setProfileImageClickListener(View view) {
-        profileImageView.setOnClickListener((View view1) -> Navigation.findNavController(view).navigate(MainPageFragmentDirections.actionMainPageFragmentToProfileFragment(Model.getInstance().getCurrentUserId())));
+        this.profileImageView.setOnClickListener((View view1) -> Navigation.findNavController(view).navigate(MainPageFragmentDirections.actionMainPageFragmentToProfileFragment(Model.getInstance().getCurrentUserId())));
     }
 
     private void setLogoutButtonClickListener() {
-        logoutImageView.setOnClickListener(view -> Model.getInstance().logout(this::startGuestActivity));
+        this.logoutImageView.setOnClickListener(view -> Model.getInstance().logout(this::startGuestActivity));
     }
 
-    private void setOnRecipeClickListener() {
-        adapter.setOnItemClickListener(pos -> {
-            Recipe recipe = Objects.requireNonNull(viewModel.getRecipeListData().getValue()).get(pos);
-            // TODO: enter recipe fragment
+    private void setOnRecipeClickListener(View view) {
+        this.adapter.setOnItemClickListener(pos -> {
+            Recipe recipe = Objects.requireNonNull(this.viewModel.getRecipeListData().getValue()).get(pos);
+            MainPageFragmentDirections.ActionMainPageFragmentToRecipeDetailsFragment action = MainPageFragmentDirections.actionMainPageFragmentToRecipeDetailsFragment(recipe.getId());
+            Navigation.findNavController(view).navigate(action);
         });
 
     }
 
     private void setOnRefreshListener() {
-        binding.swipeRefresh.setOnRefreshListener(this::reloadData);
+        this.binding.swipeRefresh.setOnRefreshListener(this::reloadData);
     }
 
     private void startGuestActivity() {
@@ -120,10 +122,10 @@ public class MainPageFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        viewModel = new ViewModelProvider(this).get(MainPageFragmentViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(MainPageFragmentViewModel.class);
     }
 
-    void reloadData() {
-        RecipeModel.getInstance().refreshAllRecipes();
+    private void reloadData() {
+        RecipesListModel.getInstance().refreshAllRecipes();
     }
 }

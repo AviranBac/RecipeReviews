@@ -15,7 +15,7 @@ import com.example.recipereviews.R;
 import com.example.recipereviews.activities.UserActivity;
 import com.example.recipereviews.databinding.FragmentRegisterBinding;
 import com.example.recipereviews.fragments.common.CameraUtilsFragment;
-import com.example.recipereviews.models.Model;
+import com.example.recipereviews.models.models.Model;
 import com.example.recipereviews.models.entities.User;
 import com.example.recipereviews.validators.InputValidator;
 import com.google.android.material.progressindicator.CircularProgressIndicator;

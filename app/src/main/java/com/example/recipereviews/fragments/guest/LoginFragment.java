@@ -14,7 +14,7 @@ import android.widget.Button;
 import com.example.recipereviews.R;
 import com.example.recipereviews.activities.UserActivity;
 import com.example.recipereviews.databinding.FragmentLoginBinding;
-import com.example.recipereviews.models.Model;
+import com.example.recipereviews.models.models.Model;
 import com.example.recipereviews.validators.InputValidator;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;

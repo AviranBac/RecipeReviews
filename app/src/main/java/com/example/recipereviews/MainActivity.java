@@ -10,7 +10,7 @@ import android.os.Looper;
 
 import com.example.recipereviews.activities.GuestActivity;
 import com.example.recipereviews.activities.UserActivity;
-import com.example.recipereviews.models.Model;
+import com.example.recipereviews.models.models.Model;
 
 public class MainActivity extends AppCompatActivity {
 

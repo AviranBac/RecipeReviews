@@ -1,8 +1,6 @@
 package com.example.recipereviews.fragments.user;
 
-import android.net.Uri;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,47 +9,46 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recipereviews.R;
+import com.example.recipereviews.databinding.RecipeCardRowBinding;
+import com.example.recipereviews.interfaces.OnItemClickListener;
 import com.example.recipereviews.models.entities.Recipe;
-import com.squareup.picasso.Picasso;
+import com.example.recipereviews.utils.ImageUtil;
 
 import java.util.List;
 
 
 class RecipeViewHolder extends RecyclerView.ViewHolder {
-    List<Recipe> data;
     TextView recipeNameTv;
     ImageView recipeImageIv;
+    RecipeCardRowBinding binding;
 
-    public RecipeViewHolder(@NonNull View itemView, RecipeRecyclerAdapter.OnItemClickListener listener, List<Recipe> data) {
-        super(itemView);
-        this.data = data;
-        recipeNameTv = itemView.findViewById(R.id.recipe_name_tv);
-        recipeImageIv = itemView.findViewById(R.id.recipe_image);
+    public RecipeViewHolder(RecipeCardRowBinding binding, OnItemClickListener listener) {
+        super(binding.getRoot());
+        this.binding = binding;
+        this.initMembers();
+        this.setListeners(listener);
+    }
 
-        itemView.setOnClickListener(view -> {
+    private void initMembers() {
+        this.recipeNameTv = this.binding.recipeNameTv;
+        this.recipeImageIv = this.binding.recipeImage;
+    }
+
+    private void setListeners(OnItemClickListener listener) {
+        this.binding.getRoot().setOnClickListener(view -> {
             int pos = getAdapterPosition();
             listener.onItemClick(pos);
         });
     }
 
-    public void bind(Recipe recipe, int pos) {
-        recipeNameTv.setText(recipe.getName());
-        System.out.println(recipe.getImg());
-        if (!recipe.getImg().equals("")) {
-            Picasso.get().load(Uri.parse(recipe.getImg())).into(recipeImageIv);
-        } else {
-            recipeImageIv.setImageResource(R.drawable.recipe_background);
-        }
+    public void bind(Recipe recipe) {
+        this.recipeNameTv.setText(recipe.getName());
+        ImageUtil.loadImage(this.recipeImageIv, recipe.getImg(), R.drawable.recipe_background);
     }
 }
 
 public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
     OnItemClickListener listener;
-
-    public static interface OnItemClickListener {
-        void onItemClick(int pos);
-    }
-
     LayoutInflater inflater;
     List<Recipe> data;
 
@@ -72,20 +69,19 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecipeViewHolder
     @NonNull
     @Override
     public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.recipe_card_row, parent, false);
-        return new RecipeViewHolder(view, listener, data);
+        RecipeCardRowBinding binding = RecipeCardRowBinding.inflate(this.inflater, parent, false);
+        return new RecipeViewHolder(binding, this.listener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
-        Recipe recipe = data.get(position);
-        holder.bind(recipe, position);
+        holder.bind(this.data.get(position));
     }
 
     @Override
     public int getItemCount() {
-        if (data == null) return 0;
-        return data.size();
+        if (this.data == null) return 0;
+        return this.data.size();
     }
 }
 
