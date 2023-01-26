@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,10 +16,12 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.recipereviews.R;
 import com.example.recipereviews.databinding.FragmentRecipeDetailsBinding;
+import com.example.recipereviews.enums.LoadingState;
 import com.example.recipereviews.models.entities.Recipe;
 import com.example.recipereviews.models.models.RecipeDetailsModel;
 import com.example.recipereviews.models.models.ReviewListModel;
@@ -37,6 +40,7 @@ public class RecipeDetailsFragment extends Fragment {
     private TextView preparationTimeTextView;
     private TextView ingredientsTextView;
     private TextView instructionsTextView;
+    private ProgressBar loadingSpinner;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,7 +57,7 @@ public class RecipeDetailsFragment extends Fragment {
         this.binding = FragmentRecipeDetailsBinding.inflate(inflater, container, false);
         View view = this.binding.getRoot();
         this.initMembers();
-        this.viewModel.getRecipeData().observe(getViewLifecycleOwner(), this::loadData);
+        this.addObservers();
         displayFragment(ReviewListFragment.newInstance(this.recipeId));
         return view;
     }
@@ -83,6 +87,35 @@ public class RecipeDetailsFragment extends Fragment {
         this.preparationTimeTextView = this.binding.preparationTime;
         this.ingredientsTextView = this.binding.ingredientsTextView;
         this.instructionsTextView = this.binding.instructionsTextView;
+        this.loadingSpinner = this.binding.loading;
+    }
+
+    private void addObservers() {
+        this.viewModel.getRecipeData().observe(getViewLifecycleOwner(), this::loadData);
+        MediatorLiveData<LoadingState> liveDataMerger = new MediatorLiveData<>();
+        liveDataMerger.addSource(RecipeDetailsModel.getInstance().EventRecipesDetailsLoadingState, value -> {
+            if (ReviewListModel.getInstance().EventReviewListLoadingState.getValue() == LoadingState.NOT_LOADING && value == LoadingState.NOT_LOADING) {
+                liveDataMerger.setValue(LoadingState.NOT_LOADING);
+            } else {
+                liveDataMerger.setValue(LoadingState.LOADING);
+            }
+        });
+        liveDataMerger.addSource(ReviewListModel.getInstance().EventReviewListLoadingState, value -> {
+            if (RecipeDetailsModel.getInstance().EventRecipesDetailsLoadingState.getValue() == LoadingState.NOT_LOADING && value == LoadingState.NOT_LOADING) {
+                liveDataMerger.setValue(LoadingState.NOT_LOADING);
+            } else {
+                liveDataMerger.setValue(LoadingState.LOADING);
+            }
+        });
+
+        liveDataMerger.observe(getViewLifecycleOwner(), status -> {
+            if (status == LoadingState.LOADING) {
+                this.loadingSpinner.setVisibility(View.VISIBLE);
+            } else {
+                this.loadingSpinner.setVisibility(View.GONE);
+            }
+        });
+
     }
 
     @Override
