@@ -7,22 +7,20 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.recipereviews.R;
 import com.example.recipereviews.databinding.FragmentRecipeDetailsBinding;
 import com.example.recipereviews.enums.LoadingState;
 import com.example.recipereviews.models.entities.Recipe;
-import com.example.recipereviews.models.models.RecipeDetailsModel;
-import com.example.recipereviews.models.models.ReviewListModel;
+import com.example.recipereviews.models.models.RecipeModel;
+import com.example.recipereviews.models.models.ReviewModel;
 import com.example.recipereviews.utils.ImageUtil;
 import com.example.recipereviews.viewModels.RecipeDetailsFragmentViewModel;
 import com.example.recipereviews.viewModels.factory.RecipeDetailsFragmentViewModelFactory;
@@ -76,7 +74,8 @@ public class RecipeDetailsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        RecipeDetailsModel.getInstance().fetchRecipeById(this.recipeId);
+        this.binding.reviewList.setVisibility(View.GONE);
+        RecipeModel.getInstance().fetchRecipeById(this.recipeId);
     }
 
     private void initMembers() {
@@ -92,11 +91,11 @@ public class RecipeDetailsFragment extends Fragment {
     private void addObservers() {
         this.viewModel.getRecipeData().observe(getViewLifecycleOwner(), this::loadData);
 
-        RecipeDetailsModel.getInstance().getEventRecipesDetailsLoadingState().observe(
+        RecipeModel.getInstance().getRecipeDetailsLoadingState().observe(
                 getViewLifecycleOwner(),
                 loadingState -> this.handleProgressIndicator(loadingState, this.binding.recipeDetailsLinearLayout, this.recipeProgressIndicator)
         );
-        ReviewListModel.getInstance().getEventReviewListLoadingState().observe(
+        ReviewModel.getInstance().getReviewListLoadingState().observe(
                 getViewLifecycleOwner(),
                 loadingState -> this.handleProgressIndicator(loadingState, this.binding.reviewList, this.reviewsProgressIndicator)
         );

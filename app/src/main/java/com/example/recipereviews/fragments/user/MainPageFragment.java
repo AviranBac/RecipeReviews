@@ -21,7 +21,7 @@ import com.example.recipereviews.databinding.FragmentMainPageBinding;
 import com.example.recipereviews.enums.LoadingState;
 import com.example.recipereviews.fragments.user.recycler_adapters.RecipeRecyclerAdapter;
 import com.example.recipereviews.models.entities.Recipe;
-import com.example.recipereviews.models.models.RecipesListModel;
+import com.example.recipereviews.models.models.RecipeModel;
 import com.example.recipereviews.models.models.UserModel;
 import com.example.recipereviews.viewModels.MainPageFragmentViewModel;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -57,7 +57,7 @@ public class MainPageFragment extends Fragment {
     private void loadData() {
         this.viewModel.getRecipeListData()
                 .observe(getViewLifecycleOwner(), list -> this.adapter.setData(list));
-        RecipesListModel.getInstance().getEventRecipesListLoadingState()
+        RecipeModel.getInstance().getRecipeListLoadingState()
                 .observe(getViewLifecycleOwner(), status -> this.binding.swipeRefresh.setRefreshing(status == LoadingState.LOADING));
     }
 
@@ -126,6 +126,6 @@ public class MainPageFragment extends Fragment {
     }
 
     private void reloadData() {
-        RecipesListModel.getInstance().refreshAllRecipes();
+        RecipeModel.getInstance().refreshAllRecipes();
     }
 }

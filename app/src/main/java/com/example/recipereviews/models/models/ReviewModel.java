@@ -13,23 +13,23 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class ReviewListModel {
-    private static final ReviewListModel instance = new ReviewListModel();
+public class ReviewModel {
+    private static final ReviewModel instance = new ReviewModel();
     private final Executor executor = Executors.newSingleThreadExecutor();
     private final RecipeReviewsLocalDbRepository localDb = RecipeReviewsLocalDb.getLocalDb();
-    private final MutableLiveData<LoadingState> eventReviewListLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
+    private final MutableLiveData<LoadingState> reviewListLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
     private final ModelFirebase firebaseModel = new ModelFirebase();
     private MutableLiveData<List<ReviewWithUser>> reviewList = new MutableLiveData();
 
-    private ReviewListModel() {
+    private ReviewModel() {
     }
 
-    public static ReviewListModel getInstance() {
+    public static ReviewModel getInstance() {
         return instance;
     }
 
-    public MutableLiveData<LoadingState> getEventReviewListLoadingState() {
-        return this.eventReviewListLoadingState;
+    public MutableLiveData<LoadingState> getReviewListLoadingState() {
+        return this.reviewListLoadingState;
     }
 
     public LiveData<List<ReviewWithUser>> getReviewByRecipeId(int recipeId) {
@@ -42,12 +42,12 @@ public class ReviewListModel {
 
     public void refreshReviewByRecipeId(int recipeId) {
         UserModel.getInstance().refreshUserList(() -> {
-            this.eventReviewListLoadingState.setValue(LoadingState.LOADING);
+            this.reviewListLoadingState.setValue(LoadingState.LOADING);
 
             this.firebaseModel.getReviewsByRecipeId(recipeId, list -> executor.execute(() -> {
                 list.forEach(review -> localDb.reviewDao().insertAll(review));
                 this.reviewList.postValue(this.localDb.reviewDao().getByRecipeId(recipeId));
-                this.eventReviewListLoadingState.postValue(LoadingState.NOT_LOADING);
+                this.reviewListLoadingState.postValue(LoadingState.NOT_LOADING);
             }));
         });
     }

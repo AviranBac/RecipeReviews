@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.recipereviews.R;
 import com.example.recipereviews.databinding.FragmentReviewListBinding;
 import com.example.recipereviews.fragments.user.recycler_adapters.ReviewRecyclerAdapter;
-import com.example.recipereviews.models.models.ReviewListModel;
+import com.example.recipereviews.models.models.ReviewModel;
 import com.example.recipereviews.viewModels.ReviewListFragmentViewModel;
 import com.example.recipereviews.viewModels.factory.ReviewListFragmentViewModelFactory;
 
@@ -68,7 +68,7 @@ public class ReviewListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ReviewListModel.getInstance().refreshReviewByRecipeId(this.recipeId);
+        ReviewModel.getInstance().refreshReviewByRecipeId(this.recipeId);
     }
 
     private void initMembers() {
