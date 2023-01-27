@@ -32,7 +32,7 @@ public abstract class CameraUtilsFragment extends Fragment {
             }
         });
         this.galleryLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), (Uri result) -> {
-            if (result != null){
+            if (result != null) {
                 avatarImg.setImageURI(result);
             }
         });

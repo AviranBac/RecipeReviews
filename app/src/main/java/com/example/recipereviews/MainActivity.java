@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
         UserModel.getInstance().getExecutor().execute(() -> {
             try {
                 Thread.sleep(2000);
-            } catch (InterruptedException e) {}
+            } catch (InterruptedException e) {
+            }
 
             Runnable startActivityRunnable = UserModel.getInstance().isSignedIn() ?
                     () -> startActivityFromIntent(UserActivity.class) :

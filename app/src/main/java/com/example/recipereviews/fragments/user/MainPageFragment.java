@@ -84,7 +84,8 @@ public class MainPageFragment extends Fragment {
     private void setSearchEditTextChangeListener() {
         this.searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int before, int count) {}
+            public void beforeTextChanged(CharSequence charSequence, int start, int before, int count) {
+            }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
@@ -94,7 +95,8 @@ public class MainPageFragment extends Fragment {
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {}
+            public void afterTextChanged(Editable editable) {
+            }
         });
     }
 

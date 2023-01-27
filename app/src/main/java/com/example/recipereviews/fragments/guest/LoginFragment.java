@@ -34,7 +34,7 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FragmentLoginBinding binding = FragmentLoginBinding.inflate(inflater, container, false);
         this.initializeMembers(binding);
-        
+
         View view = binding.getRoot();
         this.setListeners(view);
 

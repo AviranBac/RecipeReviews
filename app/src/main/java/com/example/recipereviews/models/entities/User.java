@@ -50,12 +50,12 @@ public class User {
         long lastUpdateTime = ((Timestamp) user.get("lastUpdateTime")).getSeconds();
 
         return new User(
-            id,
-            user.get("firstName").toString(),
-            user.get("lastName").toString(),
-            user.get("email").toString(),
-            imageUrl,
-            lastUpdateTime
+                id,
+                user.get("firstName").toString(),
+                user.get("lastName").toString(),
+                user.get("email").toString(),
+                imageUrl,
+                lastUpdateTime
         );
     }
 
@@ -70,7 +70,7 @@ public class User {
     }
 
     public String getFullName() {
-        return  this.firstName + " " + this.lastName;
+        return this.firstName + " " + this.lastName;
     }
 
     @NonNull
