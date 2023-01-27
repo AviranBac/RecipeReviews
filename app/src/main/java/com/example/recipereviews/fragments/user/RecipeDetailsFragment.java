@@ -3,7 +3,6 @@ package com.example.recipereviews.fragments.user;
 import static com.example.recipereviews.utils.BulletListUtil.buildBulletList;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -45,12 +43,12 @@ public class RecipeDetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             this.recipeId = getArguments().getInt(RECIPE_ID_PARAM);
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,27 +56,25 @@ public class RecipeDetailsFragment extends Fragment {
         View view = this.binding.getRoot();
         this.initMembers();
         this.addObservers();
-        displayFragment(ReviewListFragment.newInstance(this.recipeId));
+        this.displayReviewList();
+
         return view;
     }
 
-    private void displayFragment(Fragment frag) {
-        FragmentManager manager = getParentFragmentManager();
-        FragmentTransaction tran = manager.beginTransaction();
-        tran.add(this.binding.reviewList.getId(), frag);
-        tran.addToBackStack("TAG");
-        tran.commit();
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        if (getArguments() != null) {
+            this.recipeId = getArguments().getInt(RECIPE_ID_PARAM);
+            this.viewModel = new ViewModelProvider(this, new RecipeDetailsFragmentViewModelFactory(this.recipeId)).get(RecipeDetailsFragmentViewModel.class);
+        }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
-    private void loadData(Recipe recipe) {
-        if (recipe != null) {
-            this.recipeNameTextView.setText(recipe.getName());
-            ImageUtil.loadImage(this.recipeImageView, recipe.getImg(), R.drawable.recipe_background);
-            this.preparationTimeTextView.setText(requireContext().getString(R.string.preparation_time, String.valueOf(recipe.getPreparationTime())));
-            this.ingredientsTextView.setText(buildBulletList(20, recipe.getIngredients()));
-            this.instructionsTextView.setText(buildBulletList(20, recipe.getInstructions()));
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        RecipeDetailsModel.getInstance().fetchRecipeById(this.recipeId);
     }
 
     private void initMembers() {
@@ -90,45 +86,46 @@ public class RecipeDetailsFragment extends Fragment {
         this.loadingSpinner = this.binding.loading;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     private void addObservers() {
         this.viewModel.getRecipeData().observe(getViewLifecycleOwner(), this::loadData);
         MediatorLiveData<LoadingState> liveDataMerger = new MediatorLiveData<>();
-        liveDataMerger.addSource(RecipeDetailsModel.getInstance().EventRecipesDetailsLoadingState, value -> {
-            if (ReviewListModel.getInstance().EventReviewListLoadingState.getValue() == LoadingState.NOT_LOADING && value == LoadingState.NOT_LOADING) {
-                liveDataMerger.setValue(LoadingState.NOT_LOADING);
-            } else {
-                liveDataMerger.setValue(LoadingState.LOADING);
-            }
+
+        liveDataMerger.addSource(RecipeDetailsModel.getInstance().getEventRecipesDetailsLoadingState(), value -> {
+            LoadingState loadingState = ReviewListModel.getInstance().getEventReviewListLoadingState().getValue() == LoadingState.NOT_LOADING && value == LoadingState.NOT_LOADING ?
+                    LoadingState.NOT_LOADING :
+                    LoadingState.LOADING;
+            liveDataMerger.setValue(loadingState);
         });
-        liveDataMerger.addSource(ReviewListModel.getInstance().EventReviewListLoadingState, value -> {
-            if (RecipeDetailsModel.getInstance().EventRecipesDetailsLoadingState.getValue() == LoadingState.NOT_LOADING && value == LoadingState.NOT_LOADING) {
-                liveDataMerger.setValue(LoadingState.NOT_LOADING);
-            } else {
-                liveDataMerger.setValue(LoadingState.LOADING);
-            }
+
+        liveDataMerger.addSource(ReviewListModel.getInstance().getEventReviewListLoadingState(), value -> {
+            LoadingState loadingState = RecipeDetailsModel.getInstance().getEventRecipesDetailsLoadingState().getValue() == LoadingState.NOT_LOADING && value == LoadingState.NOT_LOADING ?
+                    LoadingState.NOT_LOADING :
+                    LoadingState.LOADING;
+            liveDataMerger.setValue(loadingState);
         });
 
         liveDataMerger.observe(getViewLifecycleOwner(), status -> {
-            if (status == LoadingState.LOADING) {
-                this.loadingSpinner.setVisibility(View.VISIBLE);
-            } else {
-                this.loadingSpinner.setVisibility(View.GONE);
-            }
+            int visibility = status == LoadingState.LOADING ? View.VISIBLE : View.GONE;
+            this.loadingSpinner.setVisibility(visibility);
         });
-
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        this.recipeId = getArguments().getInt(RECIPE_ID_PARAM);
-        this.viewModel = new ViewModelProvider(this, new RecipeDetailsFragmentViewModelFactory(this.recipeId)).get(RecipeDetailsFragmentViewModel.class);
+    private void displayReviewList() {
+        Fragment reviewListFragment = ReviewListFragment.newInstance(this.recipeId);
+        FragmentManager manager = getParentFragmentManager();
+        FragmentTransaction tran = manager.beginTransaction();
+        tran.add(this.binding.reviewList.getId(), reviewListFragment);
+        tran.addToBackStack("TAG");
+        tran.commit();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        RecipeDetailsModel.getInstance().fetchRecipeById(this.recipeId);
+    private void loadData(Recipe recipe) {
+        if (recipe != null) {
+            this.recipeNameTextView.setText(recipe.getName());
+            ImageUtil.loadImage(this.recipeImageView, recipe.getImg(), R.drawable.recipe_background);
+            this.preparationTimeTextView.setText(requireContext().getString(R.string.preparation_time, String.valueOf(recipe.getPreparationTime())));
+            this.ingredientsTextView.setText(buildBulletList(20, recipe.getIngredients()));
+            this.instructionsTextView.setText(buildBulletList(20, recipe.getInstructions()));
+        }
     }
 }

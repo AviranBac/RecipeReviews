@@ -1,7 +1,6 @@
 package com.example.recipereviews.viewModels;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.recipereviews.models.entities.Recipe;
@@ -17,5 +16,4 @@ public class RecipeDetailsFragmentViewModel extends ViewModel {
     public LiveData<Recipe> getRecipeData() {
         return this.recipeData;
     }
-
 }

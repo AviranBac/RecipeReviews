@@ -2,7 +2,6 @@ package com.example.recipereviews.models.firebase;
 
 import android.graphics.Bitmap;
 
-import com.example.recipereviews.interfaces.Listener;
 import com.example.recipereviews.models.entities.Review;
 import com.example.recipereviews.models.entities.User;
 import com.example.recipereviews.models.firebase.collections.ReviewModelFirebase;
@@ -17,7 +16,6 @@ public class ModelFirebase {
 
     private final UserModelFirebase userFirebase = new UserModelFirebase();
     private final ReviewModelFirebase reviewFirebase = new ReviewModelFirebase();
-
 
     public ModelFirebase() {
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
@@ -35,11 +33,11 @@ public class ModelFirebase {
         this.userFirebase.uploadUserImage(imageBitmap, name, imageUploadCallback);
     }
 
-    public void getReviewsByRecipeId(int recipeId, Listener<List<Review>> callback) {
+    public void getReviewsByRecipeId(int recipeId, Consumer<List<Review>> callback) {
         this.reviewFirebase.getReviewsByRecipeId(recipeId, callback);
     }
 
-    public void getUsers(Listener<List<User>> callback) {
+    public void getUsers(Consumer<List<User>> callback) {
         this.userFirebase.getUsers(callback);
     }
 }

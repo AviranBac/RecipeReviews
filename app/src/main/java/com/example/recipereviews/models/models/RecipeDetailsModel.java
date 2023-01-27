@@ -17,6 +17,8 @@ public class RecipeDetailsModel {
     private static final RecipeDetailsModel instance = new RecipeDetailsModel();
     private final RecipeReviewsLocalDbRepository localDb = RecipeReviewsLocalDb.getLocalDb();
     private final Executor executor = Executors.newSingleThreadExecutor();
+    private final MutableLiveData<LoadingState> eventRecipesDetailsLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
+    private MutableLiveData<Recipe> recipe = new MutableLiveData<>();
 
     private RecipeDetailsModel() {
     }
@@ -25,19 +27,20 @@ public class RecipeDetailsModel {
         return instance;
     }
 
-    final public MutableLiveData<LoadingState> EventRecipesDetailsLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
-
-    private MutableLiveData<Recipe> recipe = new MutableLiveData<>();
+    public MutableLiveData<LoadingState> getEventRecipesDetailsLoadingState() {
+        return this.eventRecipesDetailsLoadingState;
+    }
 
     public LiveData<Recipe> getRecipeById(int id) {
-        if(recipe.getValue() == null) {
-            fetchRecipeById(id);
+        if (this.recipe.getValue() == null) {
+            this.fetchRecipeById(id);
         }
-        return recipe;
+
+        return this.recipe;
     }
 
     public void fetchRecipeById(int id) {
-        this.EventRecipesDetailsLoadingState.setValue(LoadingState.LOADING);
+        this.eventRecipesDetailsLoadingState.setValue(LoadingState.LOADING);
         this.executor.execute(() -> {
             this.localDb.recipeDao().insertAll(
                     new Recipe(id, "Sausage & Pepperoni Stromboli" + id,
@@ -56,8 +59,7 @@ public class RecipeDetailsModel {
             );
             // TODO: call api
             this.recipe.postValue(this.localDb.recipeDao().getById(id));
-            this.EventRecipesDetailsLoadingState.postValue(LoadingState.NOT_LOADING);
+            this.eventRecipesDetailsLoadingState.postValue(LoadingState.NOT_LOADING);
         });
     }
-
 }

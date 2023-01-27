@@ -2,7 +2,6 @@ package com.example.recipereviews.models.firebase.collections;
 
 import android.graphics.Bitmap;
 
-import com.example.recipereviews.interfaces.Listener;
 import com.example.recipereviews.models.entities.User;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -49,7 +48,7 @@ public class UserModelFirebase {
                 );
     }
 
-    public void getUsers(Listener<List<User>> callback) {
+    public void getUsers(Consumer<List<User>> callback) {
         this.db.collection(COLLECTION_NAME)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -61,7 +60,7 @@ public class UserModelFirebase {
                         }
 
                     }
-                    callback.onComplete(list);
+                    callback.accept(list);
                 });
     }
 

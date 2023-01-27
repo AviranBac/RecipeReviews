@@ -2,6 +2,7 @@ package com.example.recipereviews.models.entities;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -14,7 +15,9 @@ import java.util.List;
 @Entity
 public class Recipe {
     private static final String LOCAL_LAST_UPDATE_TIME = "recipeLocalLastUpdateTime";
+
     @PrimaryKey
+    @NonNull
     private int id;
     private String name;
     private String img;
@@ -70,11 +73,9 @@ public class Recipe {
         return this.ingredients;
     }
 
-
     public List<String> getInstructions() {
         return this.instructions;
     }
-
 
     public static Long getLocalLastUpdateTime() {
         return ApplicationContext.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE)

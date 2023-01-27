@@ -1,7 +1,6 @@
 package com.example.recipereviews.models.entities;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;

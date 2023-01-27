@@ -17,6 +17,8 @@ public class RecipesListModel {
     private static final RecipesListModel instance = new RecipesListModel();
     private final Executor executor = Executors.newSingleThreadExecutor();
     private final RecipeReviewsLocalDbRepository localDb = RecipeReviewsLocalDb.getLocalDb();
+    private final MutableLiveData<LoadingState> eventRecipesListLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
+    private LiveData<List<Recipe>> recipeList;
 
     private RecipesListModel() {
     }
@@ -25,19 +27,21 @@ public class RecipesListModel {
         return instance;
     }
 
-    final public MutableLiveData<LoadingState> EventRecipesListLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
-    private LiveData<List<Recipe>> recipeList;
+    public MutableLiveData<LoadingState> getEventRecipesListLoadingState() {
+        return this.eventRecipesListLoadingState;
+    }
 
     public LiveData<List<Recipe>> getAllRecipes() {
         if (this.recipeList == null) {
             this.recipeList = this.localDb.recipeDao().getAll();
             refreshAllRecipes();
         }
+
         return this.recipeList;
     }
 
     public void refreshAllRecipes() {
-        this.EventRecipesListLoadingState.setValue(LoadingState.LOADING);
+        this.eventRecipesListLoadingState.setValue(LoadingState.LOADING);
         // TODO: call api i think
         this.executor.execute(() -> {
             List<Recipe> list = new ArrayList<Recipe>() {{
@@ -46,7 +50,7 @@ public class RecipesListModel {
                 add(new Recipe(3, "Lasagna Roll Ups", "https://feelslikehomeblog.com/wp-content/uploads/2022/02/Worlds-Best-Chili-with-Bacon-FB.png"));
             }};
             list.forEach(recipe -> this.localDb.recipeDao().insertAll(recipe));
-            this.EventRecipesListLoadingState.postValue(LoadingState.NOT_LOADING);
+            this.eventRecipesListLoadingState.postValue(LoadingState.NOT_LOADING);
         });
     }
 

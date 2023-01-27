@@ -17,11 +17,7 @@
         app:shapeAppearanceOverlay="@style/roundCornerImageViewStyle10"
         app:srcCompat="@drawable/review_background"
         app:tint="#8F8F8F"
-        app:tintMode="multiply">
-
-
-    </com.google.android.material.imageview.ShapeableImageView>
-
+        app:tintMode="multiply" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/review_image"
@@ -79,6 +75,4 @@
         android:theme="@style/RatingBar"
         app:layout_constraintStart_toEndOf="@id/userImage"
         app:layout_constraintTop_toBottomOf="@+id/userName" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

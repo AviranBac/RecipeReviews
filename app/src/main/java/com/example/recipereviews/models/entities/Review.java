@@ -14,21 +14,14 @@ import java.util.Objects;
 
 @Entity
 public class Review {
-
     @PrimaryKey
     @NonNull
     private String id;
-
     private int recipeId;
-
     private String userId;
-
     private double rating;
-
     private String imageUrl;
-
     private String description;
-
     private Long lastUpdateTime;
 
     public Review(@NonNull String id, int recipeId, String userId, double rating, String imageUrl, String description, Long lastUpdateTime) {
@@ -41,8 +34,9 @@ public class Review {
         this.lastUpdateTime = lastUpdateTime;
     }
 
+    @NonNull
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(String id) {

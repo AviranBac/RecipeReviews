@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.recipereviews.R;
 import com.example.recipereviews.databinding.FragmentReviewListBinding;
-import com.example.recipereviews.models.models.RecipeDetailsModel;
+import com.example.recipereviews.fragments.user.recycler_adapters.ReviewRecyclerAdapter;
 import com.example.recipereviews.models.models.ReviewListModel;
 import com.example.recipereviews.viewModels.ReviewListFragmentViewModel;
 import com.example.recipereviews.viewModels.factory.ReviewListFragmentViewModelFactory;
@@ -33,6 +33,7 @@ public class ReviewListFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putInt(RECIPE_ID_PARAM, recipeId);
         frag.setArguments(bundle);
+
         return frag;
     }
 
@@ -51,23 +52,10 @@ public class ReviewListFragment extends Fragment {
         this.binding = FragmentReviewListBinding.inflate(inflater, container, false);
         View view = this.binding.getRoot();
         this.initMembers();
+        this.setListeners();
         this.loadData();
+
         return view;
-    }
-
-    private void initMembers() {
-        this.binding.recyclerView.setHasFixedSize(true);
-        this.binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        this.adapter = new ReviewRecyclerAdapter(getLayoutInflater(), this.viewModel.getReviewListDataByRecipeId().getValue());
-        this.binding.recyclerView.setAdapter(this.adapter);
-        this.reviewsSectionTextView = this.binding.reviewsSectionTextView;
-    }
-
-    private void loadData() {
-        viewModel.getReviewListDataByRecipeId().observe(getViewLifecycleOwner(), list -> {
-            this.adapter.setData(list);
-            this.reviewsSectionTextView.setText(requireContext().getString(R.string.reviews_header, String.valueOf(list.size())));
-        });
     }
 
     @Override
@@ -83,10 +71,25 @@ public class ReviewListFragment extends Fragment {
         ReviewListModel.getInstance().refreshReviewByRecipeId(this.recipeId);
     }
 
-    private void setOnRecipeClickListener(View view) {
+    private void initMembers() {
+        this.reviewsSectionTextView = this.binding.reviewsSectionTextView;
+
+        this.binding.recyclerView.setHasFixedSize(true);
+        this.binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        this.adapter = new ReviewRecyclerAdapter(getLayoutInflater(), this.viewModel.getReviewListDataByRecipeId().getValue());
+        this.binding.recyclerView.setAdapter(this.adapter);
+    }
+
+    private void setListeners() {
         this.adapter.setOnItemClickListener(pos -> {
             // TODO: navigate to review fragment
         });
     }
 
+    private void loadData() {
+        viewModel.getReviewListDataByRecipeId().observe(getViewLifecycleOwner(), list -> {
+            this.adapter.setData(list);
+            this.reviewsSectionTextView.setText(requireContext().getString(R.string.reviews_header, String.valueOf(list.size())));
+        });
+    }
 }

@@ -5,10 +5,26 @@ import androidx.room.Relation;
 
 public class ReviewWithUser {
     @Embedded
-    public Review review;
+    private Review review;
     @Relation(
             parentColumn = "userId",
             entityColumn = "id"
     )
-    public User user;
+    private User user;
+
+    public Review getReview() {
+        return this.review;
+    }
+
+    public User getUser() {
+        return this.user;
+    }
+
+    public void setReview(Review review) {
+        this.review = review;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

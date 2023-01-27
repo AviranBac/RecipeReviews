@@ -19,9 +19,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.recipereviews.activities.GuestActivity;
 import com.example.recipereviews.databinding.FragmentMainPageBinding;
 import com.example.recipereviews.enums.LoadingState;
+import com.example.recipereviews.fragments.user.recycler_adapters.RecipeRecyclerAdapter;
 import com.example.recipereviews.models.entities.Recipe;
-import com.example.recipereviews.models.models.Model;
 import com.example.recipereviews.models.models.RecipesListModel;
+import com.example.recipereviews.models.models.UserModel;
 import com.example.recipereviews.viewModels.MainPageFragmentViewModel;
 import com.google.android.material.imageview.ShapeableImageView;
 
@@ -43,18 +44,28 @@ public class MainPageFragment extends Fragment {
         this.initializeMembers();
         this.setListeners(view);
         this.loadData();
+
         return view;
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.viewModel = new ViewModelProvider(this).get(MainPageFragmentViewModel.class);
+    }
+
     private void loadData() {
-        this.viewModel.getRecipeListData().observe(getViewLifecycleOwner(), list -> this.adapter.setData(list));
-        RecipesListModel.getInstance().EventRecipesListLoadingState.observe(getViewLifecycleOwner(), status -> this.binding.swipeRefresh.setRefreshing(status == LoadingState.LOADING));
+        this.viewModel.getRecipeListData()
+                .observe(getViewLifecycleOwner(), list -> this.adapter.setData(list));
+        RecipesListModel.getInstance().getEventRecipesListLoadingState()
+                .observe(getViewLifecycleOwner(), status -> this.binding.swipeRefresh.setRefreshing(status == LoadingState.LOADING));
     }
 
     private void initializeMembers() {
         this.profileImageView = this.binding.profileImageView;
         this.logoutImageView = this.binding.logoutImageView;
         this.searchEditText = this.binding.searchEt;
+
         this.binding.recyclerView.setHasFixedSize(true);
         this.binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         this.adapter = new RecipeRecyclerAdapter(getLayoutInflater(), this.viewModel.getRecipeListData().getValue());
@@ -73,37 +84,33 @@ public class MainPageFragment extends Fragment {
     private void setSearchEditTextChangeListener() {
         this.searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
+            public void beforeTextChanged(CharSequence charSequence, int start, int before, int count) {}
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                 String text = searchEditText.getText().toString();
                 viewModel.setNameQuery(text);
                 viewModel.getSearchedRecipes().observe(getViewLifecycleOwner(), list -> adapter.setData(list));
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-            }
+            public void afterTextChanged(Editable editable) {}
         });
     }
 
     private void setProfileImageClickListener(View view) {
-        this.profileImageView.setOnClickListener((View view1) -> Navigation.findNavController(view).navigate(MainPageFragmentDirections.actionMainPageFragmentToProfileFragment(Model.getInstance().getCurrentUserId())));
+        this.profileImageView.setOnClickListener((View view1) -> Navigation.findNavController(view).navigate(MainPageFragmentDirections.actionMainPageFragmentToProfileFragment(UserModel.getInstance().getCurrentUserId())));
     }
 
     private void setLogoutButtonClickListener() {
-        this.logoutImageView.setOnClickListener(view -> Model.getInstance().logout(this::startGuestActivity));
+        this.logoutImageView.setOnClickListener(view -> UserModel.getInstance().logout(this::startGuestActivity));
     }
 
     private void setOnRecipeClickListener(View view) {
         this.adapter.setOnItemClickListener(pos -> {
             Recipe recipe = Objects.requireNonNull(this.viewModel.getRecipeListData().getValue()).get(pos);
-            MainPageFragmentDirections.ActionMainPageFragmentToRecipeDetailsFragment action = MainPageFragmentDirections.actionMainPageFragmentToRecipeDetailsFragment(recipe.getId());
-            Navigation.findNavController(view).navigate(action);
+            Navigation.findNavController(view).navigate(MainPageFragmentDirections.actionMainPageFragmentToRecipeDetailsFragment(recipe.getId()));
         });
-
     }
 
     private void setOnRefreshListener() {
@@ -116,13 +123,6 @@ public class MainPageFragment extends Fragment {
             startActivity(guestActivityIntent);
             getActivity().finish();
         }
-    }
-
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        this.viewModel = new ViewModelProvider(this).get(MainPageFragmentViewModel.class);
     }
 
     private void reloadData() {

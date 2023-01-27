@@ -1,6 +1,5 @@
 package com.example.recipereviews.models.firebase.collections;
 
-import com.example.recipereviews.interfaces.Listener;
 import com.example.recipereviews.models.entities.Review;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -10,6 +9,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class ReviewModelFirebase {
 
@@ -18,7 +18,7 @@ public class ReviewModelFirebase {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
 
-    public void getReviewsByRecipeId(int recipeId, Listener<List<Review>> callback) {
+    public void getReviewsByRecipeId(int recipeId, Consumer<List<Review>> callback) {
         this.db.collection(COLLECTION_NAME)
                 .whereEqualTo("recipeId", recipeId)
                 .get()
@@ -31,7 +31,7 @@ public class ReviewModelFirebase {
                         }
 
                     }
-                    callback.onComplete(list);
+                    callback.accept(list);
                 });
     }
 }
