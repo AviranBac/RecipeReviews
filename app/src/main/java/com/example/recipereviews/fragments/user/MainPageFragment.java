@@ -25,6 +25,7 @@ import com.example.recipereviews.models.models.RecipeModel;
 import com.example.recipereviews.models.models.UserModel;
 import com.example.recipereviews.viewModels.MainPageFragmentViewModel;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
@@ -43,7 +44,7 @@ public class MainPageFragment extends Fragment {
         View view = this.binding.getRoot();
         this.initializeMembers();
         this.setListeners(view);
-        this.loadData();
+        this.addObservers();
 
         return view;
     }
@@ -52,13 +53,6 @@ public class MainPageFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.viewModel = new ViewModelProvider(this).get(MainPageFragmentViewModel.class);
-    }
-
-    private void loadData() {
-        this.viewModel.getRecipeListData()
-                .observe(getViewLifecycleOwner(), list -> this.adapter.setData(list));
-        RecipeModel.getInstance().getRecipeListLoadingState()
-                .observe(getViewLifecycleOwner(), status -> this.binding.swipeRefresh.setRefreshing(status == LoadingState.LOADING));
     }
 
     private void initializeMembers() {
@@ -73,7 +67,6 @@ public class MainPageFragment extends Fragment {
     }
 
     private void setListeners(View view) {
-        // TODO: need to set profile image from current user's imageUrl
         this.setProfileImageClickListener(view);
         this.setLogoutButtonClickListener();
         this.setSearchEditTextChangeListener();
@@ -117,6 +110,24 @@ public class MainPageFragment extends Fragment {
 
     private void setOnRefreshListener() {
         this.binding.swipeRefresh.setOnRefreshListener(this::reloadData);
+    }
+
+    private void addObservers() {
+        this.observeProfileImage();
+        this.viewModel.getRecipeListData()
+                .observe(getViewLifecycleOwner(), list -> this.adapter.setData(list));
+        RecipeModel.getInstance().getRecipeListLoadingState()
+                .observe(getViewLifecycleOwner(), status -> this.binding.swipeRefresh.setRefreshing(status == LoadingState.LOADING));
+    }
+
+    private void observeProfileImage() {
+        this.viewModel.getLoggedInUser().observe(getViewLifecycleOwner(), user -> {
+            if (user != null) {
+                Picasso.get()
+                        .load(user.getImageUrl())
+                        .into(this.profileImageView);
+            }
+        });
     }
 
     private void startGuestActivity() {

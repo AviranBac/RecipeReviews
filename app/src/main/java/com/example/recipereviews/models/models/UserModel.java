@@ -2,6 +2,7 @@ package com.example.recipereviews.models.models;
 
 import android.graphics.Bitmap;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.recipereviews.enums.LoadingState;
@@ -23,6 +24,7 @@ public class UserModel {
     private final ModelFirebase modelFirebase = new ModelFirebase();
     private final RecipeReviewsLocalDbRepository localDb = RecipeReviewsLocalDb.getLocalDb();
     private final MutableLiveData<LoadingState> userListLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
+    private final MutableLiveData<User> user = new MutableLiveData<>();
 
     private UserModel() {
     }
@@ -64,6 +66,15 @@ public class UserModel {
 
     public String getCurrentUserId() {
         return this.authFirebase.getCurrentUserId();
+    }
+
+    public LiveData<User> getUserById(String id) {
+        Runnable postUserByIdFn = () -> this.user.postValue(this.localDb.userDao().getById(id));
+
+        executor.execute(postUserByIdFn);
+        this.refreshUserList(() -> executor.execute(postUserByIdFn));
+
+        return this.user;
     }
 
     public void refreshUserList(Runnable callback) {
