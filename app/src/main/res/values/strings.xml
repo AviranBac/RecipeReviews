@@ -17,10 +17,10 @@
     <string name="open_gallery">Open Gallery</string>
     <string name="user_profile">User Profile</string>
     <string name="recipe_review">Recipe Review</string>
-    <string name="search">search</string>
+    <string name="search">Search</string>
     <string name="recipe_name">Recipe Name</string>
     <string name="instructions">Instructions:</string>
     <string name="ingredients">Ingredients:</string>
     <string name="preparation_time">Ready in: %1$s Minutes</string>
-    <string name="reviews_header">Reviews: (%1$s)</string>
+    <string name="reviews_header">Reviews (%1$s)</string>
 </resources>

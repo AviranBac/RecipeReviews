@@ -8,16 +8,21 @@
     android:padding="10dp"
     tools:context=".fragments.user.RecipeDetailsFragment">
 
-    <ProgressBar
-        android:id="@+id/loading"
-        style="?android:attr/progressBarStyleLarge"
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/recipeProgressIndicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/nestedScrollView"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:showAnimationBehavior="none"
+        app:indicatorColor="@color/white"
+        app:indicatorSize="200dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
@@ -32,6 +37,7 @@
         app:layout_constraintVertical_bias="0.0">
 
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/recipeDetailsLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -45,6 +51,7 @@
                 android:paddingBottom="5dp"
                 android:text=""
                 android:textSize="24sp"
+                android:textStyle="bold|italic"
                 app:layout_constraintBottom_toTopOf="@+id/recipe_image"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -108,13 +115,36 @@
                 app:layout_constraintStart_toStartOf="@+id/instructions_header"
                 app:layout_constraintTop_toBottomOf="@+id/instructions_header" />
 
-            <FrameLayout
-                android:id="@+id/review_list"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@+id/reviews_section_text_view"
-                app:layout_constraintTop_toBottomOf="@+id/reviews_section_text_view">
-            </FrameLayout>
+                app:layout_constraintStart_toStartOf="@+id/instructions_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/instructions_text_view">
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/reviewsProgressIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:indeterminate="true"
+                    android:visibility="gone"
+                    app:showAnimationBehavior="none"
+                    app:indicatorColor="@color/white"
+                    app:indicatorSize="30dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                <FrameLayout
+                    android:id="@+id/review_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+                </FrameLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>

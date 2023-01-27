@@ -27,6 +27,7 @@ import com.example.recipereviews.utils.ImageUtil;
 import com.example.recipereviews.viewModels.RecipeDetailsFragmentViewModel;
 import com.example.recipereviews.viewModels.factory.RecipeDetailsFragmentViewModelFactory;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 public class RecipeDetailsFragment extends Fragment {
     private static final String RECIPE_ID_PARAM = "recipeId";
@@ -38,7 +39,8 @@ public class RecipeDetailsFragment extends Fragment {
     private TextView preparationTimeTextView;
     private TextView ingredientsTextView;
     private TextView instructionsTextView;
-    private ProgressBar loadingSpinner;
+    private CircularProgressIndicator recipeProgressIndicator;
+    private CircularProgressIndicator reviewsProgressIndicator;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,31 +85,33 @@ public class RecipeDetailsFragment extends Fragment {
         this.preparationTimeTextView = this.binding.preparationTime;
         this.ingredientsTextView = this.binding.ingredientsTextView;
         this.instructionsTextView = this.binding.instructionsTextView;
-        this.loadingSpinner = this.binding.loading;
+        this.recipeProgressIndicator = this.binding.recipeProgressIndicator;
+        this.reviewsProgressIndicator = this.binding.reviewsProgressIndicator;
     }
 
     private void addObservers() {
         this.viewModel.getRecipeData().observe(getViewLifecycleOwner(), this::loadData);
-        MediatorLiveData<LoadingState> liveDataMerger = new MediatorLiveData<>();
 
-        liveDataMerger.addSource(RecipeDetailsModel.getInstance().getEventRecipesDetailsLoadingState(), value -> {
-            LoadingState loadingState = ReviewListModel.getInstance().getEventReviewListLoadingState().getValue() == LoadingState.NOT_LOADING && value == LoadingState.NOT_LOADING ?
-                    LoadingState.NOT_LOADING :
-                    LoadingState.LOADING;
-            liveDataMerger.setValue(loadingState);
-        });
+        RecipeDetailsModel.getInstance().getEventRecipesDetailsLoadingState().observe(
+                getViewLifecycleOwner(),
+                loadingState -> this.handleProgressIndicator(loadingState, this.binding.recipeDetailsLinearLayout, this.recipeProgressIndicator)
+        );
+        ReviewListModel.getInstance().getEventReviewListLoadingState().observe(
+                getViewLifecycleOwner(),
+                loadingState -> this.handleProgressIndicator(loadingState, this.binding.reviewList, this.reviewsProgressIndicator)
+        );
+    }
 
-        liveDataMerger.addSource(ReviewListModel.getInstance().getEventReviewListLoadingState(), value -> {
-            LoadingState loadingState = RecipeDetailsModel.getInstance().getEventRecipesDetailsLoadingState().getValue() == LoadingState.NOT_LOADING && value == LoadingState.NOT_LOADING ?
-                    LoadingState.NOT_LOADING :
-                    LoadingState.LOADING;
-            liveDataMerger.setValue(loadingState);
-        });
-
-        liveDataMerger.observe(getViewLifecycleOwner(), status -> {
-            int visibility = status == LoadingState.LOADING ? View.VISIBLE : View.GONE;
-            this.loadingSpinner.setVisibility(visibility);
-        });
+    private void handleProgressIndicator(LoadingState loadingState,
+                                         View affectedView,
+                                         CircularProgressIndicator circularProgressIndicator) {
+        if (loadingState == LoadingState.LOADING) {
+            affectedView.setVisibility(View.GONE);
+            circularProgressIndicator.show();
+        } else {
+            affectedView.setVisibility(View.VISIBLE);
+            circularProgressIndicator.hide();
+        }
     }
 
     private void displayReviewList() {
