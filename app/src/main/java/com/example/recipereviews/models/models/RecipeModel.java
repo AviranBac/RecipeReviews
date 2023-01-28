@@ -4,17 +4,27 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.recipereviews.enums.LoadingState;
+import com.example.recipereviews.models.api.GetRecipesDto;
+import com.example.recipereviews.models.api.RecipeApi;
+import com.example.recipereviews.models.api.RecipeTypeAdapter;
 import com.example.recipereviews.models.entities.Recipe;
 import com.example.recipereviews.models.room.RecipeReviewsLocalDb;
 import com.example.recipereviews.models.room.RecipeReviewsLocalDbRepository;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class RecipeModel {
+    final String BASE_URL = "https://api.spoonacular.com/";
 
     private static final RecipeModel instance = new RecipeModel();
     private final RecipeReviewsLocalDbRepository localDb = RecipeReviewsLocalDb.getLocalDb();
@@ -23,8 +33,18 @@ public class RecipeModel {
     private final MutableLiveData<LoadingState> recipeListLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
     private MutableLiveData<Recipe> recipe = new MutableLiveData<>();
     private LiveData<List<Recipe>> recipeList;
+    private Retrofit retrofit;
+    private RecipeApi recipeApi;
 
     private RecipeModel() {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Recipe.class, new RecipeTypeAdapter())
+                .create();
+        retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        recipeApi = retrofit.create(RecipeApi.class);
     }
 
     public static RecipeModel getInstance() {
@@ -62,39 +82,44 @@ public class RecipeModel {
 
     public void refreshAllRecipes() {
         this.recipeListLoadingState.setValue(LoadingState.LOADING);
-        // TODO: call api i think
-        this.executor.execute(() -> {
-            List<Recipe> list = new ArrayList<Recipe>() {{
-                add(new Recipe(1, "The Best Chili", "https://feelslikehomeblog.com/wp-content/uploads/2022/02/Worlds-Best-Chili-with-Bacon-FB.png"));
-                add(new Recipe(2, "Sausage & Pepperoni Stromboli", "https://feelslikehomeblog.com/wp-content/uploads/2022/02/Worlds-Best-Chili-with-Bacon-FB.png"));
-                add(new Recipe(3, "Lasagna Roll Ups", "https://feelslikehomeblog.com/wp-content/uploads/2022/02/Worlds-Best-Chili-with-Bacon-FB.png"));
-            }};
-            list.forEach(recipe -> this.localDb.recipeDao().insertAll(recipe));
-            this.recipeListLoadingState.postValue(LoadingState.NOT_LOADING);
+        this.recipeApi.getRecipes().enqueue(new Callback<GetRecipesDto>() {
+            @Override
+            public void onResponse(Call<GetRecipesDto> call, Response<GetRecipesDto> recipesResponse) {
+                if (recipesResponse.isSuccessful()) {
+                    executor.execute(() -> {
+                        if (recipesResponse.isSuccessful()) {
+                            recipesResponse.body().getResults().forEach(recipe -> localDb.recipeDao().insertAll(recipe));
+                            recipeListLoadingState.postValue(LoadingState.NOT_LOADING);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetRecipesDto> call, Throwable t) {
+                t.printStackTrace();
+            }
         });
     }
 
     public void fetchRecipeById(int id) {
         this.recipeDetailsLoadingState.setValue(LoadingState.LOADING);
-        this.executor.execute(() -> {
-            this.localDb.recipeDao().insertAll(
-                    new Recipe(id, "Sausage & Pepperoni Stromboli" + id,
-                            "https://feelslikehomeblog.com/wp-content/uploads/2022/02/Worlds-Best-Chili-with-Bacon-FB.png",
-                            28,
-                            new ArrayList<>(Arrays.asList(
-                                    "1 egg",
-                                    "1 lb italian sausage",
-                                    "1 cup shredded Parmesan cheese",
-                                    "1 package sliced pepperoni")),
-                            new ArrayList<>(Arrays.asList(
-                                    "cook italian sausage in medium skillet until browned",
-                                    "Drain on paper towels and crumble into small pieces",
-                                    "Heat oven to 450 degrees",
-                                    "Place parchment paper on a baking pan and lightly flour")))
-            );
-            // TODO: call api
-            this.recipe.postValue(this.localDb.recipeDao().getById(id));
-            this.recipeDetailsLoadingState.postValue(LoadingState.NOT_LOADING);
+        this.recipeApi.getRecipeById(id).enqueue(new Callback<Recipe>() {
+            @Override
+            public void onResponse(Call<Recipe> call, Response<Recipe> recipeResponse) {
+                executor.execute(() -> {
+                    if (recipeResponse.isSuccessful()) {
+                        localDb.recipeDao().insertAll(recipeResponse.body());
+                        recipe.postValue(localDb.recipeDao().getById(id));
+                        recipeDetailsLoadingState.postValue(LoadingState.NOT_LOADING);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<Recipe> call, Throwable t) {
+                t.printStackTrace();
+            }
         });
     }
 }
