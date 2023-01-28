@@ -1,7 +1,10 @@
-package com.example.recipereviews.models;
+package com.example.recipereviews.models.models;
 
 import android.graphics.Bitmap;
 
+import androidx.lifecycle.MutableLiveData;
+
+import com.example.recipereviews.enums.LoadingState;
 import com.example.recipereviews.models.entities.User;
 import com.example.recipereviews.models.firebase.AuthFirebase;
 import com.example.recipereviews.models.firebase.ModelFirebase;
@@ -12,17 +15,19 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-public class Model {
+public class UserModel {
 
-    private static final Model instance = new Model();
+    private static final UserModel instance = new UserModel();
     private final Executor executor = Executors.newSingleThreadExecutor();
     private final AuthFirebase authFirebase = new AuthFirebase();
     private final ModelFirebase modelFirebase = new ModelFirebase();
     private final RecipeReviewsLocalDbRepository localDb = RecipeReviewsLocalDb.getLocalDb();
+    private final MutableLiveData<LoadingState> userListLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
 
-    private Model() {}
+    private UserModel() {
+    }
 
-    public static Model getInstance() {
+    public static UserModel getInstance() {
         return instance;
     }
 
@@ -59,5 +64,18 @@ public class Model {
 
     public String getCurrentUserId() {
         return this.authFirebase.getCurrentUserId();
+    }
+
+    public void refreshUserList(Runnable callback) {
+        this.userListLoadingState.setValue(LoadingState.LOADING);
+
+        this.modelFirebase.getUsers(list -> {
+            this.executor.execute(() -> {
+                list.forEach(user -> this.localDb.userDao().insertAll(user));
+                this.userListLoadingState.postValue(LoadingState.NOT_LOADING);
+            });
+
+            callback.run();
+        });
     }
 }

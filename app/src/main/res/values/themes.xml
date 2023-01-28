@@ -16,4 +16,9 @@
         <item name="hintTextColor">@color/white</item>
         <item name="android:textColorHint">@color/white</item>
     </style>
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlActivated">#FFFFEB3B</item>
+    </style>
 </resources>

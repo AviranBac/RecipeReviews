@@ -1,7 +1,6 @@
 package com.example.recipereviews.models.entities;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -51,12 +50,12 @@ public class User {
         long lastUpdateTime = ((Timestamp) user.get("lastUpdateTime")).getSeconds();
 
         return new User(
-            id,
-            user.get("firstName").toString(),
-            user.get("lastName").toString(),
-            user.get("email").toString(),
-            imageUrl,
-            lastUpdateTime
+                id,
+                user.get("firstName").toString(),
+                user.get("lastName").toString(),
+                user.get("email").toString(),
+                imageUrl,
+                lastUpdateTime
         );
     }
 
@@ -68,6 +67,10 @@ public class User {
             put("imageUrl", imageUrl);
             put("lastUpdateTime", FieldValue.serverTimestamp());
         }};
+    }
+
+    public String getFullName() {
+        return this.firstName + " " + this.lastName;
     }
 
     @NonNull

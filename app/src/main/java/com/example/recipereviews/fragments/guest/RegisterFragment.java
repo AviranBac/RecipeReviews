@@ -15,8 +15,8 @@ import com.example.recipereviews.R;
 import com.example.recipereviews.activities.UserActivity;
 import com.example.recipereviews.databinding.FragmentRegisterBinding;
 import com.example.recipereviews.fragments.common.CameraUtilsFragment;
-import com.example.recipereviews.models.Model;
 import com.example.recipereviews.models.entities.User;
+import com.example.recipereviews.models.models.UserModel;
 import com.example.recipereviews.validators.InputValidator;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
@@ -85,7 +85,7 @@ public class RegisterFragment extends CameraUtilsFragment {
     }
 
     private void registerIfValid(View view) {
-        Model.getInstance().doesEmailExist(emailEditText.getText().toString(),
+        UserModel.getInstance().doesEmailExist(emailEditText.getText().toString(),
                 (Boolean emailExist) -> {
                     if (emailExist) {
                         emailTextInput.setError(getString(R.string.email_exists));
@@ -107,13 +107,13 @@ public class RegisterFragment extends CameraUtilsFragment {
 
         Drawable profileImage = super.avatarImg.getDrawable();
         if (profileImage == null) {
-            Model.getInstance().register(user, passwordEditText.getText().toString(), this::startUserActivity);
+            UserModel.getInstance().register(user, passwordEditText.getText().toString(), this::startUserActivity);
         } else {
             binding.imageIcon.setDrawingCacheEnabled(true);
             binding.imageIcon.buildDrawingCache();
-            Model.getInstance().uploadUserImage(((BitmapDrawable) profileImage).getBitmap(), user.getEmail(), (String url) -> {
+            UserModel.getInstance().uploadUserImage(((BitmapDrawable) profileImage).getBitmap(), user.getEmail(), (String url) -> {
                 user.setImageUrl(url);
-                Model.getInstance().register(user, passwordEditText.getText().toString(), this::startUserActivity);
+                UserModel.getInstance().register(user, passwordEditText.getText().toString(), this::startUserActivity);
             });
         }
     }

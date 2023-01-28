@@ -2,19 +2,18 @@ package com.example.recipereviews.fragments.guest;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
 import com.example.recipereviews.R;
 import com.example.recipereviews.activities.UserActivity;
 import com.example.recipereviews.databinding.FragmentLoginBinding;
-import com.example.recipereviews.models.Model;
+import com.example.recipereviews.models.models.UserModel;
 import com.example.recipereviews.validators.InputValidator;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
@@ -35,7 +34,7 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FragmentLoginBinding binding = FragmentLoginBinding.inflate(inflater, container, false);
         this.initializeMembers(binding);
-        
+
         View view = binding.getRoot();
         this.setListeners(view);
 
@@ -69,7 +68,7 @@ public class LoginFragment extends Fragment {
                 loginButton.setText("");
                 progressIndicator.show();
 
-                Model.getInstance().login(
+                UserModel.getInstance().login(
                         emailEditText.getText().toString(),
                         passwordEditText.getText().toString(),
                         this::startUserActivity,

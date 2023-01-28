@@ -1,16 +1,16 @@
 package com.example.recipereviews;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.os.HandlerCompat;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.os.HandlerCompat;
+
 import com.example.recipereviews.activities.GuestActivity;
 import com.example.recipereviews.activities.UserActivity;
-import com.example.recipereviews.models.Model;
+import com.example.recipereviews.models.models.UserModel;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,12 +21,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Model.getInstance().getExecutor().execute(() -> {
+        UserModel.getInstance().getExecutor().execute(() -> {
             try {
                 Thread.sleep(2000);
-            } catch (InterruptedException e) {}
+            } catch (InterruptedException e) {
+            }
 
-            Runnable startActivityRunnable = Model.getInstance().isSignedIn() ?
+            Runnable startActivityRunnable = UserModel.getInstance().isSignedIn() ?
                     () -> startActivityFromIntent(UserActivity.class) :
                     () -> startActivityFromIntent(GuestActivity.class);
 
