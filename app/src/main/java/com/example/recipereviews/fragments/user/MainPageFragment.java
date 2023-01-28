@@ -34,6 +34,7 @@ import com.example.recipereviews.models.entities.Recipe;
 import com.example.recipereviews.models.models.RecipeModel;
 import com.example.recipereviews.models.models.UserModel;
 import com.example.recipereviews.utils.ImageUtil;
+import com.example.recipereviews.utils.NavigationUtils;
 import com.example.recipereviews.viewModels.MainPageFragmentViewModel;
 
 import java.util.Objects;
@@ -80,9 +81,7 @@ public class MainPageFragment extends Fragment {
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 if (menuItem.getItemId() == R.id.profile) {
-                    NavHostFragment navHostFragment = (NavHostFragment) requireActivity().getSupportFragmentManager().findFragmentById(R.id.user_nav_host);
-                    NavController navController = navHostFragment.getNavController();
-                    navController.navigate(MainPageFragmentDirections.actionMainPageFragmentToProfileFragment(UserModel.getInstance().getCurrentUserId()));
+                    NavigationUtils.navigate(parentActivity, MainPageFragmentDirections.actionMainPageFragmentToProfileFragment(UserModel.getInstance().getCurrentUserId()));
                 } else if (menuItem.getItemId() == R.id.logout) {
                     UserModel.getInstance().logout(() -> startGuestActivity());
                 }
@@ -129,7 +128,7 @@ public class MainPageFragment extends Fragment {
     private void setOnRecipeClickListener(View view) {
         this.adapter.setOnItemClickListener(pos -> {
             Recipe recipe = Objects.requireNonNull(this.viewModel.getRecipeListData().getValue()).get(pos);
-            Navigation.findNavController(view).navigate(MainPageFragmentDirections.actionMainPageFragmentToRecipeDetailsFragment(recipe.getId()));
+            NavigationUtils.navigate(view, MainPageFragmentDirections.actionMainPageFragmentToRecipeDetailsFragment(recipe.getId()));
         });
     }
 

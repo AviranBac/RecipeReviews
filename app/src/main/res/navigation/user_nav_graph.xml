@@ -31,6 +31,16 @@
         <action
             android:id="@+id/action_profileFragment_to_reviewDetailsFragment"
             app:destination="@id/reviewDetailsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.recipereviews.fragments.user.EditProfileFragment"
+        android:label=""
+        tools:layout="@layout/fragment_edit_profile" >
+        <argument android:name="userId" app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/recipeDetailsFragment"

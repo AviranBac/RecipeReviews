@@ -8,12 +8,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import com.example.recipereviews.R;
 import com.example.recipereviews.activities.UserActivity;
 import com.example.recipereviews.databinding.FragmentLoginBinding;
 import com.example.recipereviews.models.models.UserModel;
+import com.example.recipereviews.utils.NavigationUtils;
 import com.example.recipereviews.validators.InputValidator;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
@@ -89,7 +89,7 @@ public class LoginFragment extends Fragment {
 
     private void setRegisterButtonOnClickListener(View view) {
         registerButton.setOnClickListener((View view1) ->
-                Navigation.findNavController(view).navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
+                NavigationUtils.navigate(view, LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
         );
     }
 

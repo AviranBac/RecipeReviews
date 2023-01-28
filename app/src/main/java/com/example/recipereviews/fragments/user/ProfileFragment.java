@@ -21,7 +21,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -32,6 +31,7 @@ import com.example.recipereviews.fragments.user.recycler_adapters.ProfileReviewR
 import com.example.recipereviews.models.models.ReviewModel;
 import com.example.recipereviews.models.models.UserModel;
 import com.example.recipereviews.utils.ImageUtil;
+import com.example.recipereviews.utils.NavigationUtils;
 import com.example.recipereviews.viewModels.ProfileFragmentViewModel;
 import com.example.recipereviews.viewModels.factory.ProfileFragmentViewModelFactory;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -91,6 +91,10 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                if (menuItem.getItemId() == R.id.edit_profile) {
+                    NavigationUtils.navigate(parentActivity, ProfileFragmentDirections.actionProfileFragmentToEditProfileFragment(userId));
+                }
+
                 return false;
             }
         },this, Lifecycle.State.RESUMED);
@@ -116,7 +120,7 @@ public class ProfileFragment extends Fragment {
     private void setOnReviewClickListener(View view) {
         this.adapter.setOnItemClickListener(pos -> {
             String reviewId = Objects.requireNonNull(this.viewModel.getReviewListDataByUserId().getValue()).get(pos).getReview().getId();
-            Navigation.findNavController(view).navigate(actionProfileFragmentToReviewDetailsFragment(reviewId));
+            NavigationUtils.navigate(view, actionProfileFragmentToReviewDetailsFragment(reviewId));
         });
     }
 
