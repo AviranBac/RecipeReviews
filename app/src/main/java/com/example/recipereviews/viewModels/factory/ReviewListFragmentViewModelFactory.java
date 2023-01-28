@@ -18,6 +18,6 @@ public class ReviewListFragmentViewModelFactory implements ViewModelProvider.Fac
     @NonNull
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
-        return Objects.requireNonNull(modelClass.cast(new ReviewListFragmentViewModel(recipeId)));
+        return Objects.requireNonNull(modelClass.cast(new ReviewListFragmentViewModel(this.recipeId)));
     }
 }

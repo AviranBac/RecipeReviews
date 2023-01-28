@@ -16,7 +16,6 @@ public class RecipeTypeAdapter extends TypeAdapter<Recipe> {
 
     @Override
     public void write(JsonWriter out, Recipe value) {
-
     }
 
     @Override

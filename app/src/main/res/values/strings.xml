@@ -8,19 +8,20 @@
     <string name="invalid_email">This is not an email format</string>
     <string name="invalid_password">The password should be at least 6 characters long</string>
     <string name="register">Register</string>
-    <string name="main_page">Main Page</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
     <string name="email_exists">This Email is already registered</string>
     <string name="required_field">Required field</string>
     <string name="open_camera">Open Camera</string>
     <string name="open_gallery">Open Gallery</string>
-    <string name="user_profile">User Profile</string>
-    <string name="recipe_review">Recipe Review</string>
     <string name="search">Search</string>
     <string name="recipe_name">Recipe Name</string>
     <string name="instructions">Instructions:</string>
     <string name="ingredients">Ingredients:</string>
     <string name="preparation_time">Ready in: %1$s Minutes</string>
     <string name="reviews_header">Reviews (%1$s)</string>
+    <string name="recipe_details">Recipe Details</string>
+    <string name="my_reviews">My Reviews</string>
+    <string name="logout">Logout</string>
+    <string name="recipe_reviews">Recipe Reviews</string>
 </resources>

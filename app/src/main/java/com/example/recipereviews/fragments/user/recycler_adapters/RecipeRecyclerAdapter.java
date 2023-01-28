@@ -6,7 +6,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recipereviews.R;
 import com.example.recipereviews.databinding.RecipeCardRowBinding;
@@ -16,69 +15,40 @@ import com.example.recipereviews.utils.ImageUtil;
 import java.util.List;
 import java.util.function.Consumer;
 
-class RecipeViewHolder extends RecyclerView.ViewHolder {
+class RecipeViewHolder extends GenericViewHolder<Recipe> {
+
     private TextView recipeNameTv;
     private ImageView recipeImageIv;
-    private RecipeCardRowBinding binding;
 
     public RecipeViewHolder(RecipeCardRowBinding binding, Consumer<Integer> itemClickListener) {
-        super(binding.getRoot());
-        this.binding = binding;
-        this.initMembers();
-        this.setListeners(itemClickListener);
+        super(binding, itemClickListener);
     }
 
-    private void initMembers() {
-        this.recipeNameTv = this.binding.recipeNameTv;
-        this.recipeImageIv = this.binding.recipeImage;
+    @Override
+    protected void initMembers() {
+        RecipeCardRowBinding binding = (RecipeCardRowBinding) this.binding;
+        this.recipeNameTv = binding.recipeNameTv;
+        this.recipeImageIv = binding.recipeImage;
     }
 
-    private void setListeners(Consumer<Integer> itemClickListener) {
-        this.binding.getRoot().setOnClickListener(view ->
-                itemClickListener.accept(getAdapterPosition())
-        );
-    }
-
+    @Override
     public void bind(Recipe recipe) {
         this.recipeNameTv.setText(recipe.getName());
         ImageUtil.loadImage(this.recipeImageIv, recipe.getImg(), R.drawable.recipe_background);
     }
 }
 
-public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
-    private Consumer<Integer> itemClickListener;
-    private LayoutInflater inflater;
-    private List<Recipe> data;
+public class RecipeRecyclerAdapter extends GenericRecyclerAdapter<Recipe, RecipeViewHolder> {
 
     public RecipeRecyclerAdapter(LayoutInflater inflater, List<Recipe> data) {
-        this.inflater = inflater;
-        this.data = data;
-    }
-
-    public void setOnItemClickListener(Consumer<Integer> itemClickListener) {
-        this.itemClickListener = itemClickListener;
-    }
-
-    public void setData(List<Recipe> data) {
-        this.data = data;
-        notifyDataSetChanged();
+        super(inflater, data);
     }
 
     @NonNull
     @Override
     public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        RecipeCardRowBinding binding = RecipeCardRowBinding.inflate(this.inflater, parent, false);
+        RecipeCardRowBinding binding = RecipeCardRowBinding.inflate(super.inflater, parent, false);
         return new RecipeViewHolder(binding, this.itemClickListener);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
-        holder.bind(this.data.get(position));
-    }
-
-    @Override
-    public int getItemCount() {
-        return this.data == null ? 0 : this.data.size();
     }
 }
 

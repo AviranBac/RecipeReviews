@@ -2,6 +2,7 @@ package com.example.recipereviews.models.models;
 
 import android.graphics.Bitmap;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.recipereviews.enums.LoadingState;
@@ -23,6 +24,8 @@ public class UserModel {
     private final ModelFirebase modelFirebase = new ModelFirebase();
     private final RecipeReviewsLocalDbRepository localDb = RecipeReviewsLocalDb.getLocalDb();
     private final MutableLiveData<LoadingState> userListLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
+    private final MutableLiveData<LoadingState> loggedInUserLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
+    private final MutableLiveData<User> loggedInUser = new MutableLiveData<>();
 
     private UserModel() {
     }
@@ -33,6 +36,10 @@ public class UserModel {
 
     public Executor getExecutor() {
         return this.executor;
+    }
+
+    public MutableLiveData<LoadingState> getLoggedInUserLoadingState() {
+        return this.loggedInUserLoadingState;
     }
 
     public void uploadUserImage(Bitmap imageBitmap, String name, Consumer<String> imageUploadCallback) {
@@ -64,6 +71,31 @@ public class UserModel {
 
     public String getCurrentUserId() {
         return this.authFirebase.getCurrentUserId();
+    }
+
+    public LiveData<User> getUserById(String id) {
+        if (this.loggedInUser.getValue() == null) {
+            this.refreshLoggedInUser(id, () -> {});
+        }
+
+        return this.loggedInUser;
+    }
+
+    public void refreshLoggedInUser(String userId, Runnable callback) {
+        this.loggedInUserLoadingState.setValue(LoadingState.LOADING);
+
+        this.modelFirebase.getUser(userId, user -> {
+            executor.execute(() -> {
+                if (user != null) {
+                    this.localDb.userDao().insertAll(user);
+                    this.loggedInUser.postValue(this.localDb.userDao().getById(userId));
+                }
+
+                this.loggedInUserLoadingState.postValue(LoadingState.NOT_LOADING);
+            });
+
+            callback.run();
+        });
     }
 
     public void refreshUserList(Runnable callback) {

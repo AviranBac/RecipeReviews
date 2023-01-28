@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.recipereviews.enums.LoadingState;
+import com.example.recipereviews.models.entities.ReviewWithRecipe;
 import com.example.recipereviews.models.entities.ReviewWithUser;
 import com.example.recipereviews.models.firebase.ModelFirebase;
 import com.example.recipereviews.models.room.RecipeReviewsLocalDb;
@@ -18,8 +19,10 @@ public class ReviewModel {
     private final Executor executor = Executors.newSingleThreadExecutor();
     private final RecipeReviewsLocalDbRepository localDb = RecipeReviewsLocalDb.getLocalDb();
     private final MutableLiveData<LoadingState> reviewListLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
+    private final MutableLiveData<LoadingState> profileReviewListLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
     private final ModelFirebase firebaseModel = new ModelFirebase();
     private MutableLiveData<List<ReviewWithUser>> reviewList = new MutableLiveData();
+    private MutableLiveData<List<ReviewWithRecipe>> profileReviewList = new MutableLiveData();
 
     private ReviewModel() {
     }
@@ -32,6 +35,10 @@ public class ReviewModel {
         return this.reviewListLoadingState;
     }
 
+    public MutableLiveData<LoadingState> getProfileReviewListLoadingState() {
+        return this.profileReviewListLoadingState;
+    }
+
     public LiveData<List<ReviewWithUser>> getReviewByRecipeId(int recipeId) {
         if (this.reviewList.getValue() == null) {
             this.refreshReviewByRecipeId(recipeId);
@@ -41,13 +48,33 @@ public class ReviewModel {
     }
 
     public void refreshReviewByRecipeId(int recipeId) {
-        UserModel.getInstance().refreshUserList(() -> {
-            this.reviewListLoadingState.setValue(LoadingState.LOADING);
+        this.reviewListLoadingState.setValue(LoadingState.LOADING);
 
+        UserModel.getInstance().refreshUserList(() -> {
             this.firebaseModel.getReviewsByRecipeId(recipeId, list -> executor.execute(() -> {
                 list.forEach(review -> localDb.reviewDao().insertAll(review));
                 this.reviewList.postValue(this.localDb.reviewDao().getByRecipeId(recipeId));
                 this.reviewListLoadingState.postValue(LoadingState.NOT_LOADING);
+            }));
+        });
+    }
+
+    public LiveData<List<ReviewWithRecipe>> getReviewByUserId(String userId) {
+        if (this.profileReviewList.getValue() == null) {
+            this.refreshReviewByUserId(userId);
+        }
+
+        return this.profileReviewList;
+    }
+
+    public void refreshReviewByUserId(String userId) {
+        this.profileReviewListLoadingState.setValue(LoadingState.LOADING);
+
+        UserModel.getInstance().refreshLoggedInUser(userId, () -> {
+            this.firebaseModel.getReviewsByUserId(userId, list -> executor.execute(() -> {
+                list.forEach(review -> localDb.reviewDao().insertAll(review));
+                this.profileReviewList.postValue(this.localDb.reviewDao().getByUserId(userId));
+                this.profileReviewListLoadingState.postValue(LoadingState.NOT_LOADING);
             }));
         });
     }

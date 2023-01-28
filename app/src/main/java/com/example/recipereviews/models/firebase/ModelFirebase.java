@@ -37,7 +37,15 @@ public class ModelFirebase {
         this.reviewFirebase.getReviewsByRecipeId(recipeId, callback);
     }
 
+    public void getReviewsByUserId(String userId, Consumer<List<Review>> callback) {
+        this.reviewFirebase.getReviewsByUserId(userId, callback);
+    }
+
     public void getUsers(Consumer<List<User>> callback) {
         this.userFirebase.getUsers(callback);
+    }
+
+    public void getUser(String userId, Consumer<User> callback) {
+        this.userFirebase.getUser(userId, callback);
     }
 }

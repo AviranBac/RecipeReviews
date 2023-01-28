@@ -7,6 +7,7 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 
 import com.example.recipereviews.models.entities.Review;
+import com.example.recipereviews.models.entities.ReviewWithRecipe;
 import com.example.recipereviews.models.entities.ReviewWithUser;
 
 import java.util.List;
@@ -16,6 +17,10 @@ public interface ReviewDao {
     @Transaction
     @Query("select * from Review where recipeId = :recipeId")
     List<ReviewWithUser> getByRecipeId(int recipeId);
+
+    @Transaction
+    @Query("select * from Review where userId = :userId")
+    List<ReviewWithRecipe> getByUserId(String userId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Review... reviews);

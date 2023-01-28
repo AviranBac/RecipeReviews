@@ -1,6 +1,8 @@
 package com.example.recipereviews.models.firebase.collections;
 
 import com.example.recipereviews.models.entities.Review;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -22,16 +24,27 @@ public class ReviewModelFirebase {
         this.db.collection(COLLECTION_NAME)
                 .whereEqualTo("recipeId", recipeId)
                 .get()
-                .addOnCompleteListener(task -> {
-                    List<Review> list = new LinkedList<>();
-                    if (task.isSuccessful()) {
-                        QuerySnapshot jsonsList = task.getResult();
-                        for (DocumentSnapshot json : jsonsList) {
-                            list.add(Review.create(Objects.requireNonNull(json.getData()), json.getId()));
-                        }
+                .addOnCompleteListener(this.getOnCompleteListener(callback));
+    }
 
-                    }
-                    callback.accept(list);
-                });
+    public void getReviewsByUserId(String userId, Consumer<List<Review>> callback) {
+        this.db.collection(COLLECTION_NAME)
+                .whereEqualTo("userId", userId)
+                .get()
+                .addOnCompleteListener(this.getOnCompleteListener(callback));
+    }
+
+    private OnCompleteListener<QuerySnapshot> getOnCompleteListener(Consumer<List<Review>> callback) {
+        return (Task<QuerySnapshot> task) -> {
+            List<Review> list = new LinkedList<>();
+            if (task.isSuccessful()) {
+                QuerySnapshot jsonsList = task.getResult();
+                for (DocumentSnapshot json : jsonsList) {
+                    list.add(Review.create(Objects.requireNonNull(json.getData()), json.getId()));
+                }
+
+            }
+            callback.accept(list);
+        };
     }
 }

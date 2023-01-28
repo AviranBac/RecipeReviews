@@ -6,16 +6,26 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.recipereviews.R;
 import com.example.recipereviews.activities.GuestActivity;
 import com.example.recipereviews.databinding.FragmentMainPageBinding;
 import com.example.recipereviews.enums.LoadingState;
@@ -23,19 +33,24 @@ import com.example.recipereviews.fragments.user.recycler_adapters.RecipeRecycler
 import com.example.recipereviews.models.entities.Recipe;
 import com.example.recipereviews.models.models.RecipeModel;
 import com.example.recipereviews.models.models.UserModel;
+import com.example.recipereviews.utils.ImageUtil;
+import com.example.recipereviews.utils.NavigationUtils;
 import com.example.recipereviews.viewModels.MainPageFragmentViewModel;
-import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.Objects;
 
 public class MainPageFragment extends Fragment {
 
-    private ShapeableImageView profileImageView;
-    private ShapeableImageView logoutImageView;
     private EditText searchEditText;
     private RecipeRecyclerAdapter adapter;
     private MainPageFragmentViewModel viewModel;
     private FragmentMainPageBinding binding;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.initializeMenu();
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,7 +58,7 @@ public class MainPageFragment extends Fragment {
         View view = this.binding.getRoot();
         this.initializeMembers();
         this.setListeners(view);
-        this.loadData();
+        this.addObservers();
 
         return view;
     }
@@ -54,16 +69,29 @@ public class MainPageFragment extends Fragment {
         this.viewModel = new ViewModelProvider(this).get(MainPageFragmentViewModel.class);
     }
 
-    private void loadData() {
-        this.viewModel.getRecipeListData()
-                .observe(getViewLifecycleOwner(), list -> this.adapter.setData(list));
-        RecipeModel.getInstance().getRecipeListLoadingState()
-                .observe(getViewLifecycleOwner(), status -> this.binding.swipeRefresh.setRefreshing(status == LoadingState.LOADING));
+    private void initializeMenu() {
+        FragmentActivity parentActivity = getActivity();
+        parentActivity.addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.main_page_menu, menu);
+                observeProfileImage(menu);
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                if (menuItem.getItemId() == R.id.profile) {
+                    NavigationUtils.navigate(parentActivity, MainPageFragmentDirections.actionMainPageFragmentToProfileFragment(UserModel.getInstance().getCurrentUserId()));
+                } else if (menuItem.getItemId() == R.id.logout) {
+                    UserModel.getInstance().logout(() -> startGuestActivity());
+                }
+
+                return false;
+            }
+        },this, Lifecycle.State.RESUMED);
     }
 
     private void initializeMembers() {
-        this.profileImageView = this.binding.profileImageView;
-        this.logoutImageView = this.binding.logoutImageView;
         this.searchEditText = this.binding.searchEt;
 
         this.binding.recyclerView.setHasFixedSize(true);
@@ -73,9 +101,6 @@ public class MainPageFragment extends Fragment {
     }
 
     private void setListeners(View view) {
-        // TODO: need to set profile image from current user's imageUrl
-        this.setProfileImageClickListener(view);
-        this.setLogoutButtonClickListener();
         this.setSearchEditTextChangeListener();
         this.setOnRecipeClickListener(view);
         this.setOnRefreshListener();
@@ -100,23 +125,31 @@ public class MainPageFragment extends Fragment {
         });
     }
 
-    private void setProfileImageClickListener(View view) {
-        this.profileImageView.setOnClickListener((View view1) -> Navigation.findNavController(view).navigate(MainPageFragmentDirections.actionMainPageFragmentToProfileFragment(UserModel.getInstance().getCurrentUserId())));
-    }
-
-    private void setLogoutButtonClickListener() {
-        this.logoutImageView.setOnClickListener(view -> UserModel.getInstance().logout(this::startGuestActivity));
-    }
-
     private void setOnRecipeClickListener(View view) {
         this.adapter.setOnItemClickListener(pos -> {
             Recipe recipe = Objects.requireNonNull(this.viewModel.getRecipeListData().getValue()).get(pos);
-            Navigation.findNavController(view).navigate(MainPageFragmentDirections.actionMainPageFragmentToRecipeDetailsFragment(recipe.getId()));
+            NavigationUtils.navigate(view, MainPageFragmentDirections.actionMainPageFragmentToRecipeDetailsFragment(recipe.getId()));
         });
     }
 
     private void setOnRefreshListener() {
         this.binding.swipeRefresh.setOnRefreshListener(this::reloadData);
+    }
+
+    private void addObservers() {
+        this.viewModel.getRecipeListData()
+                .observe(getViewLifecycleOwner(), list -> this.adapter.setData(list));
+        RecipeModel.getInstance().getRecipeListLoadingState()
+                .observe(getViewLifecycleOwner(), status -> this.binding.swipeRefresh.setRefreshing(status == LoadingState.LOADING));
+    }
+
+    private void observeProfileImage(Menu mainPageMenu) {
+        this.viewModel.getLoggedInUser().observe(getViewLifecycleOwner(), user -> {
+            if (user != null) {
+                MenuItem profileMenuItem = mainPageMenu.findItem(R.id.profile);
+                ImageUtil.loadImage(profileMenuItem, user.getImageUrl(), R.drawable.blank_profile_picture);
+            }
+        });
     }
 
     private void startGuestActivity() {

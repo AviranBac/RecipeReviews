@@ -1,5 +1,7 @@
 package com.example.recipereviews.fragments.user;
 
+import static com.example.recipereviews.fragments.user.RecipeDetailsFragmentDirections.actionRecipeDetailsFragmentToReviewDetailsFragment;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,14 +13,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.recipereviews.R;
 import com.example.recipereviews.databinding.FragmentReviewListBinding;
 import com.example.recipereviews.fragments.user.recycler_adapters.ReviewRecyclerAdapter;
 import com.example.recipereviews.models.models.ReviewModel;
+import com.example.recipereviews.utils.NavigationUtils;
 import com.example.recipereviews.viewModels.ReviewListFragmentViewModel;
 import com.example.recipereviews.viewModels.factory.ReviewListFragmentViewModelFactory;
+
+import java.util.Objects;
 
 public class ReviewListFragment extends Fragment {
     private static final String RECIPE_ID_PARAM = "recipe_id";
@@ -52,7 +58,7 @@ public class ReviewListFragment extends Fragment {
         this.binding = FragmentReviewListBinding.inflate(inflater, container, false);
         View view = this.binding.getRoot();
         this.initMembers();
-        this.setListeners();
+        this.setListeners(view);
         this.loadData();
 
         return view;
@@ -80,9 +86,10 @@ public class ReviewListFragment extends Fragment {
         this.binding.recyclerView.setAdapter(this.adapter);
     }
 
-    private void setListeners() {
+    private void setListeners(View view) {
         this.adapter.setOnItemClickListener(pos -> {
-            // TODO: navigate to review fragment
+            String reviewId = Objects.requireNonNull(this.viewModel.getReviewListDataByRecipeId().getValue()).get(pos).getReview().getId();
+            NavigationUtils.navigate(view, actionRecipeDetailsFragmentToReviewDetailsFragment(reviewId));
         });
     }
 

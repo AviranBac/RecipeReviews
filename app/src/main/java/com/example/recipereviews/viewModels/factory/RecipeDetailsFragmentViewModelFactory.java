@@ -18,6 +18,6 @@ public class RecipeDetailsFragmentViewModelFactory implements ViewModelProvider.
     @NonNull
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
-        return Objects.requireNonNull(modelClass.cast(new RecipeDetailsFragmentViewModel(recipeId)));
+        return Objects.requireNonNull(modelClass.cast(new RecipeDetailsFragmentViewModel(this.recipeId)));
     }
 }
