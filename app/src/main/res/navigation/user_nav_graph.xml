@@ -28,6 +28,9 @@
         android:label="@string/user_profile"
         tools:layout="@layout/fragment_profile" >
         <argument android:name="userId" app:argType="string" />
+        <action
+            android:id="@+id/action_profileFragment_to_reviewDetailsFragment"
+            app:destination="@id/reviewDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/recipeDetailsFragment"
@@ -35,5 +38,15 @@
         android:label="@string/recipeDetails"
         tools:layout="@layout/fragment_recipe_details" >
         <argument android:name="recipeId" app:argType="integer" />
+        <action
+            android:id="@+id/action_recipeDetailsFragment_to_reviewDetailsFragment"
+            app:destination="@id/reviewDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reviewDetailsFragment"
+        android:name="com.example.recipereviews.fragments.user.ReviewDetailsFragment"
+        android:label="@string/reviewDetails"
+        tools:layout="@layout/fragment_review_details" >
+        <argument android:name="reviewId" app:argType="string" />
     </fragment>
 </navigation>

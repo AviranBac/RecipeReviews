@@ -24,4 +24,5 @@
     <string name="preparation_time">Ready in: %1$s Minutes</string>
     <string name="reviews_header">Reviews (%1$s)</string>
     <string name="recipeDetails">Recipe Details</string>
+    <string name="reviewDetails">Review Details</string>
 </resources>

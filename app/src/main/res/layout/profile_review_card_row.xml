@@ -8,18 +8,19 @@
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/card_item_view"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="70dp"
         android:adjustViewBounds="true"
-        android:minHeight="100dp"
+        android:minHeight="70dp"
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/roundCornerImageViewStyle10"
-        app:srcCompat="@drawable/recipe_background"
+        app:srcCompat="@drawable/review_background"
         app:tint="#8F8F8F"
         app:tintMode="multiply" />
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@+id/card_item_view"
@@ -28,27 +29,43 @@
         app:layout_constraintTop_toTopOf="@+id/card_item_view">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/recipe_image"
-            android:layout_width="100dp"
-            android:layout_height="70dp"
+            android:id="@+id/reviewLink"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginVertical="15dp"
-            android:layout_marginEnd="15dp"
-            android:scaleType="fitXY"
+            android:layout_marginVertical="20dp"
+            android:layout_marginEnd="25dp"
             app:shapeAppearanceOverlay="@style/roundCornerImageViewStyle10"
-            app:srcCompat="@drawable/transparent" />
+            app:srcCompat="@drawable/chevron_right_white"
+            app:tint="#3164F4"
+            app:tintMode="multiply" />
 
         <TextView
-            android:id="@+id/recipe_name_tv"
+            android:id="@+id/recipeNameTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="1dp"
-            android:layout_toStartOf="@+id/recipe_image"
-            android:text="@string/recipe_name"
-            android:textSize="24sp"
+            android:layout_marginBottom="1dp"
+            android:layout_toStartOf="@+id/reviewLink"
+            android:text=""
+            android:textSize="25sp"
             android:textStyle="bold|italic" />
+
+        <RatingBar
+            android:id="@+id/rating"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="14dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:stepSize="0.5"
+            android:theme="@style/RatingBar"
+            app:layout_constraintBottom_toBottomOf="parent" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
