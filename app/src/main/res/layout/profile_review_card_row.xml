@@ -30,15 +30,15 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/reviewLink"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginVertical="20dp"
+            android:layout_marginVertical="15dp"
             android:layout_marginEnd="25dp"
             app:shapeAppearanceOverlay="@style/roundCornerImageViewStyle10"
-            app:srcCompat="@drawable/chevron_right_white"
-            app:tint="#3164F4"
-            app:tintMode="multiply" />
+            app:srcCompat="@drawable/ic_baseline_chevron_right_24"
+            android:background="#3164F4"
+            app:tint="@color/white" />
 
         <LinearLayout
             android:layout_width="match_parent"

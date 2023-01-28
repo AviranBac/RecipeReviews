@@ -31,6 +31,13 @@ class ProfileReviewViewHolder extends GenericViewHolder<ReviewWithRecipe> {
     }
 
     @Override
+    protected void setListeners(Consumer<Integer> itemClickListener) {
+        ((ProfileReviewCardRowBinding) this.binding).reviewLink.setOnClickListener(view ->
+                itemClickListener.accept(getAdapterPosition())
+        );
+    }
+
+    @Override
     public void bind(ReviewWithRecipe reviewWithRecipe) {
         this.recipeNameTv.setText(reviewWithRecipe.getRecipe().getName());
         this.ratingBar.setRating((float) reviewWithRecipe.getReview().getRating());
