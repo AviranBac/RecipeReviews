@@ -44,4 +44,8 @@ public class ModelFirebase {
     public void getUsers(Consumer<List<User>> callback) {
         this.userFirebase.getUsers(callback);
     }
+
+    public void getUser(String userId, Consumer<User> callback) {
+        this.userFirebase.getUser(userId, callback);
+    }
 }

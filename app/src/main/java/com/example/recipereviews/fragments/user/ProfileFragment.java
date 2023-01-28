@@ -153,12 +153,12 @@ public class ProfileFragment extends Fragment {
     private void observeRefresh() {
         MediatorLiveData<LoadingState> refreshMerger = new MediatorLiveData<>();
         refreshMerger.addSource(ReviewModel.getInstance().getProfileReviewListLoadingState(), value -> {
-            LoadingState loadingState = UserModel.getInstance().getUserLoadingState().getValue() == LoadingState.NOT_LOADING && value == LoadingState.NOT_LOADING ?
+            LoadingState loadingState = UserModel.getInstance().getLoggedInUserLoadingState().getValue() == LoadingState.NOT_LOADING && value == LoadingState.NOT_LOADING ?
                     LoadingState.NOT_LOADING :
                     LoadingState.LOADING;
             refreshMerger.setValue(loadingState);
         });
-        refreshMerger.addSource(UserModel.getInstance().getUserLoadingState(), value -> {
+        refreshMerger.addSource(UserModel.getInstance().getLoggedInUserLoadingState(), value -> {
             LoadingState loadingState = ReviewModel.getInstance().getProfileReviewListLoadingState().getValue() == LoadingState.NOT_LOADING && value == LoadingState.NOT_LOADING ?
                     LoadingState.NOT_LOADING :
                     LoadingState.LOADING;

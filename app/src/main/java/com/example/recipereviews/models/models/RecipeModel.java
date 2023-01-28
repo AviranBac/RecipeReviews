@@ -16,6 +16,7 @@ import com.google.gson.GsonBuilder;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,10 +32,10 @@ public class RecipeModel {
     private final Executor executor = Executors.newSingleThreadExecutor();
     private final MutableLiveData<LoadingState> recipeDetailsLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
     private final MutableLiveData<LoadingState> recipeListLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
+    private final Retrofit retrofit;
+    private final RecipeApi recipeApi;
     private MutableLiveData<Recipe> recipe = new MutableLiveData<>();
     private LiveData<List<Recipe>> recipeList;
-    private Retrofit retrofit;
-    private RecipeApi recipeApi;
 
     private RecipeModel() {
         Gson gson = new GsonBuilder()
@@ -88,7 +89,7 @@ public class RecipeModel {
                 if (recipesResponse.isSuccessful()) {
                     executor.execute(() -> {
                         if (recipesResponse.isSuccessful()) {
-                            recipesResponse.body().getResults().forEach(recipe -> localDb.recipeDao().insertAll(recipe));
+                            localDb.recipeDao().insertAll(recipesResponse.body().getResults().toArray(new Recipe[0]));
                             recipeListLoadingState.postValue(LoadingState.NOT_LOADING);
                         }
                     });

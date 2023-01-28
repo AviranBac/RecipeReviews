@@ -3,6 +3,7 @@ package com.example.recipereviews.models.firebase.collections;
 import android.graphics.Bitmap;
 
 import com.example.recipereviews.models.entities.User;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -64,4 +65,21 @@ public class UserModelFirebase {
                 });
     }
 
+    public void getUser(String userId, Consumer<User> callback) {
+        this.db.collection(COLLECTION_NAME)
+                .document(userId)
+                .get()
+                .addOnCompleteListener((Task<DocumentSnapshot> task) -> {
+                    User user = null;
+
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot json = task.getResult();
+                        if (json != null) {
+                            user = User.create(Objects.requireNonNull(json.getData()), json.getId());
+                        }
+                    }
+
+                    callback.accept(user);
+                });
+    }
 }

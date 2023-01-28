@@ -48,9 +48,9 @@ public class ReviewModel {
     }
 
     public void refreshReviewByRecipeId(int recipeId) {
-        UserModel.getInstance().refreshUserList(() -> {
-            this.reviewListLoadingState.setValue(LoadingState.LOADING);
+        this.reviewListLoadingState.setValue(LoadingState.LOADING);
 
+        UserModel.getInstance().refreshUserList(() -> {
             this.firebaseModel.getReviewsByRecipeId(recipeId, list -> executor.execute(() -> {
                 list.forEach(review -> localDb.reviewDao().insertAll(review));
                 this.reviewList.postValue(this.localDb.reviewDao().getByRecipeId(recipeId));
@@ -68,9 +68,9 @@ public class ReviewModel {
     }
 
     public void refreshReviewByUserId(String userId) {
-        UserModel.getInstance().refreshUserList(() -> {
-            this.profileReviewListLoadingState.setValue(LoadingState.LOADING);
+        this.profileReviewListLoadingState.setValue(LoadingState.LOADING);
 
+        UserModel.getInstance().refreshLoggedInUser(userId, () -> {
             this.firebaseModel.getReviewsByUserId(userId, list -> executor.execute(() -> {
                 list.forEach(review -> localDb.reviewDao().insertAll(review));
                 this.profileReviewList.postValue(this.localDb.reviewDao().getByUserId(userId));

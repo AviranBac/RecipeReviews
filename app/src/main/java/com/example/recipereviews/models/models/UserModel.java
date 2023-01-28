@@ -24,8 +24,8 @@ public class UserModel {
     private final ModelFirebase modelFirebase = new ModelFirebase();
     private final RecipeReviewsLocalDbRepository localDb = RecipeReviewsLocalDb.getLocalDb();
     private final MutableLiveData<LoadingState> userListLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
-    private final MutableLiveData<LoadingState> userLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
-    private final MutableLiveData<User> user = new MutableLiveData<>();
+    private final MutableLiveData<LoadingState> loggedInUserLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
+    private final MutableLiveData<User> loggedInUser = new MutableLiveData<>();
 
     private UserModel() {
     }
@@ -38,8 +38,8 @@ public class UserModel {
         return this.executor;
     }
 
-    public MutableLiveData<LoadingState> getUserLoadingState() {
-        return this.userLoadingState;
+    public MutableLiveData<LoadingState> getLoggedInUserLoadingState() {
+        return this.loggedInUserLoadingState;
     }
 
     public void uploadUserImage(Bitmap imageBitmap, String name, Consumer<String> imageUploadCallback) {
@@ -74,16 +74,28 @@ public class UserModel {
     }
 
     public LiveData<User> getUserById(String id) {
-        Runnable postUserByIdFn = () -> this.user.postValue(this.localDb.userDao().getById(id));
+        if (this.loggedInUser.getValue() == null) {
+            this.refreshLoggedInUser(id, () -> {});
+        }
 
-        executor.execute(postUserByIdFn);
-        this.refreshUserList(() -> {
-            this.userLoadingState.setValue(LoadingState.LOADING);
-            executor.execute(postUserByIdFn);
-            this.userLoadingState.setValue(LoadingState.NOT_LOADING);
+        return this.loggedInUser;
+    }
+
+    public void refreshLoggedInUser(String userId, Runnable callback) {
+        this.loggedInUserLoadingState.setValue(LoadingState.LOADING);
+
+        this.modelFirebase.getUser(userId, user -> {
+            executor.execute(() -> {
+                if (user != null) {
+                    this.localDb.userDao().insertAll(user);
+                    this.loggedInUser.postValue(this.localDb.userDao().getById(userId));
+                }
+
+                this.loggedInUserLoadingState.postValue(LoadingState.NOT_LOADING);
+            });
+
+            callback.run();
         });
-
-        return this.user;
     }
 
     public void refreshUserList(Runnable callback) {

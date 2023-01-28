@@ -13,7 +13,6 @@ import com.example.recipereviews.models.entities.ReviewWithRecipe;
 import java.util.List;
 import java.util.function.Consumer;
 
-
 class ProfileReviewViewHolder extends GenericViewHolder<ReviewWithRecipe> {
 
     private TextView recipeNameTv;
@@ -39,8 +38,13 @@ class ProfileReviewViewHolder extends GenericViewHolder<ReviewWithRecipe> {
 
     @Override
     public void bind(ReviewWithRecipe reviewWithRecipe) {
-        this.recipeNameTv.setText(reviewWithRecipe.getRecipe().getName());
-        this.ratingBar.setRating((float) reviewWithRecipe.getReview().getRating());
+        if (reviewWithRecipe.getRecipe() != null) {
+            this.recipeNameTv.setText(reviewWithRecipe.getRecipe().getName());
+        }
+
+        if (reviewWithRecipe.getReview() != null) {
+            this.ratingBar.setRating((float) reviewWithRecipe.getReview().getRating());
+        }
     }
 }
 

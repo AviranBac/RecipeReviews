@@ -21,7 +21,6 @@
     <string name="preparation_time">Ready in: %1$s Minutes</string>
     <string name="reviews_header">Reviews (%1$s)</string>
     <string name="recipe_details">Recipe Details</string>
-    <string name="review_details">Review Details</string>
     <string name="my_reviews">My Reviews</string>
     <string name="logout">Logout</string>
     <string name="recipe_reviews">Recipe Reviews</string>

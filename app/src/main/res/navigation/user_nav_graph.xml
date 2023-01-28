@@ -55,7 +55,6 @@
     <fragment
         android:id="@+id/reviewDetailsFragment"
         android:name="com.example.recipereviews.fragments.user.ReviewDetailsFragment"
-        android:label="@string/review_details"
         tools:layout="@layout/fragment_review_details" >
         <argument android:name="reviewId" app:argType="string" />
     </fragment>
