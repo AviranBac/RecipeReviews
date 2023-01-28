@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.recipereviews.R;
 import com.example.recipereviews.activities.GuestActivity;
 import com.example.recipereviews.databinding.FragmentMainPageBinding;
 import com.example.recipereviews.enums.LoadingState;
@@ -23,9 +24,9 @@ import com.example.recipereviews.fragments.user.recycler_adapters.RecipeRecycler
 import com.example.recipereviews.models.entities.Recipe;
 import com.example.recipereviews.models.models.RecipeModel;
 import com.example.recipereviews.models.models.UserModel;
+import com.example.recipereviews.utils.ImageUtil;
 import com.example.recipereviews.viewModels.MainPageFragmentViewModel;
 import com.google.android.material.imageview.ShapeableImageView;
-import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
@@ -123,9 +124,7 @@ public class MainPageFragment extends Fragment {
     private void observeProfileImage() {
         this.viewModel.getLoggedInUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
-                Picasso.get()
-                        .load(user.getImageUrl())
-                        .into(this.profileImageView);
+                ImageUtil.loadImage(this.profileImageView, user.getImageUrl(), R.drawable.blank_profile_picture);
             }
         });
     }
