@@ -118,7 +118,7 @@ public class LoginFragment extends Fragment {
     }
 
     private boolean validatePassword() {
-        if (InputValidator.isPasswordValid(passwordEditText.getText())) {
+        if (InputValidator.isPasswordValid(passwordEditText.getText(), false)) {
             passwordTextInput.setError(null);
             return true;
         } else {

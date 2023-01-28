@@ -90,13 +90,13 @@ public class RegisterFragment extends CameraUtilsFragment {
                     if (emailExist) {
                         emailTextInput.setError(getString(R.string.email_exists));
                     } else {
-                        this.register(view);
+                        this.register();
                     }
                 },
                 (errorMessage) -> Snackbar.make(view, errorMessage, Snackbar.LENGTH_SHORT).show());
     }
 
-    private void register(View view) {
+    private void register() {
         registerButton.setEnabled(false);
         registerButton.setText("");
         progressIndicator.show();
@@ -167,7 +167,7 @@ public class RegisterFragment extends CameraUtilsFragment {
     }
 
     private boolean validatePassword() {
-        if (InputValidator.isPasswordValid(passwordEditText.getText())) {
+        if (InputValidator.isPasswordValid(passwordEditText.getText(), false)) {
             passwordTextInput.setError(null);
             return true;
         } else {

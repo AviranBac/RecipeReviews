@@ -2,6 +2,7 @@ package com.example.recipereviews.models.firebase;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.SignInMethodQueryResult;
 
@@ -24,6 +25,22 @@ public class AuthFirebase {
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener((AuthResult authResult) -> onSuccessCallback.run())
                 .addOnFailureListener((Exception e) -> onFailureCallback.accept(e.getMessage()));
+    }
+
+    public void updatePassword(String oldPassword, String newPassword, Consumer<String> onFailureCallback, Runnable onSuccessCallback) {
+        firebaseAuth.getCurrentUser().reauthenticate(EmailAuthProvider.getCredential(firebaseAuth.getCurrentUser().getEmail(), oldPassword))
+                .addOnCompleteListener((Task<Void> reauthenticateTask) -> {
+                    if (reauthenticateTask.isSuccessful()) {
+                        firebaseAuth.getCurrentUser().updatePassword(newPassword)
+                                .addOnCompleteListener((Task<Void> updatePasswordTask) -> {
+                                    if (updatePasswordTask.isSuccessful()) {
+                                        onSuccessCallback.run();
+                                    }
+                                })
+                                .addOnFailureListener(error -> onFailureCallback.accept(error.getMessage()));
+                    }
+                })
+                .addOnFailureListener(error -> onFailureCallback.accept(error.getMessage()));
     }
 
     public void logout(Runnable callback) {

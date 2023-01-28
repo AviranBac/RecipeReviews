@@ -48,4 +48,8 @@ public class ModelFirebase {
     public void getUser(String userId, Consumer<User> callback) {
         this.userFirebase.getUser(userId, callback);
     }
+
+    public void updateUser(User user, Runnable successCallback, Consumer<String> failureCallback) {
+        this.userFirebase.updateUser(user, successCallback, failureCallback);
+    }
 }
