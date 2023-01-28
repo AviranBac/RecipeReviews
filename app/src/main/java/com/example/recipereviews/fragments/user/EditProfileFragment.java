@@ -30,6 +30,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.function.BooleanSupplier;
+
 public class EditProfileFragment extends CameraUtilsFragment {
 
     private String userId;
@@ -86,8 +88,8 @@ public class EditProfileFragment extends CameraUtilsFragment {
         this.setImageIconOnClickListener();
         this.setOnKeyListener(firstNameEditText, this::validateFirstName);
         this.setOnKeyListener(lastNameEditText, this::validateLastName);
-        this.setOnKeyListener(oldPasswordEditText, () -> this.validatePassword(oldPasswordEditText, oldPasswordTextInput));
-        this.setOnKeyListener(newPasswordEditText, () -> this.validatePassword(newPasswordEditText, newPasswordTextInput));
+        this.setOnKeyListener(oldPasswordEditText, this::validatePassword);
+        this.setOnKeyListener(newPasswordEditText, this::validatePassword);
         this.setSaveButtonOnClickListener();
     }
 
@@ -122,14 +124,32 @@ public class EditProfileFragment extends CameraUtilsFragment {
         }
     }
 
-    private boolean validatePassword(TextInputEditText passwordEditText, TextInputLayout passwordTextInput) {
-        if (InputValidator.isPasswordValid(passwordEditText.getText(), true)) {
-            passwordTextInput.setError(null);
-            return true;
+    private boolean validatePassword() {
+        boolean isOldPasswordValid = InputValidator.isPasswordValid(oldPasswordEditText.getText(), true);
+        boolean isNewPasswordValid = InputValidator.isPasswordValid(newPasswordEditText.getText(), true);
+        BooleanSupplier hasFilledExactlyOnePassword = () ->
+                (oldPasswordEditText.getText().length() > 0 && newPasswordEditText.getText().length() == 0) ||
+                (oldPasswordEditText.getText().length() == 0 && newPasswordEditText.getText().length() > 0);
+
+        if (isOldPasswordValid && isNewPasswordValid) {
+            if (!hasFilledExactlyOnePassword.getAsBoolean()) {
+                oldPasswordTextInput.setError(null);
+                newPasswordTextInput.setError(null);
+                return true;
+            }
+
+            String oldPasswordError = oldPasswordEditText.getText().length() > 0 ? null : getString(R.string.update_invalid_password);
+            String newPasswordError = newPasswordEditText.getText().length() > 0 ? null : getString(R.string.update_invalid_password);
+            oldPasswordTextInput.setError(oldPasswordError);
+            newPasswordTextInput.setError(newPasswordError);
         } else {
-            passwordTextInput.setError(getString(R.string.update_invalid_password));
-            return false;
+            String oldPasswordError = isOldPasswordValid ? null : getString(R.string.update_invalid_password);
+            String newPasswordError = isNewPasswordValid ? null : getString(R.string.update_invalid_password);
+            oldPasswordTextInput.setError(oldPasswordError);
+            newPasswordTextInput.setError(newPasswordError);
         }
+
+        return false;
     }
 
     private void setSaveButtonOnClickListener() {
@@ -141,10 +161,7 @@ public class EditProfileFragment extends CameraUtilsFragment {
     }
 
     private boolean isFormValid() {
-        return this.validateFirstName() &&
-                this.validateLastName() &&
-                this.validatePassword(oldPasswordEditText, oldPasswordTextInput) &&
-                this.validatePassword(newPasswordEditText, newPasswordTextInput);
+        return this.validateFirstName() && this.validateLastName() && this.validatePassword();
     }
 
     private void saveUser(View view) {
