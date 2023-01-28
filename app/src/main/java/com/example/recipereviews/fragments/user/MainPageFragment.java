@@ -93,7 +93,7 @@ public class MainPageFragment extends Fragment {
 
         this.binding.recyclerView.setHasFixedSize(true);
         this.binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        this.adapter = new RecipeRecyclerAdapter(getLayoutInflater(), this.viewModel.getRecipeListData().getValue());
+        this.adapter = new RecipeRecyclerAdapter(getLayoutInflater(), this.viewModel.getSearchedRecipes().getValue());
         this.binding.recyclerView.setAdapter(this.adapter);
     }
 
@@ -113,7 +113,6 @@ public class MainPageFragment extends Fragment {
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                 String text = searchEditText.getText().toString();
                 viewModel.setNameQuery(text);
-                viewModel.getSearchedRecipes().observe(getViewLifecycleOwner(), list -> adapter.setData(list));
             }
 
             @Override
@@ -124,7 +123,7 @@ public class MainPageFragment extends Fragment {
 
     private void setOnRecipeClickListener(View view) {
         this.adapter.setOnItemClickListener(pos -> {
-            Recipe recipe = Objects.requireNonNull(this.viewModel.getRecipeListData().getValue()).get(pos);
+            Recipe recipe = Objects.requireNonNull(this.viewModel.getSearchedRecipes().getValue()).get(pos);
             NavigationUtils.navigate(view, MainPageFragmentDirections.actionMainPageFragmentToRecipeDetailsFragment(recipe.getId()));
         });
     }
@@ -134,8 +133,8 @@ public class MainPageFragment extends Fragment {
     }
 
     private void addObservers() {
-        this.viewModel.getRecipeListData()
-                .observe(getViewLifecycleOwner(), list -> this.adapter.setData(list));
+        this.viewModel.getSearchedRecipes()
+                .observe(getViewLifecycleOwner(), list -> adapter.setData(list));
         RecipeModel.getInstance().getRecipeListLoadingState()
                 .observe(getViewLifecycleOwner(), status -> this.binding.swipeRefresh.setRefreshing(status == LoadingState.LOADING));
     }
