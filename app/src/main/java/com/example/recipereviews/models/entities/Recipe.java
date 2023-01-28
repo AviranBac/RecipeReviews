@@ -27,6 +27,10 @@ public class Recipe {
     private List<String> instructions;
 
     @Ignore
+    public Recipe() {
+    }
+
+    @Ignore
     public Recipe(int id, String name, String img) {
         this.id = id;
         this.name = name;
@@ -87,5 +91,29 @@ public class Recipe {
                 .edit()
                 .putLong(Recipe.LOCAL_LAST_UPDATE_TIME, localLastUpdateTime)
                 .apply();
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public void setPreparationTime(int preparationTime) {
+        this.preparationTime = preparationTime;
+    }
+
+    public void setIngredients(List<String> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public void setInstructions(List<String> instructions) {
+        this.instructions = instructions;
     }
 }

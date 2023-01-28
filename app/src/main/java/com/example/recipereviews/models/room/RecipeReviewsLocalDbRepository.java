@@ -12,7 +12,7 @@ import com.example.recipereviews.models.room.daos.RecipeDao;
 import com.example.recipereviews.models.room.daos.ReviewDao;
 import com.example.recipereviews.models.room.daos.UserDao;
 
-@Database(entities = {User.class, Recipe.class, Review.class}, version = 12)
+@Database(entities = {User.class, Recipe.class, Review.class}, version = 14)
 @TypeConverters({Converters.class})
 public abstract class RecipeReviewsLocalDbRepository extends RoomDatabase {
 
