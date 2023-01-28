@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/mainPageFragment"
         android:name="com.example.recipereviews.fragments.user.MainPageFragment"
-        android:label="@string/main_page"
+        android:label="@string/recipe_reviews"
         tools:layout="@layout/fragment_main_page" >
         <action
             android:id="@+id/action_mainPageFragment_to_profileFragment"
@@ -25,7 +25,7 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.recipereviews.fragments.user.ProfileFragment"
-        android:label="@string/user_profile"
+        android:label=""
         tools:layout="@layout/fragment_profile" >
         <argument android:name="userId" app:argType="string" />
         <action
@@ -35,7 +35,7 @@
     <fragment
         android:id="@+id/recipeDetailsFragment"
         android:name="com.example.recipereviews.fragments.user.RecipeDetailsFragment"
-        android:label="@string/recipeDetails"
+        android:label="@string/recipe_details"
         tools:layout="@layout/fragment_recipe_details" >
         <argument android:name="recipeId" app:argType="integer" />
         <action
@@ -45,7 +45,7 @@
     <fragment
         android:id="@+id/reviewDetailsFragment"
         android:name="com.example.recipereviews.fragments.user.ReviewDetailsFragment"
-        android:label="@string/reviewDetails"
+        android:label="@string/review_details"
         tools:layout="@layout/fragment_review_details" >
         <argument android:name="reviewId" app:argType="string" />
     </fragment>

@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.recipereviews.R;
-import com.example.recipereviews.databinding.FragmentRecipeDetailsBinding;
 import com.example.recipereviews.databinding.FragmentReviewDetailsBinding;
 
 public class ReviewDetailsFragment extends Fragment {

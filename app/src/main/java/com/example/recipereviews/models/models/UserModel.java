@@ -24,6 +24,7 @@ public class UserModel {
     private final ModelFirebase modelFirebase = new ModelFirebase();
     private final RecipeReviewsLocalDbRepository localDb = RecipeReviewsLocalDb.getLocalDb();
     private final MutableLiveData<LoadingState> userListLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
+    private final MutableLiveData<LoadingState> userLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
     private final MutableLiveData<User> user = new MutableLiveData<>();
 
     private UserModel() {
@@ -35,6 +36,10 @@ public class UserModel {
 
     public Executor getExecutor() {
         return this.executor;
+    }
+
+    public MutableLiveData<LoadingState> getUserLoadingState() {
+        return this.userLoadingState;
     }
 
     public void uploadUserImage(Bitmap imageBitmap, String name, Consumer<String> imageUploadCallback) {
@@ -72,7 +77,11 @@ public class UserModel {
         Runnable postUserByIdFn = () -> this.user.postValue(this.localDb.userDao().getById(id));
 
         executor.execute(postUserByIdFn);
-        this.refreshUserList(() -> executor.execute(postUserByIdFn));
+        this.refreshUserList(() -> {
+            this.userLoadingState.setValue(LoadingState.LOADING);
+            executor.execute(postUserByIdFn);
+            this.userLoadingState.setValue(LoadingState.NOT_LOADING);
+        });
 
         return this.user;
     }
