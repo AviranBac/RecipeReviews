@@ -8,70 +8,84 @@
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:fillViewport="true"
+            android:isScrollContainer="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/profileImageView"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"
-                android:layout_gravity="center_horizontal"
-                android:scaleType="centerCrop"
-                app:shapeAppearanceOverlay="@style/circleImageViewStyle"
-                app:srcCompat="@drawable/blank_profile_picture" />
-
-            <TextView
-                android:id="@+id/fullNameTv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="1dp"
-                android:textStyle="bold"
-                android:textAlignment="center"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/emailTv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="1dp"
-                android:textAlignment="center"
-                android:textSize="15sp" />
-
-            <Button
-                android:id="@+id/myReviews"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:backgroundTint="#3164f4"
-                android:text="@string/my_reviews"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:clickable="false"
-                android:paddingHorizontal="30dp"
-                app:cornerRadius="30dp" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_horizontal"
-                android:layout_marginTop="10dp"
-                app:layout_constraintHorizontal_bias="0.0" />
-        </LinearLayout>
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/profileImageView"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_gravity="center_horizontal"
+                    android:scaleType="centerCrop"
+                    app:shapeAppearanceOverlay="@style/circleImageViewStyle"
+                    app:srcCompat="@drawable/blank_profile_picture" />
+
+                <TextView
+                    android:id="@+id/fullNameTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="1dp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/emailTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="1dp"
+                    android:textAlignment="center"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/myReviews"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:backgroundTint="#3164f4"
+                    android:text="@string/my_reviews"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:clickable="false"
+                    android:paddingHorizontal="30dp"
+                    app:cornerRadius="30dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintHorizontal_bias="0.0" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
