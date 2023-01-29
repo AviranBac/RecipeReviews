@@ -66,4 +66,13 @@ public class UserModelFirebase extends StorageFirebase {
                     callback.accept(user);
                 });
     }
+
+    public void updateUser(User user, Runnable successCallback, Consumer<String> failureCallback) {
+        Map<String, Object> jsonUser = user.toMap();
+        db.collection(COLLECTION_NAME)
+                .document(user.getId())
+                .update(jsonUser)
+                .addOnSuccessListener(runnable -> successCallback.run())
+                .addOnFailureListener(error -> failureCallback.accept(error.getMessage()));
+    }
 }

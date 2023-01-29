@@ -14,21 +14,18 @@ import java.util.List;
 
 public class MainPageFragmentViewModel extends ViewModel {
     private final LiveData<User> loggedInUser = UserModel.getInstance().getUserById(UserModel.getInstance().getCurrentUserId());;
-    private final LiveData<List<Recipe>> recipeListData = RecipeModel.getInstance().getAllRecipes();;
-    private final MutableLiveData<String> searchQueryLiveData = new MutableLiveData<>();;
+    private final MutableLiveData<String> searchQueryLiveData = new MutableLiveData<>("");
+    private final LiveData<List<Recipe>> searchedRecipes = Transformations.switchMap(
+            this.searchQueryLiveData,
+            search -> RecipeModel.getInstance().getRecipesBySearchText(search)
+    );
 
     public LiveData<User> getLoggedInUser() {
         return this.loggedInUser;
     }
 
-    public LiveData<List<Recipe>> getRecipeListData() {
-        return this.recipeListData;
-    }
-
     public LiveData<List<Recipe>> getSearchedRecipes() {
-        return Transformations.switchMap(
-                this.searchQueryLiveData,
-                search -> RecipeModel.getInstance().getRecipesBySearchText(search));
+        return this.searchedRecipes;
     }
 
     public void setNameQuery(String name) {

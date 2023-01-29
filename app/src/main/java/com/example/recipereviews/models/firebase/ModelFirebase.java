@@ -64,4 +64,8 @@ public class ModelFirebase {
     public void editReview(Review review, Runnable onEditSuccessListener, Consumer<String> onEditFailureListener) {
         this.reviewFirebase.editReview(review, onEditSuccessListener, onEditFailureListener);
     }
+
+    public void updateUser(User user, Runnable successCallback, Consumer<String> failureCallback) {
+        this.userFirebase.updateUser(user, successCallback, failureCallback);
+    }
 }
