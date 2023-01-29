@@ -11,6 +11,7 @@ import com.example.recipereviews.models.firebase.AuthFirebase;
 import com.example.recipereviews.models.firebase.ModelFirebase;
 import com.example.recipereviews.models.room.RecipeReviewsLocalDb;
 import com.example.recipereviews.models.room.RecipeReviewsLocalDbRepository;
+import com.google.android.gms.common.util.Strings;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -109,5 +110,15 @@ public class UserModel {
 
             callback.run();
         });
+    }
+
+    public void updateUser(User user, String oldPassword, String newPassword, Runnable updateFinishedCallback, Consumer<String> updateFailedCallback) {
+        if (!Strings.isEmptyOrWhitespace(oldPassword)) {
+            this.authFirebase.updatePassword(oldPassword, newPassword, updateFailedCallback, () ->
+                this.modelFirebase.updateUser(user, updateFinishedCallback, updateFailedCallback)
+            );
+        } else {
+            this.modelFirebase.updateUser(user, updateFinishedCallback, updateFailedCallback);
+        }
     }
 }

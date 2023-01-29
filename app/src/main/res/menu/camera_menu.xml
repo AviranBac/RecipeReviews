@@ -4,4 +4,6 @@
         android:title="@string/open_camera" />
     <item android:id="@+id/camera_menu_open_gallery"
         android:title="@string/open_gallery" />
+    <item android:id="@+id/clear"
+        android:title="@string/clear" />
 </menu>

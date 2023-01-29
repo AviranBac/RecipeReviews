@@ -7,6 +7,7 @@
     <string name="register_question"><u>Register?</u></string>
     <string name="invalid_email">This is not an email format</string>
     <string name="invalid_password">The password should be at least 6 characters long</string>
+    <string name="update_invalid_password">If you wish to update your password, it should be at least 6 characters long. If you don\'t, leave it empty.</string>
     <string name="register">Register</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
@@ -24,4 +25,8 @@
     <string name="my_reviews">My Reviews</string>
     <string name="logout">Logout</string>
     <string name="recipe_reviews">Recipe Reviews</string>
+    <string name="save">Save</string>
+    <string name="old_password">Old Password (if you update password)</string>
+    <string name="new_password">New Password (if you update password)</string>
+    <string name="clear">Clear</string>
 </resources>

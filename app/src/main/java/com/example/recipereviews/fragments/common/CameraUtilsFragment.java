@@ -55,6 +55,8 @@ public abstract class CameraUtilsFragment extends Fragment {
         } else if (menuItem.getItemId() == R.id.camera_menu_open_gallery) {
             this.galleryLauncher.launch("image/*");
             return true;
+        } else if (menuItem.getItemId() == R.id.clear) {
+            this.avatarImg.setImageResource(R.drawable.blank_profile_picture);
         }
 
         return false;

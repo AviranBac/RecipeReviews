@@ -17,8 +17,9 @@ public class InputValidator {
         return email != null && Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    public static boolean isPasswordValid(Editable password) {
-        return password != null && password.length() >= 6;
+    public static boolean isPasswordValid(Editable password, boolean canBeEmpty) {
+        return password != null &&
+                ((canBeEmpty && password.length() == 0) || password.length() >= 6);
     }
 
     private static boolean isFieldEmptyOrNull(Editable text) {
