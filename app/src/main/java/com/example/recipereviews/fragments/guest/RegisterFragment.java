@@ -17,6 +17,7 @@ import com.example.recipereviews.databinding.FragmentRegisterBinding;
 import com.example.recipereviews.fragments.common.CameraUtilsFragment;
 import com.example.recipereviews.models.entities.User;
 import com.example.recipereviews.models.models.UserModel;
+import com.example.recipereviews.utils.ValidatorListenerUtils;
 import com.example.recipereviews.validators.InputValidator;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
@@ -69,10 +70,10 @@ public class RegisterFragment extends CameraUtilsFragment {
 
     private void setListeners(View view) {
         setProfileImageViewOnClickListener();
-        this.setOnKeyListener(firstNameEditText, this::validateFirstName);
-        this.setOnKeyListener(lastNameEditText, this::validateLastName);
-        this.setOnKeyListener(emailEditText, this::validateEmail);
-        this.setOnKeyListener(passwordEditText, this::validatePassword);
+        ValidatorListenerUtils.setOnKeyListener(firstNameEditText, this::validateFirstName);
+        ValidatorListenerUtils.setOnKeyListener(lastNameEditText, this::validateLastName);
+        ValidatorListenerUtils.setOnKeyListener(emailEditText, this::validateEmail);
+        ValidatorListenerUtils.setOnKeyListener(passwordEditText, this::validatePassword);
         setRegisterButtonOnClickListener(view);
     }
 
@@ -127,13 +128,6 @@ public class RegisterFragment extends CameraUtilsFragment {
 
     private void setProfileImageViewOnClickListener() {
         binding.imageIcon.setOnClickListener(super::showCameraMenu);
-    }
-
-    private void setOnKeyListener(TextInputEditText editText, Runnable validator) {
-        editText.setOnKeyListener((view, i, keyEvent) -> {
-            validator.run();
-            return false;
-        });
     }
 
     private boolean validateFirstName() {

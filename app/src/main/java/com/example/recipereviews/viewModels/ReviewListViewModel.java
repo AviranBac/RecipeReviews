@@ -8,10 +8,10 @@ import com.example.recipereviews.models.models.ReviewModel;
 
 import java.util.List;
 
-public class ReviewListFragmentViewModel extends ViewModel {
+public class ReviewListViewModel extends ViewModel {
     private LiveData<List<ReviewWithUser>> reviewListData;
 
-    public ReviewListFragmentViewModel(int recipeId) {
+    public ReviewListViewModel(int recipeId) {
         this.reviewListData = ReviewModel.getInstance().getReviewByRecipeId(recipeId);
     }
 
