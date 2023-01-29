@@ -24,4 +24,8 @@ public class InputValidator {
     private static boolean isFieldEmptyOrNull(Editable text) {
         return text == null || text.length() == 0;
     }
+    
+    public static boolean isDescriptionValid(Editable text) {
+        return !isFieldEmptyOrNull(text);
+    }
 }
