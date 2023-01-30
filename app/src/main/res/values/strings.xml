@@ -33,7 +33,6 @@
     <string name="description">Description</string>
     <string name="rate">Rate</string>
     <string name="save">Save</string>
-    <string name="save">Save</string>
     <string name="old_password">Old Password (if you update password)</string>
     <string name="new_password">New Password (if you update password)</string>
     <string name="clear">Clear</string>
