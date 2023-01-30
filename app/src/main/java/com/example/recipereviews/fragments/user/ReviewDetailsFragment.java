@@ -59,6 +59,7 @@ public class ReviewDetailsFragment extends Fragment {
         View view = this.binding.getRoot();
         this.initializeMembers();
         this.setListeners();
+        this.initializeMenu();
         this.addObservers();
         return view;
     }
