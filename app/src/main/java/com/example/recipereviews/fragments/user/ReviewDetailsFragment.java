@@ -16,6 +16,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -53,13 +54,18 @@ public class ReviewDetailsFragment extends Fragment {
     private CircularProgressIndicator progressIndicator;
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.initializeMenu();
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         this.binding = FragmentReviewDetailsBinding.inflate(inflater, container, false);
         View view = this.binding.getRoot();
         this.initializeMembers();
         this.setListeners();
-        this.initializeMenu();
         this.addObservers();
         return view;
     }
@@ -134,6 +140,7 @@ public class ReviewDetailsFragment extends Fragment {
             ReviewModel.getInstance().deleteReview(review, this.getSuccessListener(view), this.getErrorListener(view));
         }
     }
+
     private void initializeMenu() {
         FragmentActivity parentActivity = getActivity();
         parentActivity.addMenuProvider(new MenuProvider() {
