@@ -32,21 +32,6 @@ public class ReviewModelFirebase extends StorageFirebase {
                 .addOnCompleteListener(this.getOnCompleteListener(callback));
     }
 
-    public void getReviewById(String reviewId, Consumer<Review> callback) {
-        this.db.collection(COLLECTION_NAME).document(reviewId)
-                .get()
-                .addOnCompleteListener((Task<DocumentSnapshot> task) -> {
-                    Review review = null;
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot json = task.getResult();
-                        if (json.exists()) {
-                            review = Review.create(Objects.requireNonNull(json.getData()), json.getId());
-                        }
-                    }
-                    callback.accept(review);
-                });
-    }
-
     public void getReviewsByUserId(String userId, Consumer<List<Review>> callback) {
         this.db.collection(COLLECTION_NAME)
                 .whereEqualTo("userId", userId)

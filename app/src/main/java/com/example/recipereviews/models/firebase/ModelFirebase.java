@@ -49,10 +49,6 @@ public class ModelFirebase {
         this.userFirebase.getUser(userId, callback);
     }
 
-    public void getReviewById(String reviewId, Consumer<Review> callback) {
-        this.reviewFirebase.getReviewById(reviewId, callback);
-    }
-
     public void uploadReviewImage(Bitmap imageBitmap, String name, Consumer<String> imageUploadCallback) {
         this.reviewFirebase.uploadImage(imageBitmap, name, imageUploadCallback);
     }

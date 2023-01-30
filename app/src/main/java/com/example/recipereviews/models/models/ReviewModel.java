@@ -24,11 +24,9 @@ public class ReviewModel {
     private final RecipeReviewsLocalDbRepository localDb = RecipeReviewsLocalDb.getLocalDb();
     private final MutableLiveData<LoadingState> reviewListLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
     private final MutableLiveData<LoadingState> profileReviewListLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
-    private final MutableLiveData<LoadingState> reviewLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
     private final ModelFirebase firebaseModel = new ModelFirebase();
     private MutableLiveData<List<ReviewWithUser>> reviewList = new MutableLiveData<>();
     private MutableLiveData<List<ReviewWithRecipe>> profileReviewList = new MutableLiveData<>();
-    private MutableLiveData<ReviewWithUser> reviewWithUser = new MutableLiveData<>();
 
     private ReviewModel() {
     }
@@ -68,15 +66,6 @@ public class ReviewModel {
         })));
     }
 
-    public LiveData<ReviewWithUser> getReviewWithRelationsById(String id) {
-        if (this.reviewWithUser.getValue() == null) {
-            this.fetchReviewWithRelationsById(id);
-        }
-
-        return this.reviewWithUser;
-    }
-
-
     public LiveData<List<ReviewWithRecipe>> getReviewByUserId(String userId) {
         if (this.profileReviewList.getValue() == null) {
             this.refreshReviewByUserId(userId);
@@ -89,22 +78,15 @@ public class ReviewModel {
         this.profileReviewListLoadingState.setValue(LoadingState.LOADING);
 
         UserModel.getInstance().refreshLoggedInUser(userId, () -> this.firebaseModel.getReviewsByUserId(userId, list -> executor.execute(() -> {
-            list.forEach(review -> localDb.reviewDao().insertAll(review));
+            list.forEach(review -> {
+                localDb.reviewDao().insertAll(review);
+                if(review.isDeleted()) {
+                    localDb.reviewDao().delete(review);
+                }
+            });
             this.profileReviewList.postValue(this.localDb.reviewDao().getByUserId(userId));
             this.profileReviewListLoadingState.postValue(LoadingState.NOT_LOADING);
         })));
-    }
-
-    public void fetchReviewWithRelationsById(String reviewId) {
-        this.reviewLoadingState.setValue(LoadingState.LOADING);
-
-        this.firebaseModel.getReviewById(reviewId, review -> executor.execute(() -> {
-            if (review != null) {
-                this.localDb.reviewDao().insertAll(review);
-            }
-            this.reviewWithUser.postValue(this.localDb.reviewDao().getWithRelationsById(reviewId));
-            this.reviewLoadingState.postValue(LoadingState.NOT_LOADING);
-        }));
     }
 
     public void uploadReviewImage(Bitmap imageBitmap, String name, Consumer<String> imageUploadCallback) {
