@@ -6,6 +6,9 @@ import static com.example.recipereviews.fragments.user.ReviewDetailsFragmentDire
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -13,7 +16,10 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.recipereviews.R;
@@ -126,6 +132,24 @@ public class ReviewDetailsFragment extends Fragment {
         if (review != null) {
             ReviewModel.getInstance().deleteReview(review, this.getSuccessListener(view), this.getErrorListener(view));
         }
+    }
+    private void initializeMenu() {
+        FragmentActivity parentActivity = getActivity();
+        parentActivity.addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.empty_menu, menu);
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                if (menuItem.getItemId() == android.R.id.home) {
+                    sharedViewModel.setReviewData(null);
+                }
+
+                return false;
+            }
+        }, this, Lifecycle.State.RESUMED);
     }
 
     private Consumer<Review> getSuccessListener(View view) {

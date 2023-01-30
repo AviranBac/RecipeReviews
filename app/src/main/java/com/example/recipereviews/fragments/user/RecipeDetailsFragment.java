@@ -7,12 +7,18 @@ import static com.example.recipereviews.utils.BulletListUtil.buildBulletList;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -61,7 +67,7 @@ public class RecipeDetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        this.initializeMenu();
         if (getArguments() != null) {
             this.recipeId = getArguments().getInt(RECIPE_ID_PARAM);
         }
@@ -157,6 +163,27 @@ public class RecipeDetailsFragment extends Fragment {
         }
     }
 
+    private void initializeMenu() {
+        FragmentActivity parentActivity = getActivity();
+        parentActivity.addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.empty_menu, menu);
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                if (menuItem.getItemId() == android.R.id.home) {
+                    sharedViewModel.setReviewData(null);
+                    sharedViewModel.setRecipeData(null);
+                    sharedViewModel.setUserData(null);
+                }
+
+                return false;
+            }
+        }, this, Lifecycle.State.RESUMED);
+    }
+
 
     private void loadData(Recipe recipe) {
         if (recipe != null) {
@@ -170,7 +197,12 @@ public class RecipeDetailsFragment extends Fragment {
     }
 
     private void updateCurrentUserReview(List<ReviewWithUser> reviews) {
-        reviews.stream().filter(reviewWithUser -> !reviewWithUser.getReview().isDeleted() && reviewWithUser.getUser().getId().equals(UserModel.getInstance().getCurrentUserId())).findAny().ifPresent(review -> this.sharedViewModel.setReviewData(review.getReview()));
+        reviews.stream()
+                .filter(reviewWithUser -> !reviewWithUser.getReview().isDeleted() &&
+                        reviewWithUser.getUser().getId().equals(UserModel.getInstance().getCurrentUserId()) &&
+                        this.recipeId == reviewWithUser.getReview().getRecipeId())
+                .findAny()
+                .ifPresent(review -> this.sharedViewModel.setReviewData(review.getReview()));
     }
 
     private void setEditButtonListener(Review review) {
