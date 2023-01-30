@@ -56,6 +56,7 @@ public class MainPageFragment extends Fragment {
         this.initializeMembers();
         this.setListeners(view);
         this.addObservers();
+        this.reloadData();
 
         return view;
     }

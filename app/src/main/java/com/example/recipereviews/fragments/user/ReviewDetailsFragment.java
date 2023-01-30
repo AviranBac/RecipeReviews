@@ -1,7 +1,7 @@
 package com.example.recipereviews.fragments.user;
 
-import static com.example.recipereviews.fragments.user.ReviewDetailsFragmentDirections.actionReviewDetailsFragmentToRecipeDetailsFragment;
-import static com.example.recipereviews.fragments.user.ReviewDetailsFragmentDirections.actionReviewDetailsFragmentToSaveReviewFragment;
+
+import static com.example.recipereviews.fragments.user.ReviewDetailsFragmentDirections.actionGlobalSaveReviewFragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 
 import com.example.recipereviews.R;
 import com.example.recipereviews.databinding.FragmentReviewDetailsBinding;
@@ -76,11 +77,6 @@ public class ReviewDetailsFragment extends Fragment {
         this.sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
     private void initializeMembers() {
         this.recipeNameTextView = this.binding.recipeName;
         this.reviewImage = this.binding.reviewImage;
@@ -94,7 +90,7 @@ public class ReviewDetailsFragment extends Fragment {
     }
 
     private void setListeners() {
-        this.editButton.setOnClickListener(view -> NavigationUtils.navigate(view, actionReviewDetailsFragmentToSaveReviewFragment(true)));
+        this.editButton.setOnClickListener(view -> NavigationUtils.navigate(view, actionGlobalSaveReviewFragment(true)));
         this.deleteButton.setOnClickListener(this::deleteReview);
     }
 
@@ -132,12 +128,14 @@ public class ReviewDetailsFragment extends Fragment {
     }
 
     private void deleteReview(View view) {
+        String deleteButtonText = this.deleteButton.getText().toString();
         this.deleteButton.setEnabled(false);
+        this.deleteButton.setText("");
         this.editButton.setEnabled(false);
         this.progressIndicator.show();
         Review review = this.sharedViewModel.getReviewData().getValue();
         if (review != null) {
-            ReviewModel.getInstance().deleteReview(review, this.getSuccessListener(view), this.getErrorListener(view));
+            ReviewModel.getInstance().deleteReview(review, this.getSuccessListener(), this.getErrorListener(view, deleteButtonText));
         }
     }
 
@@ -160,19 +158,20 @@ public class ReviewDetailsFragment extends Fragment {
         }, this, Lifecycle.State.RESUMED);
     }
 
-    private Consumer<Review> getSuccessListener(View view) {
+    private Consumer<Review> getSuccessListener() {
         return (review) -> {
             this.progressIndicator.hide();
             this.sharedViewModel.setReviewData(null);
-            NavigationUtils.navigate(view, actionReviewDetailsFragmentToRecipeDetailsFragment(review.getRecipeId()));
+            NavigationUtils.navigate(requireActivity(), NavController::navigateUp);
         };
     }
 
-    private Consumer<String> getErrorListener(View view) {
+    private Consumer<String> getErrorListener(View view, String deleteButtonText) {
         return errorMessage -> {
             Snackbar.make(view, errorMessage, Snackbar.LENGTH_SHORT).show();
-            this.deleteButton.setEnabled(true);
             this.progressIndicator.hide();
+            this.deleteButton.setEnabled(true);
+            this.deleteButton.setText(deleteButtonText);
         };
     }
 

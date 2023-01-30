@@ -1,7 +1,5 @@
 package com.example.recipereviews.fragments.user;
 
-import static com.example.recipereviews.fragments.user.SaveReviewFragmentDirections.actionSaveReviewFragmentToReviewDetailsFragment;
-
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -15,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 
 import com.example.recipereviews.R;
 import com.example.recipereviews.databinding.FragmentSaveReviewBinding;
@@ -50,7 +49,6 @@ public class SaveReviewFragment extends CameraUtilsFragment {
     private Button saveButton;
     private CircularProgressIndicator progressIndicator;
 
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,6 +57,7 @@ public class SaveReviewFragment extends CameraUtilsFragment {
         this.initializeMembers();
         this.addObservers();
         this.setListener();
+
         return view;
     }
 
@@ -70,11 +69,6 @@ public class SaveReviewFragment extends CameraUtilsFragment {
             this.isEdit = getArguments().getBoolean(IS_EDIT_PARAM);
             this.sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     private void initializeMembers() {
@@ -120,7 +114,9 @@ public class SaveReviewFragment extends CameraUtilsFragment {
     }
 
     private void saveReview(View view) {
+        String saveButtonText = this.saveButton.getText().toString();
         this.saveButton.setEnabled(false);
+        this.saveButton.setText("");
         this.progressIndicator.show();
 
         String userId = UserModel.getInstance().getCurrentUserId();
@@ -134,28 +130,27 @@ public class SaveReviewFragment extends CameraUtilsFragment {
 
         Drawable reviewImage = super.imageView.getDrawable();
         if (reviewImage == null) {
-            this.saveReviewHandler(review, view);
+            this.saveReviewHandler(review, view, saveButtonText);
         } else {
             super.imageView.setDrawingCacheEnabled(true);
             super.imageView.buildDrawingCache();
             ReviewModel.getInstance().uploadReviewImage(((BitmapDrawable) reviewImage).getBitmap(), review.getRecipeId() + userId, (String url) -> {
                 review.setImageUrl(url);
-                this.saveReviewHandler(review, view);
+                this.saveReviewHandler(review, view, saveButtonText);
             });
         }
     }
 
-    private void saveReviewHandler(Review review, View view) {
+    private void saveReviewHandler(Review review, View view, String saveButtonText) {
         if (this.isEdit) {
             review.setId(Objects.requireNonNull(this.sharedViewModel.getReviewData().getValue()).getId());
-            ReviewModel.getInstance().editReview(review, this.getSuccessListener(view), this.getErrorListener(view));
+            ReviewModel.getInstance().editReview(review, this.getSuccessListener(), this.getErrorListener(view, saveButtonText));
         } else {
-            ReviewModel.getInstance().addReview(review, this.getSuccessListener(view), this.getErrorListener(view));
+            ReviewModel.getInstance().addReview(review, this.getSuccessListener(), this.getErrorListener(view, saveButtonText));
         }
     }
 
-
-    private Consumer<Review> getSuccessListener(View view) {
+    private Consumer<Review> getSuccessListener() {
         return (review) -> {
             progressIndicator.hide();
             this.imageView.setImageResource(R.drawable.blank_review_image);
@@ -165,15 +160,16 @@ public class SaveReviewFragment extends CameraUtilsFragment {
                 this.sharedViewModel.setReviewData(review);
                 this.sharedViewModel.setUserData(UserModel.getInstance().getUserById(UserModel.getInstance().getCurrentUserId()).getValue());
             }
-            NavigationUtils.navigate(view, actionSaveReviewFragmentToReviewDetailsFragment());
+            NavigationUtils.navigate(requireActivity(), NavController::navigateUp);
         };
     }
 
-    private Consumer<String> getErrorListener(View view) {
+    private Consumer<String> getErrorListener(View view, String saveButtonText) {
         return errorMessage -> {
             Snackbar.make(view, errorMessage, Snackbar.LENGTH_SHORT).show();
-            this.saveButton.setEnabled(true);
             progressIndicator.hide();
+            this.saveButton.setEnabled(true);
+            this.saveButton.setText(saveButtonText);
         };
     }
 

@@ -1,6 +1,6 @@
 package com.example.recipereviews.fragments.user;
 
-import static com.example.recipereviews.fragments.user.ProfileFragmentDirections.actionProfileFragmentToReviewDetailsFragment;
+import static com.example.recipereviews.fragments.user.ProfileFragmentDirections.actionGlobalReviewDetailsFragment;
 
 import android.content.Context;
 import android.graphics.Paint;
@@ -124,7 +124,7 @@ public class ProfileFragment extends Fragment {
             this.sharedViewModel.setReviewData(Objects.requireNonNull(this.viewModel.getReviewListDataByUserId().getValue()).get(pos).getReview());
             this.sharedViewModel.setRecipeData(Objects.requireNonNull(this.viewModel.getReviewListDataByUserId().getValue()).get(pos).getRecipe());
             this.sharedViewModel.setUserData(Objects.requireNonNull(this.viewModel.getProfileUser().getValue()));
-            NavigationUtils.navigate(view, actionProfileFragmentToReviewDetailsFragment());
+            NavigationUtils.navigate(view, actionGlobalReviewDetailsFragment());
         });
     }
 

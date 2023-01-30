@@ -34,7 +34,6 @@ public class RecipeModel {
     private final Retrofit retrofit;
     private final RecipeApi recipeApi;
     private MutableLiveData<Recipe> recipe = new MutableLiveData<>();
-    private LiveData<List<Recipe>> recipeList;
 
     private RecipeModel() {
         Gson gson = new GsonBuilder()
@@ -57,15 +56,6 @@ public class RecipeModel {
 
     public MutableLiveData<LoadingState> getRecipeListLoadingState() {
         return this.recipeListLoadingState;
-    }
-
-    public LiveData<List<Recipe>> getAllRecipes() {
-        if (this.recipeList == null) {
-            this.recipeList = this.localDb.recipeDao().getAll();
-            refreshAllRecipes();
-        }
-
-        return this.recipeList;
     }
 
     public LiveData<Recipe> getRecipeById(int id) {

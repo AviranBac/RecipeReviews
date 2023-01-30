@@ -1,7 +1,7 @@
 package com.example.recipereviews.fragments.user;
 
-import static com.example.recipereviews.fragments.user.RecipeDetailsFragmentDirections.actionRecipeDetailsFragmentToReviewDetailsFragment;
-import static com.example.recipereviews.fragments.user.RecipeDetailsFragmentDirections.actionRecipeDetailsFragmentToSaveReviewFragment;
+import static com.example.recipereviews.fragments.user.RecipeDetailsFragmentDirections.actionGlobalReviewDetailsFragment;
+import static com.example.recipereviews.fragments.user.RecipeDetailsFragmentDirections.actionGlobalSaveReviewFragment;
 import static com.example.recipereviews.utils.BulletListUtil.buildBulletList;
 
 import android.content.Context;
@@ -122,14 +122,13 @@ public class RecipeDetailsFragment extends Fragment {
     }
 
     private void setListener(View view) {
-        this.addReviewButton.setOnClickListener(view1 -> NavigationUtils.navigate(view, actionRecipeDetailsFragmentToSaveReviewFragment(false)));
+        this.addReviewButton.setOnClickListener(view1 -> NavigationUtils.navigate(view, actionGlobalSaveReviewFragment(false)));
         this.adapter.setOnItemClickListener(pos -> {
             ReviewWithUser reviewWithUser = Objects.requireNonNull(this.reviewListViewModel.getReviewListDataByRecipeId().getValue()).get(pos);
             this.sharedViewModel.setReviewData(reviewWithUser.getReview());
             this.sharedViewModel.setUserData(reviewWithUser.getUser());
-            NavigationUtils.navigate(view, actionRecipeDetailsFragmentToReviewDetailsFragment());
+            NavigationUtils.navigate(view, actionGlobalReviewDetailsFragment());
         });
-
     }
 
     private void addObservers() {
@@ -206,12 +205,9 @@ public class RecipeDetailsFragment extends Fragment {
     }
 
     private void setEditButtonListener(Review review) {
-        if (review != null) {
-            this.addReviewButton.setOnClickListener(view -> NavigationUtils.navigate(view, actionRecipeDetailsFragmentToSaveReviewFragment(true)));
-            this.addReviewButton.setImageResource(R.drawable.baseline_edit_24);
-        } else {
-            this.addReviewButton.setOnClickListener(view -> NavigationUtils.navigate(view, actionRecipeDetailsFragmentToSaveReviewFragment(false)));
-            this.addReviewButton.setImageResource(R.drawable.baseline_add_24);
-        }
+        boolean isEdit = review != null;
+        int reviewButtonImageResource = review != null ? R.drawable.baseline_edit_24 : R.drawable.baseline_add_24;
+        this.addReviewButton.setOnClickListener(view -> NavigationUtils.navigate(view, actionGlobalSaveReviewFragment(isEdit)));
+        this.addReviewButton.setImageResource(reviewButtonImageResource);
     }
 }
