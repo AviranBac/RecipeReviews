@@ -142,23 +142,22 @@ public class RecipeDetailsFragment extends Fragment {
 
         RecipeModel.getInstance().getRecipeDetailsLoadingState().observe(
                 getViewLifecycleOwner(),
-                loadingState -> this.handleProgressIndicator(loadingState, this.binding.recipeDetailsLinearLayout, this.recipeProgressIndicator)
+                loadingState -> this.handleProgressIndicator(loadingState, this.recipeProgressIndicator)
         );
         ReviewModel.getInstance().getReviewListLoadingState().observe(
                 getViewLifecycleOwner(),
-                loadingState -> this.handleProgressIndicator(loadingState, this.binding.recipeDetailsLinearLayout, this.reviewsProgressIndicator)
+                loadingState -> this.handleProgressIndicator(loadingState, this.reviewsProgressIndicator)
         );
     }
 
     private void handleProgressIndicator(LoadingState loadingState,
-                                         View affectedView,
                                          CircularProgressIndicator circularProgressIndicator) {
         if (loadingState == LoadingState.LOADING) {
-            affectedView.setVisibility(View.GONE);
+            this.binding.recipeDetailsLinearLayout.setVisibility(View.GONE);
             circularProgressIndicator.show();
         } else {
-            affectedView.setVisibility(View.VISIBLE);
             circularProgressIndicator.hide();
+            this.binding.recipeDetailsLinearLayout.setVisibility(View.VISIBLE);
         }
     }
 
