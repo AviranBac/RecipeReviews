@@ -55,7 +55,8 @@ public class RegisterFragment extends CameraUtilsFragment {
     }
 
     private void initializeMembers() {
-        super.avatarImg = binding.imageIcon;
+        super.imageView = binding.imageIcon;
+        super.defaultPicture = R.drawable.blank_profile_picture;
         firstNameTextInput = binding.firstNameTextInput;
         firstNameEditText = binding.firstNameEt;
         lastNameTextInput = binding.lastNameTextInput;
@@ -106,7 +107,7 @@ public class RegisterFragment extends CameraUtilsFragment {
                              lastNameEditText.getText().toString(),
                              emailEditText.getText().toString());
 
-        Drawable profileImage = super.avatarImg.getDrawable();
+        Drawable profileImage = super.imageView.getDrawable();
         if (profileImage == null) {
             UserModel.getInstance().register(user, passwordEditText.getText().toString(), this::startUserActivity);
         } else {

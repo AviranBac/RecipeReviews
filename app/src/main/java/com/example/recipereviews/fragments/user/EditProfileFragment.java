@@ -70,7 +70,8 @@ public class EditProfileFragment extends CameraUtilsFragment {
     }
 
     private void initializeMembers() {
-        super.avatarImg = binding.imageIcon;
+        super.imageView = binding.imageIcon;
+        super.defaultPicture = R.drawable.blank_profile_picture;
         this.emailTextView = this.binding.emailTv;
         this.firstNameTextInput = this.binding.firstNameTextInput;
         this.lastNameTextInput = this.binding.lastNameTextInput;
@@ -173,7 +174,7 @@ public class EditProfileFragment extends CameraUtilsFragment {
         User updatedUser = this.currentUser;
         updatedUser.setFirstName(firstNameEditText.getText().toString());
         updatedUser.setLastName(lastNameEditText.getText().toString());
-        Drawable profileImage = super.avatarImg.getDrawable();
+        Drawable profileImage = super.imageView.getDrawable();
 
         if (profileImage == null) {
             UserModel.getInstance().updateUser(
@@ -184,8 +185,8 @@ public class EditProfileFragment extends CameraUtilsFragment {
                     errorMessage -> this.handleUpdateError(view, errorMessage, saveButtonText)
             );
         } else {
-            this.avatarImg.setDrawingCacheEnabled(true);
-            this.avatarImg.buildDrawingCache();
+            this.imageView.setDrawingCacheEnabled(true);
+            this.imageView.buildDrawingCache();
             UserModel.getInstance().uploadUserImage(((BitmapDrawable) profileImage).getBitmap(), updatedUser.getEmail(), (String url) -> {
                 updatedUser.setImageUrl(url);
                 UserModel.getInstance().updateUser(
@@ -209,7 +210,7 @@ public class EditProfileFragment extends CameraUtilsFragment {
     }
 
     private void setFormData() {
-        ImageUtil.loadImage(this.avatarImg, this.currentUser.getImageUrl(), R.drawable.blank_profile_picture);
+        ImageUtil.loadImage(this.imageView, this.currentUser.getImageUrl(), R.drawable.blank_profile_picture);
         this.emailTextView.setText(this.currentUser.getEmail());
         this.emailTextView.setPaintFlags(this.emailTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         this.firstNameEditText.setText(this.currentUser.getFirstName());

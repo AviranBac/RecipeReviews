@@ -46,7 +46,7 @@
                 app:layout_constraintStart_toStartOf="@id/recipe_name"
                 app:layout_constraintTop_toBottomOf="@id/recipe_name"
                 app:shapeAppearanceOverlay="@style/roundCornerImageViewStyle10"
-                tools:src="@drawable/review_background" />
+                tools:src="@drawable/blank_review_image" />
 
             <RelativeLayout
                 android:id="@+id/rating_layout"
@@ -103,6 +103,7 @@
                 android:id="@+id/review_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:minHeight="200dp"
                 android:layout_marginTop="10dp"
                 android:text=""
                 android:textStyle="bold|italic"

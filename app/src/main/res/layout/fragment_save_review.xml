@@ -42,7 +42,7 @@
                 android:layout_height="200dp"
                 android:layout_marginTop="5dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/review_background"
+                android:src="@drawable/blank_review_image"
                 app:layout_constraintStart_toStartOf="@id/recipe_name"
                 app:layout_constraintTop_toBottomOf="@id/recipe_name"
                 app:shapeAppearanceOverlay="@style/roundCornerImageViewStyle10" />
@@ -73,7 +73,7 @@
                         android:id="@+id/rating"
                         style="?android:attr/ratingBarStyleSmall"
                         android:layout_width="wrap_content"
-                        android:layout_height="20dp"
+                        android:layout_height="50dp"
                         android:isIndicator="false"
                         android:numStars="5"
                         android:stepSize="0.5"
@@ -102,7 +102,7 @@
                     android:gravity="top|start"
                     android:hint="@string/description"
                     android:inputType="textMultiLine"
-                    android:minHeight="300dp"
+                    android:minHeight="100dp"
                     android:textStyle="bold|italic" />
             </com.google.android.material.textfield.TextInputLayout>
 

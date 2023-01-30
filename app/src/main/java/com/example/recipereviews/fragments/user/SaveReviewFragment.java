@@ -78,7 +78,8 @@ public class SaveReviewFragment extends CameraUtilsFragment {
     }
 
     private void initializeMembers() {
-        super.avatarImg = this.binding.reviewImage;
+        super.imageView = this.binding.reviewImage;
+        super.defaultPicture = R.drawable.blank_review_image;
         this.recipeNameTextView = this.binding.recipeName;
         this.ratingBar = this.binding.rating;
         this.reviewDescriptionTextInput = this.binding.reviewDescriptionTextInput;
@@ -89,7 +90,7 @@ public class SaveReviewFragment extends CameraUtilsFragment {
 
     private void setListener() {
         ValidatorListenerUtils.setOnKeyListener(reviewDescriptionEditText, this::validateDescription);
-        super.avatarImg.setOnClickListener(super::showCameraMenu);
+        super.imageView.setOnClickListener(super::showCameraMenu);
         this.saveButton.setOnClickListener(view -> {
             if (this.validateDescription()) {
                 this.saveReview(view);
@@ -112,7 +113,7 @@ public class SaveReviewFragment extends CameraUtilsFragment {
 
     private void loadReview(Review review) {
         if (review != null) {
-            ImageUtil.loadImage(super.avatarImg, review.getImageUrl(), R.drawable.review_background);
+            ImageUtil.loadImage(super.imageView, review.getImageUrl(), R.drawable.blank_review_image);
             this.reviewDescriptionEditText.setText(review.getDescription());
             this.ratingBar.setRating((float) review.getRating());
         }
@@ -131,12 +132,12 @@ public class SaveReviewFragment extends CameraUtilsFragment {
                 Objects.requireNonNull(this.reviewDescriptionEditText.getText()).toString()
         );
 
-        Drawable reviewImage = super.avatarImg.getDrawable();
+        Drawable reviewImage = super.imageView.getDrawable();
         if (reviewImage == null) {
             this.saveReviewHandler(review, view);
         } else {
-            super.avatarImg.setDrawingCacheEnabled(true);
-            super.avatarImg.buildDrawingCache();
+            super.imageView.setDrawingCacheEnabled(true);
+            super.imageView.buildDrawingCache();
             ReviewModel.getInstance().uploadReviewImage(((BitmapDrawable) reviewImage).getBitmap(), review.getRecipeId() + userId, (String url) -> {
                 review.setImageUrl(url);
                 this.saveReviewHandler(review, view);
@@ -157,7 +158,7 @@ public class SaveReviewFragment extends CameraUtilsFragment {
     private Consumer<Review> getSuccessListener(View view) {
         return (review) -> {
             progressIndicator.hide();
-            this.avatarImg.setImageResource(R.drawable.review_background);
+            this.imageView.setImageResource(R.drawable.blank_review_image);
             this.reviewDescriptionEditText.setText(null);
             this.ratingBar.setRating(0);
             if (review != null) {
