@@ -25,6 +25,11 @@
     <string name="my_reviews">My Reviews</string>
     <string name="logout">Logout</string>
     <string name="recipe_reviews">Recipe Reviews</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="review_name_placeholder">Review - %1$s</string>
+    <string name="description">Description</string>
+    <string name="rate">Rate</string>
     <string name="save">Save</string>
     <string name="old_password">Old Password (if you update password)</string>
     <string name="new_password">New Password (if you update password)</string>

@@ -1,6 +1,6 @@
 package com.example.recipereviews.fragments.user;
 
-import static com.example.recipereviews.fragments.user.ProfileFragmentDirections.actionProfileFragmentToReviewDetailsFragment;
+import static com.example.recipereviews.fragments.user.ProfileFragmentDirections.actionGlobalReviewDetailsFragment;
 
 import android.content.Context;
 import android.graphics.Paint;
@@ -33,6 +33,7 @@ import com.example.recipereviews.models.models.UserModel;
 import com.example.recipereviews.utils.ImageUtil;
 import com.example.recipereviews.utils.NavigationUtils;
 import com.example.recipereviews.viewModels.ProfileFragmentViewModel;
+import com.example.recipereviews.viewModels.SharedViewModel;
 import com.example.recipereviews.viewModels.factory.ProfileFragmentViewModelFactory;
 import com.google.android.material.imageview.ShapeableImageView;
 
@@ -48,6 +49,7 @@ public class ProfileFragment extends Fragment {
     private SwipeRefreshLayout swipeRefresh;
     private TextView fullNameTv;
     private TextView emailTv;
+    private SharedViewModel sharedViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,6 +75,7 @@ public class ProfileFragment extends Fragment {
         super.onAttach(context);
         this.userId = ProfileFragmentArgs.fromBundle(getArguments()).getUserId();
         this.viewModel = new ViewModelProvider(this, new ProfileFragmentViewModelFactory(this.userId)).get(ProfileFragmentViewModel.class);
+        this.sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
     }
 
     @Override
@@ -105,7 +108,6 @@ public class ProfileFragment extends Fragment {
         this.swipeRefresh = this.binding.swipeRefresh;
         this.fullNameTv = this.binding.fullNameTv;
         this.emailTv = this.binding.emailTv;
-
         this.binding.recyclerView.setHasFixedSize(true);
         this.binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         this.adapter = new ProfileReviewRecyclerAdapter(getLayoutInflater(), this.viewModel.getReviewListDataByUserId().getValue());
@@ -119,8 +121,10 @@ public class ProfileFragment extends Fragment {
 
     private void setOnReviewClickListener(View view) {
         this.adapter.setOnItemClickListener(pos -> {
-            String reviewId = Objects.requireNonNull(this.viewModel.getReviewListDataByUserId().getValue()).get(pos).getReview().getId();
-            NavigationUtils.navigate(view, actionProfileFragmentToReviewDetailsFragment(reviewId));
+            this.sharedViewModel.setReviewData(Objects.requireNonNull(this.viewModel.getReviewListDataByUserId().getValue()).get(pos).getReview());
+            this.sharedViewModel.setRecipeData(Objects.requireNonNull(this.viewModel.getReviewListDataByUserId().getValue()).get(pos).getRecipe());
+            this.sharedViewModel.setUserData(Objects.requireNonNull(this.viewModel.getProfileUser().getValue()));
+            NavigationUtils.navigate(view, actionGlobalReviewDetailsFragment());
         });
     }
 

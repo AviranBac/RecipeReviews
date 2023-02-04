@@ -17,6 +17,7 @@ import com.example.recipereviews.databinding.FragmentRegisterBinding;
 import com.example.recipereviews.fragments.common.CameraUtilsFragment;
 import com.example.recipereviews.models.entities.User;
 import com.example.recipereviews.models.models.UserModel;
+import com.example.recipereviews.utils.ValidatorListenerUtils;
 import com.example.recipereviews.validators.InputValidator;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
@@ -54,7 +55,8 @@ public class RegisterFragment extends CameraUtilsFragment {
     }
 
     private void initializeMembers() {
-        super.avatarImg = binding.imageIcon;
+        super.imageView = binding.imageIcon;
+        super.defaultPicture = R.drawable.blank_profile_picture;
         firstNameTextInput = binding.firstNameTextInput;
         firstNameEditText = binding.firstNameEt;
         lastNameTextInput = binding.lastNameTextInput;
@@ -69,10 +71,10 @@ public class RegisterFragment extends CameraUtilsFragment {
 
     private void setListeners(View view) {
         setProfileImageViewOnClickListener();
-        this.setOnKeyListener(firstNameEditText, this::validateFirstName);
-        this.setOnKeyListener(lastNameEditText, this::validateLastName);
-        this.setOnKeyListener(emailEditText, this::validateEmail);
-        this.setOnKeyListener(passwordEditText, this::validatePassword);
+        ValidatorListenerUtils.setOnKeyListener(firstNameEditText, this::validateFirstName);
+        ValidatorListenerUtils.setOnKeyListener(lastNameEditText, this::validateLastName);
+        ValidatorListenerUtils.setOnKeyListener(emailEditText, this::validateEmail);
+        ValidatorListenerUtils.setOnKeyListener(passwordEditText, this::validatePassword);
         setRegisterButtonOnClickListener(view);
     }
 
@@ -105,7 +107,7 @@ public class RegisterFragment extends CameraUtilsFragment {
                              lastNameEditText.getText().toString(),
                              emailEditText.getText().toString());
 
-        Drawable profileImage = super.avatarImg.getDrawable();
+        Drawable profileImage = super.imageView.getDrawable();
         if (profileImage == null) {
             UserModel.getInstance().register(user, passwordEditText.getText().toString(), this::startUserActivity);
         } else {
@@ -127,13 +129,6 @@ public class RegisterFragment extends CameraUtilsFragment {
 
     private void setProfileImageViewOnClickListener() {
         binding.imageIcon.setOnClickListener(super::showCameraMenu);
-    }
-
-    private void setOnKeyListener(TextInputEditText editText, Runnable validator) {
-        editText.setOnKeyListener((view, i, keyEvent) -> {
-            validator.run();
-            return false;
-        });
     }
 
     private boolean validateFirstName() {

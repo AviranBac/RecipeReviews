@@ -2,6 +2,7 @@ package com.example.recipereviews.models.entities;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.example.recipereviews.utils.FirebaseUtil;
@@ -23,8 +24,9 @@ public class Review {
     private String imageUrl;
     private String description;
     private Long lastUpdateTime;
+    private boolean isDeleted;
 
-    public Review(@NonNull String id, int recipeId, String userId, double rating, String imageUrl, String description, Long lastUpdateTime) {
+    public Review(@NonNull String id, int recipeId, String userId, double rating, String imageUrl, String description, Long lastUpdateTime, boolean isDeleted) {
         this.id = id;
         this.recipeId = recipeId;
         this.userId = userId;
@@ -32,6 +34,16 @@ public class Review {
         this.imageUrl = imageUrl;
         this.description = description;
         this.lastUpdateTime = lastUpdateTime;
+        this.isDeleted = isDeleted;
+    }
+
+    @Ignore
+    public Review(int recipeId, String userId, double rating, String description) {
+        this.recipeId = recipeId;
+        this.userId = userId;
+        this.rating = rating;
+        this.description = description;
+        this.isDeleted = false;
     }
 
     @NonNull
@@ -49,6 +61,14 @@ public class Review {
 
     public void setRecipeId(int recipeId) {
         this.recipeId = recipeId;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     public String getUserId() {
@@ -71,6 +91,10 @@ public class Review {
         return this.lastUpdateTime;
     }
 
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
     public Map<String, Object> toMap() {
         return new HashMap<String, Object>() {{
             put("recipeId", recipeId);
@@ -79,6 +103,7 @@ public class Review {
             put("imageUrl", imageUrl);
             put("description", description);
             put("lastUpdateTime", FieldValue.serverTimestamp());
+            put("isDeleted", isDeleted);
         }};
     }
 
@@ -93,7 +118,8 @@ public class Review {
                 FirebaseUtil.parseDouble(Objects.requireNonNull(review.get("rating"))),
                 imageUrl,
                 Objects.requireNonNull(review.get("description")).toString(),
-                lastUpdateTime
+                lastUpdateTime,
+                (boolean) Objects.requireNonNull(review.get("isDeleted"))
         );
     }
 }

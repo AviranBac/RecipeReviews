@@ -18,9 +18,10 @@ import com.google.android.material.imageview.ShapeableImageView;
 
 public abstract class CameraUtilsFragment extends Fragment {
 
-    protected ShapeableImageView avatarImg;
+    protected ShapeableImageView imageView;
     private ActivityResultLauncher<Void> cameraLauncher;
     private ActivityResultLauncher<String> galleryLauncher;
+    protected int defaultPicture;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,12 +29,12 @@ public abstract class CameraUtilsFragment extends Fragment {
 
         this.cameraLauncher = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), (Bitmap result) -> {
             if (result != null) {
-                avatarImg.setImageBitmap(result);
+                imageView.setImageBitmap(result);
             }
         });
         this.galleryLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), (Uri result) -> {
             if (result != null) {
-                avatarImg.setImageURI(result);
+                imageView.setImageURI(result);
             }
         });
     }
@@ -56,7 +57,7 @@ public abstract class CameraUtilsFragment extends Fragment {
             this.galleryLauncher.launch("image/*");
             return true;
         } else if (menuItem.getItemId() == R.id.clear) {
-            this.avatarImg.setImageResource(R.drawable.blank_profile_picture);
+            this.imageView.setImageResource(this.defaultPicture);
         }
 
         return false;

@@ -30,7 +30,7 @@ public class ModelFirebase {
     }
 
     public void uploadUserImage(Bitmap imageBitmap, String name, Consumer<String> imageUploadCallback) {
-        this.userFirebase.uploadUserImage(imageBitmap, name, imageUploadCallback);
+        this.userFirebase.uploadImage(imageBitmap, name, imageUploadCallback);
     }
 
     public void getReviewsByRecipeId(int recipeId, Consumer<List<Review>> callback) {
@@ -47,6 +47,18 @@ public class ModelFirebase {
 
     public void getUser(String userId, Consumer<User> callback) {
         this.userFirebase.getUser(userId, callback);
+    }
+
+    public void uploadReviewImage(Bitmap imageBitmap, String name, Consumer<String> imageUploadCallback) {
+        this.reviewFirebase.uploadImage(imageBitmap, name, imageUploadCallback);
+    }
+
+    public void addReview(Review review, Consumer<String> onAddSuccessListener, Consumer<String> onAddFailureListener) {
+        this.reviewFirebase.addReview(review, onAddSuccessListener, onAddFailureListener);
+    }
+
+    public void editReview(Review review, Runnable onEditSuccessListener, Consumer<String> onEditFailureListener) {
+        this.reviewFirebase.editReview(review, onEditSuccessListener, onEditFailureListener);
     }
 
     public void updateUser(User user, Runnable successCallback, Consumer<String> failureCallback) {
