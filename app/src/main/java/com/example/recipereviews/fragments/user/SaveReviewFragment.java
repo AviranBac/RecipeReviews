@@ -129,7 +129,7 @@ public class SaveReviewFragment extends CameraUtilsFragment {
         );
 
         Drawable reviewImage = super.imageView.getDrawable();
-        if (reviewImage == null) {
+        if (reviewImage == null || reviewImage.getConstantState().equals(requireContext().getDrawable(R.drawable.blank_review_image).getConstantState())) {
             this.saveReviewHandler(review, view, saveButtonText);
         } else {
             super.imageView.setDrawingCacheEnabled(true);
