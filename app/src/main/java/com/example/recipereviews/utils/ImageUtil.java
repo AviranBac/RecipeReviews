@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.example.recipereviews.ApplicationContext;
@@ -18,6 +19,14 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 public class ImageUtil {
+
+    public static void loadImage(ImageView imageView, String imageName) {
+        if (!Strings.isEmptyOrWhitespace(imageName)) {
+            Picasso.get().load(Uri.parse(imageName)).into(imageView);
+        } else {
+            imageView.setVisibility(View.GONE);
+        }
+    }
 
     public static void loadImage(ImageView imageView, String imageName, Integer defaultImage) {
         if (!Strings.isEmptyOrWhitespace(imageName)) {

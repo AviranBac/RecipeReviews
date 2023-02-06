@@ -43,7 +43,7 @@ class ReviewViewHolder extends GenericViewHolder<ReviewWithUser> {
     public void bind(ReviewWithUser reviewWithUser) {
         if (reviewWithUser.getReview() != null) {
             this.reviewDescription.setText(reviewWithUser.getReview().getDescription());
-            ImageUtil.loadImage(this.reviewImage, reviewWithUser.getReview().getImageUrl(), R.drawable.recipe_background);
+            ImageUtil.loadImage(this.reviewImage, reviewWithUser.getReview().getImageUrl());
             this.ratingBar.setRating((float) reviewWithUser.getReview().getRating());
         }
 

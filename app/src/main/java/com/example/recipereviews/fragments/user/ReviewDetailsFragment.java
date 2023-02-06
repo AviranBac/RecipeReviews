@@ -109,7 +109,7 @@ public class ReviewDetailsFragment extends Fragment {
 
     private void loadReviewData(Review review) {
         if (review != null) {
-            ImageUtil.loadImage(this.reviewImage, review.getImageUrl(), R.drawable.blank_review_image);
+            ImageUtil.loadImage(this.reviewImage, review.getImageUrl());
             this.reviewDescriptionTextView.setText(review.getDescription());
             this.ratingBar.setRating((float) review.getRating());
             if (review.getUserId().equals(UserModel.getInstance().getCurrentUserId())) {
