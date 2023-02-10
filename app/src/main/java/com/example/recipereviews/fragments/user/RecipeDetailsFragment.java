@@ -20,14 +20,12 @@ import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.recipereviews.R;
 import com.example.recipereviews.databinding.FragmentRecipeDetailsBinding;
-import com.example.recipereviews.enums.LoadingState;
 import com.example.recipereviews.fragments.user.recycler_adapters.ReviewRecyclerAdapter;
 import com.example.recipereviews.models.entities.Recipe;
 import com.example.recipereviews.models.entities.Review;
@@ -36,6 +34,7 @@ import com.example.recipereviews.models.models.RecipeModel;
 import com.example.recipereviews.models.models.ReviewModel;
 import com.example.recipereviews.models.models.UserModel;
 import com.example.recipereviews.utils.ImageUtil;
+import com.example.recipereviews.utils.LiveDataUtils;
 import com.example.recipereviews.utils.NavigationUtils;
 import com.example.recipereviews.viewModels.RecipeDetailsFragmentViewModel;
 import com.example.recipereviews.viewModels.ReviewListViewModel;
@@ -161,20 +160,12 @@ public class RecipeDetailsFragment extends Fragment {
     }
 
     private void observeRefresh() {
-        MediatorLiveData<LoadingState> refreshMerger = new MediatorLiveData<>();
-        refreshMerger.addSource(RecipeModel.getInstance().getRecipeDetailsLoadingState(), value -> {
-            LoadingState loadingState = ReviewModel.getInstance().getReviewListLoadingState().getValue() == LoadingState.NOT_LOADING && value == LoadingState.NOT_LOADING ?
-                    LoadingState.NOT_LOADING :
-                    LoadingState.LOADING;
-            refreshMerger.setValue(loadingState);
-        });
-        refreshMerger.addSource(ReviewModel.getInstance().getReviewListLoadingState(), value -> {
-            LoadingState loadingState = RecipeModel.getInstance().getRecipeDetailsLoadingState().getValue() == LoadingState.NOT_LOADING && value == LoadingState.NOT_LOADING ?
-                    LoadingState.NOT_LOADING :
-                    LoadingState.LOADING;
-            refreshMerger.setValue(loadingState);
-        });
-        refreshMerger.observe(getViewLifecycleOwner(), (LoadingState status) -> this.swipeRefresh.setRefreshing(status == LoadingState.LOADING));
+        LiveDataUtils.observeRefreshMerger(
+                getViewLifecycleOwner(),
+                RecipeModel.getInstance().getRecipeDetailsLoadingState(),
+                ReviewModel.getInstance().getReviewListLoadingState(),
+                this.swipeRefresh
+        );
     }
 
     private void initializeMenu() {
