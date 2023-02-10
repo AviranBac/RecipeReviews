@@ -58,7 +58,7 @@ public class RecipeModel {
         return this.recipeListLoadingState;
     }
 
-    public LiveData<Recipe> getRecipeById(int id) {
+    public MutableLiveData<Recipe> getRecipeById(int id) {
         if (this.recipe.getValue() == null) {
             this.fetchRecipeById(id);
         }

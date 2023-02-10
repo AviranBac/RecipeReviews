@@ -87,10 +87,7 @@ public class MainPageFragment extends Fragment {
                 if (menuItem.getItemId() == R.id.profile) {
                     NavigationUtils.navigate(parentActivity, MainPageFragmentDirections.actionMainPageFragmentToProfileFragment());
                 } else if (menuItem.getItemId() == R.id.logout) {
-                    UserModel.getInstance().logout(() -> {
-                        UserModel.getInstance().getLoggedInUser().setValue(null);
-                        startGuestActivity();
-                    });
+                    UserModel.getInstance().logout(() -> startGuestActivity());
                 }
 
                 return false;

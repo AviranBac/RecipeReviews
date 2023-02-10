@@ -54,7 +54,10 @@ public class UserModel {
     }
 
     public void logout(Runnable callback) {
-        this.authFirebase.logout(callback);
+        this.authFirebase.logout(() -> {
+            this.loggedInUser.setValue(null);
+            callback.run();
+        });
     }
 
     public void login(String email, String password, Runnable onSuccessCallback, Consumer<String> onFailureCallback) {

@@ -43,7 +43,7 @@ public class ReviewModel {
         return this.profileReviewListLoadingState;
     }
 
-    public LiveData<List<ReviewWithUser>> getReviewByRecipeId(int recipeId) {
+    public MutableLiveData<List<ReviewWithUser>> getReviewByRecipeId(int recipeId) {
         if (this.reviewList.getValue() == null) {
             this.refreshReviewByRecipeId(recipeId);
         }
