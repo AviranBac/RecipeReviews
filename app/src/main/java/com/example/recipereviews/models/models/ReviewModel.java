@@ -53,17 +53,15 @@ public class ReviewModel {
 
     public void refreshReviewByRecipeId(int recipeId) {
         this.reviewListLoadingState.setValue(LoadingState.LOADING);
+        long reviewLastUpdateTime = Review.getLocalLastUpdateTime();
 
-        UserModel.getInstance().refreshUserList(() -> this.firebaseModel.getReviewsByRecipeId(recipeId, list -> executor.execute(() -> {
-            list.forEach(review -> {
-                localDb.reviewDao().insertAll(review);
-                if (review.isDeleted()) {
-                    localDb.reviewDao().delete(review);
-                }
-            });
-            this.reviewList.postValue(this.localDb.reviewDao().getByRecipeId(recipeId));
-            this.reviewListLoadingState.postValue(LoadingState.NOT_LOADING);
-        })));
+        UserModel.getInstance().refreshUserList(() ->
+                this.firebaseModel.getReviewsSince(reviewLastUpdateTime, list -> executor.execute(() -> {
+                    this.handleRefreshedReviews(list, reviewLastUpdateTime);
+                    this.reviewList.postValue(this.localDb.reviewDao().getByRecipeId(recipeId));
+                    this.reviewListLoadingState.postValue(LoadingState.NOT_LOADING);
+                }))
+        );
     }
 
     public LiveData<List<ReviewWithRecipe>> getReviewByUserId(String userId) {
@@ -76,17 +74,31 @@ public class ReviewModel {
 
     public void refreshReviewByUserId(String userId) {
         this.profileReviewListLoadingState.setValue(LoadingState.LOADING);
+        long reviewLastUpdateTime = Review.getLocalLastUpdateTime();
 
-        UserModel.getInstance().refreshLoggedInUser(userId, () -> this.firebaseModel.getReviewsByUserId(userId, list -> executor.execute(() -> {
-            list.forEach(review -> {
-                localDb.reviewDao().insertAll(review);
-                if(review.isDeleted()) {
-                    localDb.reviewDao().delete(review);
-                }
-            });
-            this.profileReviewList.postValue(this.localDb.reviewDao().getByUserId(userId));
-            this.profileReviewListLoadingState.postValue(LoadingState.NOT_LOADING);
-        })));
+        UserModel.getInstance().refreshLoggedInUser(userId, () ->
+                this.firebaseModel.getReviewsSince(reviewLastUpdateTime, list -> executor.execute(() -> {
+                    this.handleRefreshedReviews(list, reviewLastUpdateTime);
+                    this.profileReviewList.postValue(this.localDb.reviewDao().getByUserId(userId));
+                    this.profileReviewListLoadingState.postValue(LoadingState.NOT_LOADING);
+                }))
+        );
+    }
+
+    private void handleRefreshedReviews(List<Review> refreshedReviews, long reviewLastUpdateTime) {
+        long latestLastUpdateTime = refreshedReviews.stream()
+                .mapToLong(Review::getLastUpdateTime)
+                .max()
+                .orElse(reviewLastUpdateTime);
+
+        refreshedReviews.forEach(review -> {
+            localDb.reviewDao().insertAll(review);
+            if (review.isDeleted()) {
+                localDb.reviewDao().delete(review);
+            }
+        });
+
+        Review.setLocalLastUpdateTime(latestLastUpdateTime);
     }
 
     public void uploadReviewImage(Bitmap imageBitmap, String name, Consumer<String> imageUploadCallback) {

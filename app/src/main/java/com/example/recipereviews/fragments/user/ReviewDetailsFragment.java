@@ -52,7 +52,7 @@ public class ReviewDetailsFragment extends Fragment {
     private TextView reviewDescriptionTextView;
     private Button editButton;
     private Button deleteButton;
-    private CircularProgressIndicator progressIndicator;
+    private CircularProgressIndicator deleteProgressIndicator;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,7 +86,7 @@ public class ReviewDetailsFragment extends Fragment {
         this.reviewDescriptionTextView = this.binding.reviewDescription;
         this.editButton = this.binding.editButton;
         this.deleteButton = this.binding.deleteButton;
-        this.progressIndicator = this.binding.progressIndicator;
+        this.deleteProgressIndicator = this.binding.deleteProgressIndicator;
     }
 
     private void setListeners() {
@@ -132,7 +132,7 @@ public class ReviewDetailsFragment extends Fragment {
         this.deleteButton.setEnabled(false);
         this.deleteButton.setText("");
         this.editButton.setEnabled(false);
-        this.progressIndicator.show();
+        this.deleteProgressIndicator.show();
         Review review = this.sharedViewModel.getReviewData().getValue();
         if (review != null) {
             ReviewModel.getInstance().deleteReview(review, this.getSuccessListener(), this.getErrorListener(view, deleteButtonText));
@@ -160,7 +160,7 @@ public class ReviewDetailsFragment extends Fragment {
 
     private Consumer<Review> getSuccessListener() {
         return (review) -> {
-            this.progressIndicator.hide();
+            this.deleteProgressIndicator.hide();
             this.sharedViewModel.setReviewData(null);
             NavigationUtils.navigate(requireActivity(), NavController::navigateUp);
         };
@@ -169,7 +169,7 @@ public class ReviewDetailsFragment extends Fragment {
     private Consumer<String> getErrorListener(View view, String deleteButtonText) {
         return errorMessage -> {
             Snackbar.make(view, errorMessage, Snackbar.LENGTH_SHORT).show();
-            this.progressIndicator.hide();
+            this.deleteProgressIndicator.hide();
             this.deleteButton.setEnabled(true);
             this.deleteButton.setText(deleteButtonText);
         };

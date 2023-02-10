@@ -12,8 +12,6 @@ import java.util.List;
 
 @Dao
 public interface RecipeDao {
-    @Query("select * from Recipe")
-    LiveData<List<Recipe>> getAll();
 
     @Query("select * from Recipe where name LIKE :search")
     LiveData<List<Recipe>> getByName(String search);

@@ -3,6 +3,7 @@ package com.example.recipereviews.models.firebase.collections;
 import com.example.recipereviews.models.entities.User;
 import com.example.recipereviews.models.firebase.StorageFirebase;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -32,9 +33,9 @@ public class UserModelFirebase extends StorageFirebase {
                 .addOnFailureListener(e -> addUserCallback.run());
     }
 
-
-    public void getUsers(Consumer<List<User>> callback) {
+    public void getUsersSince(long since, Consumer<List<User>> callback) {
         this.db.collection(COLLECTION_NAME)
+                .whereGreaterThanOrEqualTo(User.getLastUpdateTimeField(), new Timestamp(since, 0))
                 .get()
                 .addOnCompleteListener(task -> {
                     List<User> list = new LinkedList<>();

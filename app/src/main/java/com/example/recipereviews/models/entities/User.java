@@ -122,6 +122,10 @@ public class User {
         this.lastUpdateTime = lastUpdateTime;
     }
 
+    public static String getLastUpdateTimeField() {
+        return LAST_UPDATE_TIME_FIELD;
+    }
+
     public static Long getLocalLastUpdateTime() {
         return ApplicationContext.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE)
                 .getLong(User.LOCAL_LAST_UPDATE_TIME, 0);

@@ -2,8 +2,8 @@ package com.example.recipereviews.models.firebase.collections;
 
 import com.example.recipereviews.models.entities.Review;
 import com.example.recipereviews.models.firebase.StorageFirebase;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -25,32 +25,20 @@ public class ReviewModelFirebase extends StorageFirebase {
         super(IMAGE_FOLDER);
     }
 
-    public void getReviewsByRecipeId(int recipeId, Consumer<List<Review>> callback) {
+    public void getReviewsSince(long since, Consumer<List<Review>> callback) {
         this.db.collection(COLLECTION_NAME)
-                .whereEqualTo("recipeId", recipeId)
+                .whereGreaterThanOrEqualTo(Review.getLastUpdateTimeField(), new Timestamp(since, 0))
                 .get()
-                .addOnCompleteListener(this.getOnCompleteListener(callback));
-    }
-
-    public void getReviewsByUserId(String userId, Consumer<List<Review>> callback) {
-        this.db.collection(COLLECTION_NAME)
-                .whereEqualTo("userId", userId)
-                .get()
-                .addOnCompleteListener(this.getOnCompleteListener(callback));
-    }
-
-    private OnCompleteListener<QuerySnapshot> getOnCompleteListener(Consumer<List<Review>> callback) {
-        return (Task<QuerySnapshot> task) -> {
-            List<Review> list = new LinkedList<>();
-            if (task.isSuccessful()) {
-                QuerySnapshot jsonsList = task.getResult();
-                for (DocumentSnapshot json : jsonsList) {
-                    list.add(Review.create(Objects.requireNonNull(json.getData()), json.getId()));
-                }
-
-            }
-            callback.accept(list);
-        };
+                .addOnCompleteListener((Task<QuerySnapshot> task) -> {
+                    List<Review> list = new LinkedList<>();
+                    if (task.isSuccessful()) {
+                        QuerySnapshot jsonsList = task.getResult();
+                        for (DocumentSnapshot json : jsonsList) {
+                            list.add(Review.create(Objects.requireNonNull(json.getData()), json.getId()));
+                        }
+                    }
+                    callback.accept(list);
+                });
     }
 
     public void addReview(Review review, Consumer<String> onAddSuccessListener, Consumer<String> onAddFailureListener) {

@@ -118,7 +118,6 @@ public class RecipeDetailsFragment extends Fragment {
         this.binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         this.adapter = new ReviewRecyclerAdapter(getLayoutInflater(), this.reviewListViewModel.getReviewListDataByRecipeId().getValue());
         this.binding.recyclerView.setAdapter(this.adapter);
-
     }
 
     private void setListener(View view) {

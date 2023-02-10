@@ -24,7 +24,6 @@ public class UserModel {
     private final AuthFirebase authFirebase = new AuthFirebase();
     private final ModelFirebase modelFirebase = new ModelFirebase();
     private final RecipeReviewsLocalDbRepository localDb = RecipeReviewsLocalDb.getLocalDb();
-    private final MutableLiveData<LoadingState> userListLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
     private final MutableLiveData<LoadingState> loggedInUserLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
     private final MutableLiveData<User> loggedInUser = new MutableLiveData<>();
 
@@ -86,29 +85,32 @@ public class UserModel {
         this.loggedInUserLoadingState.setValue(LoadingState.LOADING);
 
         this.modelFirebase.getUser(userId, user -> {
-            executor.execute(() -> {
+            this.executor.execute(() -> {
                 if (user != null) {
                     this.localDb.userDao().insertAll(user);
                     this.loggedInUser.postValue(this.localDb.userDao().getById(userId));
                 }
 
                 this.loggedInUserLoadingState.postValue(LoadingState.NOT_LOADING);
+                callback.run();
             });
-
-            callback.run();
         });
     }
 
     public void refreshUserList(Runnable callback) {
-        this.userListLoadingState.setValue(LoadingState.LOADING);
+        long userLastUpdateTime = User.getLocalLastUpdateTime();
 
-        this.modelFirebase.getUsers(list -> {
+        this.modelFirebase.getUsersSince(userLastUpdateTime, list -> {
             this.executor.execute(() -> {
-                list.forEach(user -> this.localDb.userDao().insertAll(user));
-                this.userListLoadingState.postValue(LoadingState.NOT_LOADING);
-            });
+                long latestLastUpdateTime = list.stream()
+                        .mapToLong(User::getLastUpdateTime)
+                        .max()
+                        .orElse(userLastUpdateTime);
 
-            callback.run();
+                list.forEach(user -> this.localDb.userDao().insertAll(user));
+                User.setLocalLastUpdateTime(latestLastUpdateTime);
+                callback.run();
+            });
         });
     }
 

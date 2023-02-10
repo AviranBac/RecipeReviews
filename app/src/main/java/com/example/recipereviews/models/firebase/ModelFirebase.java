@@ -33,16 +33,12 @@ public class ModelFirebase {
         this.userFirebase.uploadImage(imageBitmap, name, imageUploadCallback);
     }
 
-    public void getReviewsByRecipeId(int recipeId, Consumer<List<Review>> callback) {
-        this.reviewFirebase.getReviewsByRecipeId(recipeId, callback);
+    public void getReviewsSince(long since, Consumer<List<Review>> callback) {
+        this.reviewFirebase.getReviewsSince(since, callback);
     }
 
-    public void getReviewsByUserId(String userId, Consumer<List<Review>> callback) {
-        this.reviewFirebase.getReviewsByUserId(userId, callback);
-    }
-
-    public void getUsers(Consumer<List<User>> callback) {
-        this.userFirebase.getUsers(callback);
+    public void getUsersSince(long since, Consumer<List<User>> callback) {
+        this.userFirebase.getUsersSince(since, callback);
     }
 
     public void getUser(String userId, Consumer<User> callback) {
