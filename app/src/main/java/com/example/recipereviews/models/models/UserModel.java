@@ -73,16 +73,17 @@ public class UserModel {
         return this.authFirebase.getCurrentUserId();
     }
 
-    public LiveData<User> getUserById(String id) {
+    public MutableLiveData<User> getLoggedInUser() {
         if (this.loggedInUser.getValue() == null) {
-            this.refreshLoggedInUser(id, () -> {});
+            this.refreshLoggedInUser(() -> {});
         }
 
         return this.loggedInUser;
     }
 
-    public void refreshLoggedInUser(String userId, Runnable callback) {
+    public void refreshLoggedInUser(Runnable callback) {
         this.loggedInUserLoadingState.setValue(LoadingState.LOADING);
+        String userId = this.getCurrentUserId();
 
         this.modelFirebase.getUser(userId, user -> {
             this.executor.execute(() -> {

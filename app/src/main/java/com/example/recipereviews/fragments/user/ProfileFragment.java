@@ -34,7 +34,6 @@ import com.example.recipereviews.utils.ImageUtil;
 import com.example.recipereviews.utils.NavigationUtils;
 import com.example.recipereviews.viewModels.ProfileFragmentViewModel;
 import com.example.recipereviews.viewModels.SharedViewModel;
-import com.example.recipereviews.viewModels.factory.ProfileFragmentViewModelFactory;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.Objects;
@@ -73,8 +72,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        this.userId = ProfileFragmentArgs.fromBundle(getArguments()).getUserId();
-        this.viewModel = new ViewModelProvider(this, new ProfileFragmentViewModelFactory(this.userId)).get(ProfileFragmentViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(ProfileFragmentViewModel.class);
         this.sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
     }
 
@@ -95,7 +93,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 if (menuItem.getItemId() == R.id.edit_profile) {
-                    NavigationUtils.navigate(parentActivity, ProfileFragmentDirections.actionProfileFragmentToEditProfileFragment(userId));
+                    NavigationUtils.navigate(parentActivity, ProfileFragmentDirections.actionProfileFragmentToEditProfileFragment());
                 }
 
                 return false;
@@ -133,7 +131,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void reloadData() {
-        ReviewModel.getInstance().refreshReviewByUserId(this.userId);
+        ReviewModel.getInstance().refreshLoggedInUserReviews();
     }
 
     private void addObservers() {

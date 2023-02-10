@@ -64,22 +64,22 @@ public class ReviewModel {
         );
     }
 
-    public LiveData<List<ReviewWithRecipe>> getReviewByUserId(String userId) {
+    public LiveData<List<ReviewWithRecipe>> getLoggedInUserReviews() {
         if (this.profileReviewList.getValue() == null) {
-            this.refreshReviewByUserId(userId);
+            this.refreshLoggedInUserReviews();
         }
 
         return this.profileReviewList;
     }
 
-    public void refreshReviewByUserId(String userId) {
+    public void refreshLoggedInUserReviews() {
         this.profileReviewListLoadingState.setValue(LoadingState.LOADING);
         long reviewLastUpdateTime = Review.getLocalLastUpdateTime();
 
-        UserModel.getInstance().refreshLoggedInUser(userId, () ->
+        UserModel.getInstance().refreshLoggedInUser(() ->
                 this.firebaseModel.getReviewsSince(reviewLastUpdateTime, list -> executor.execute(() -> {
                     this.handleRefreshedReviews(list, reviewLastUpdateTime);
-                    this.profileReviewList.postValue(this.localDb.reviewDao().getByUserId(userId));
+                    this.profileReviewList.postValue(this.localDb.reviewDao().getByUserId(UserModel.getInstance().getCurrentUserId()));
                     this.profileReviewListLoadingState.postValue(LoadingState.NOT_LOADING);
                 }))
         );

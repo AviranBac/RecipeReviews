@@ -24,7 +24,6 @@ import com.example.recipereviews.utils.ImageUtil;
 import com.example.recipereviews.utils.NavigationUtils;
 import com.example.recipereviews.validators.InputValidator;
 import com.example.recipereviews.viewModels.EditProfileFragmentViewModel;
-import com.example.recipereviews.viewModels.factory.EditProfileFragmentViewModelFactory;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -34,7 +33,6 @@ import java.util.function.BooleanSupplier;
 
 public class EditProfileFragment extends CameraUtilsFragment {
 
-    private String userId;
     private FragmentEditProfileBinding binding;
     private EditProfileFragmentViewModel viewModel;
     private User currentUser;
@@ -65,8 +63,7 @@ public class EditProfileFragment extends CameraUtilsFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        this.userId = EditProfileFragmentArgs.fromBundle(getArguments()).getUserId();
-        this.viewModel = new ViewModelProvider(this, new EditProfileFragmentViewModelFactory(this.userId)).get(EditProfileFragmentViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(EditProfileFragmentViewModel.class);
     }
 
     private void initializeMembers() {

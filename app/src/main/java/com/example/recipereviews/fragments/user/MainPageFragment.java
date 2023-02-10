@@ -67,6 +67,12 @@ public class MainPageFragment extends Fragment {
         this.viewModel = new ViewModelProvider(this).get(MainPageFragmentViewModel.class);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.reloadData();
+    }
+
     private void initializeMenu() {
         FragmentActivity parentActivity = getActivity();
         parentActivity.addMenuProvider(new MenuProvider() {
@@ -79,9 +85,12 @@ public class MainPageFragment extends Fragment {
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 if (menuItem.getItemId() == R.id.profile) {
-                    NavigationUtils.navigate(parentActivity, MainPageFragmentDirections.actionMainPageFragmentToProfileFragment(UserModel.getInstance().getCurrentUserId()));
+                    NavigationUtils.navigate(parentActivity, MainPageFragmentDirections.actionMainPageFragmentToProfileFragment());
                 } else if (menuItem.getItemId() == R.id.logout) {
-                    UserModel.getInstance().logout(() -> startGuestActivity());
+                    UserModel.getInstance().logout(() -> {
+                        UserModel.getInstance().getLoggedInUser().setValue(null);
+                        startGuestActivity();
+                    });
                 }
 
                 return false;
@@ -142,9 +151,12 @@ public class MainPageFragment extends Fragment {
 
     private void observeProfileImage(Menu mainPageMenu) {
         this.viewModel.getLoggedInUser().observe(getViewLifecycleOwner(), user -> {
+            MenuItem profileMenuItem = mainPageMenu.findItem(R.id.profile);
+
             if (user != null) {
-                MenuItem profileMenuItem = mainPageMenu.findItem(R.id.profile);
                 ImageUtil.loadImage(profileMenuItem, user.getImageUrl(), R.drawable.blank_profile_picture);
+            } else {
+                profileMenuItem.setIcon(0);
             }
         });
     }
@@ -158,6 +170,7 @@ public class MainPageFragment extends Fragment {
     }
 
     private void reloadData() {
+        UserModel.getInstance().refreshLoggedInUser(() -> {});
         RecipeModel.getInstance().refreshAllRecipes();
     }
 }

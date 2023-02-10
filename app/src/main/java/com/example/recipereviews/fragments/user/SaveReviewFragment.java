@@ -158,7 +158,7 @@ public class SaveReviewFragment extends CameraUtilsFragment {
             this.ratingBar.setRating(0);
             if (review != null) {
                 this.sharedViewModel.setReviewData(review);
-                this.sharedViewModel.setUserData(UserModel.getInstance().getUserById(UserModel.getInstance().getCurrentUserId()).getValue());
+                this.sharedViewModel.setUserData(UserModel.getInstance().getLoggedInUser().getValue());
             }
             NavigationUtils.navigate(requireActivity(), NavController::navigateUp);
         };

@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.recipereviews.R;
 import com.example.recipereviews.databinding.FragmentReviewDetailsBinding;
@@ -53,6 +54,7 @@ public class ReviewDetailsFragment extends Fragment {
     private Button editButton;
     private Button deleteButton;
     private CircularProgressIndicator deleteProgressIndicator;
+    private SwipeRefreshLayout swipeRefresh;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,18 +89,19 @@ public class ReviewDetailsFragment extends Fragment {
         this.editButton = this.binding.editButton;
         this.deleteButton = this.binding.deleteButton;
         this.deleteProgressIndicator = this.binding.deleteProgressIndicator;
+        this.swipeRefresh = this.binding.swipeRefresh;
     }
 
     private void setListeners() {
         this.editButton.setOnClickListener(view -> NavigationUtils.navigate(view, actionGlobalSaveReviewFragment(true)));
         this.deleteButton.setOnClickListener(this::deleteReview);
+        this.swipeRefresh.setOnRefreshListener(this::reloadData);
     }
 
     private void addObservers() {
         this.sharedViewModel.getRecipeData().observe(getViewLifecycleOwner(), this::loadRecipeData);
         this.sharedViewModel.getReviewData().observe(getViewLifecycleOwner(), this::loadReviewData);
         this.sharedViewModel.getUserData().observe(getViewLifecycleOwner(), this::loadUserData);
-
     }
 
     private void loadRecipeData(Recipe recipe) {
@@ -117,7 +120,6 @@ public class ReviewDetailsFragment extends Fragment {
                 this.deleteButton.setVisibility(View.VISIBLE);
             }
         }
-
     }
 
     private void loadUserData(User user) {
@@ -175,4 +177,7 @@ public class ReviewDetailsFragment extends Fragment {
         };
     }
 
+    public void reloadData() {
+        // TODO
+    }
 }
