@@ -14,9 +14,9 @@ public class ProfileFragmentViewModel extends ViewModel {
     private LiveData<User> profileUser;
     private LiveData<List<ReviewWithRecipe>> reviewListData;
 
-    public ProfileFragmentViewModel(String userId) {
-        this.profileUser = UserModel.getInstance().getUserById(userId);
-        this.reviewListData = ReviewModel.getInstance().getReviewByUserId(userId);
+    public ProfileFragmentViewModel() {
+        this.profileUser = UserModel.getInstance().getLoggedInUser();
+        this.reviewListData = ReviewModel.getInstance().getLoggedInUserReviews();
     }
 
     public LiveData<User> getProfileUser() {

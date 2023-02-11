@@ -2,7 +2,6 @@ package com.example.recipereviews.models.models;
 
 import android.graphics.Bitmap;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.recipereviews.enums.LoadingState;
@@ -24,7 +23,6 @@ public class UserModel {
     private final AuthFirebase authFirebase = new AuthFirebase();
     private final ModelFirebase modelFirebase = new ModelFirebase();
     private final RecipeReviewsLocalDbRepository localDb = RecipeReviewsLocalDb.getLocalDb();
-    private final MutableLiveData<LoadingState> userListLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
     private final MutableLiveData<LoadingState> loggedInUserLoadingState = new MutableLiveData<>(LoadingState.NOT_LOADING);
     private final MutableLiveData<User> loggedInUser = new MutableLiveData<>();
 
@@ -55,7 +53,10 @@ public class UserModel {
     }
 
     public void logout(Runnable callback) {
-        this.authFirebase.logout(callback);
+        this.authFirebase.logout(() -> {
+            this.loggedInUser.setValue(null);
+            callback.run();
+        });
     }
 
     public void login(String email, String password, Runnable onSuccessCallback, Consumer<String> onFailureCallback) {
@@ -74,41 +75,45 @@ public class UserModel {
         return this.authFirebase.getCurrentUserId();
     }
 
-    public LiveData<User> getUserById(String id) {
+    public MutableLiveData<User> getLoggedInUser() {
         if (this.loggedInUser.getValue() == null) {
-            this.refreshLoggedInUser(id, () -> {});
+            this.refreshLoggedInUser(() -> {});
         }
 
         return this.loggedInUser;
     }
 
-    public void refreshLoggedInUser(String userId, Runnable callback) {
+    public void refreshLoggedInUser(Runnable callback) {
         this.loggedInUserLoadingState.setValue(LoadingState.LOADING);
+        String userId = this.getCurrentUserId();
 
         this.modelFirebase.getUser(userId, user -> {
-            executor.execute(() -> {
+            this.executor.execute(() -> {
                 if (user != null) {
                     this.localDb.userDao().insertAll(user);
                     this.loggedInUser.postValue(this.localDb.userDao().getById(userId));
                 }
 
                 this.loggedInUserLoadingState.postValue(LoadingState.NOT_LOADING);
+                callback.run();
             });
-
-            callback.run();
         });
     }
 
     public void refreshUserList(Runnable callback) {
-        this.userListLoadingState.setValue(LoadingState.LOADING);
+        long userLastUpdateTime = User.getLocalLastUpdateTime();
 
-        this.modelFirebase.getUsers(list -> {
+        this.modelFirebase.getUsersSince(userLastUpdateTime, list -> {
             this.executor.execute(() -> {
-                list.forEach(user -> this.localDb.userDao().insertAll(user));
-                this.userListLoadingState.postValue(LoadingState.NOT_LOADING);
-            });
+                long latestLastUpdateTime = list.stream()
+                        .mapToLong(User::getLastUpdateTime)
+                        .max()
+                        .orElse(userLastUpdateTime);
 
-            callback.run();
+                list.forEach(user -> this.localDb.userDao().insertAll(user));
+                User.setLocalLastUpdateTime(latestLastUpdateTime);
+                callback.run();
+            });
         });
     }
 

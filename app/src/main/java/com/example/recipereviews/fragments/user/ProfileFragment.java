@@ -19,29 +19,26 @@ import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.recipereviews.R;
 import com.example.recipereviews.databinding.FragmentProfileBinding;
-import com.example.recipereviews.enums.LoadingState;
 import com.example.recipereviews.fragments.user.recycler_adapters.ProfileReviewRecyclerAdapter;
 import com.example.recipereviews.models.models.ReviewModel;
 import com.example.recipereviews.models.models.UserModel;
 import com.example.recipereviews.utils.ImageUtil;
+import com.example.recipereviews.utils.LiveDataUtils;
 import com.example.recipereviews.utils.NavigationUtils;
 import com.example.recipereviews.viewModels.ProfileFragmentViewModel;
 import com.example.recipereviews.viewModels.SharedViewModel;
-import com.example.recipereviews.viewModels.factory.ProfileFragmentViewModelFactory;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.Objects;
 
 public class ProfileFragment extends Fragment {
 
-    private String userId;
     private FragmentProfileBinding binding;
     private ShapeableImageView profileImageView;
     private ProfileReviewRecyclerAdapter adapter;
@@ -73,8 +70,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        this.userId = ProfileFragmentArgs.fromBundle(getArguments()).getUserId();
-        this.viewModel = new ViewModelProvider(this, new ProfileFragmentViewModelFactory(this.userId)).get(ProfileFragmentViewModel.class);
+        this.viewModel = new ViewModelProvider(this).get(ProfileFragmentViewModel.class);
         this.sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
     }
 
@@ -95,7 +91,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 if (menuItem.getItemId() == R.id.edit_profile) {
-                    NavigationUtils.navigate(parentActivity, ProfileFragmentDirections.actionProfileFragmentToEditProfileFragment(userId));
+                    NavigationUtils.navigate(parentActivity, ProfileFragmentDirections.actionProfileFragmentToEditProfileFragment());
                 }
 
                 return false;
@@ -133,7 +129,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void reloadData() {
-        ReviewModel.getInstance().refreshReviewByUserId(this.userId);
+        ReviewModel.getInstance().refreshLoggedInUserReviews();
     }
 
     private void addObservers() {
@@ -155,19 +151,11 @@ public class ProfileFragment extends Fragment {
     }
 
     private void observeRefresh() {
-        MediatorLiveData<LoadingState> refreshMerger = new MediatorLiveData<>();
-        refreshMerger.addSource(ReviewModel.getInstance().getProfileReviewListLoadingState(), value -> {
-            LoadingState loadingState = UserModel.getInstance().getLoggedInUserLoadingState().getValue() == LoadingState.NOT_LOADING && value == LoadingState.NOT_LOADING ?
-                    LoadingState.NOT_LOADING :
-                    LoadingState.LOADING;
-            refreshMerger.setValue(loadingState);
-        });
-        refreshMerger.addSource(UserModel.getInstance().getLoggedInUserLoadingState(), value -> {
-            LoadingState loadingState = ReviewModel.getInstance().getProfileReviewListLoadingState().getValue() == LoadingState.NOT_LOADING && value == LoadingState.NOT_LOADING ?
-                    LoadingState.NOT_LOADING :
-                    LoadingState.LOADING;
-            refreshMerger.setValue(loadingState);
-        });
-        refreshMerger.observe(getViewLifecycleOwner(), (LoadingState status) -> this.swipeRefresh.setRefreshing(status == LoadingState.LOADING));
+        LiveDataUtils.observeRefreshMerger(
+                getViewLifecycleOwner(),
+                ReviewModel.getInstance().getProfileReviewListLoadingState(),
+                UserModel.getInstance().getLoggedInUserLoadingState(),
+                this.swipeRefresh
+        );
     }
 }

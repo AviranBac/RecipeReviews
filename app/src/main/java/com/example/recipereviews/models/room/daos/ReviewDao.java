@@ -23,10 +23,6 @@ public interface ReviewDao {
     @Query("select * from Review where userId = :userId")
     List<ReviewWithRecipe> getByUserId(String userId);
 
-    @Transaction
-    @Query("select * from Review where Review.id = :id")
-    ReviewWithUser getWithRelationsById(String id);
-
     @Delete
     void delete(Review review);
 

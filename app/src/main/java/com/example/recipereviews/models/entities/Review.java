@@ -1,10 +1,13 @@
 package com.example.recipereviews.models.entities;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.example.recipereviews.ApplicationContext;
 import com.example.recipereviews.utils.FirebaseUtil;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FieldValue;
@@ -15,6 +18,9 @@ import java.util.Objects;
 
 @Entity
 public class Review {
+    private static final String LOCAL_LAST_UPDATE_TIME = "reviewLocalLastUpdateTime";
+    private static final String LAST_UPDATE_TIME_FIELD = "lastUpdateTime";
+
     @PrimaryKey
     @NonNull
     private String id;
@@ -121,5 +127,21 @@ public class Review {
                 lastUpdateTime,
                 (boolean) Objects.requireNonNull(review.get("isDeleted"))
         );
+    }
+
+    public static String getLastUpdateTimeField() {
+        return LAST_UPDATE_TIME_FIELD;
+    }
+
+    public static Long getLocalLastUpdateTime() {
+        return ApplicationContext.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE)
+                .getLong(Review.LOCAL_LAST_UPDATE_TIME, 0);
+    }
+
+    public static void setLocalLastUpdateTime(Long localLastUpdateTime) {
+        ApplicationContext.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE)
+                .edit()
+                .putLong(Review.LOCAL_LAST_UPDATE_TIME, localLastUpdateTime)
+                .apply();
     }
 }

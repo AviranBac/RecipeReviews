@@ -13,7 +13,7 @@ import com.example.recipereviews.models.models.UserModel;
 import java.util.List;
 
 public class MainPageFragmentViewModel extends ViewModel {
-    private final LiveData<User> loggedInUser = UserModel.getInstance().getUserById(UserModel.getInstance().getCurrentUserId());;
+    private final LiveData<User> loggedInUser = UserModel.getInstance().getLoggedInUser();
     private final MutableLiveData<String> searchQueryLiveData = new MutableLiveData<>("");
     private final LiveData<List<Recipe>> searchedRecipes = Transformations.switchMap(
             this.searchQueryLiveData,

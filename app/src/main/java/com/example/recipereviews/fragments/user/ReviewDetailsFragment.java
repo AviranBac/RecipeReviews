@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.recipereviews.R;
 import com.example.recipereviews.databinding.FragmentReviewDetailsBinding;
@@ -52,7 +53,8 @@ public class ReviewDetailsFragment extends Fragment {
     private TextView reviewDescriptionTextView;
     private Button editButton;
     private Button deleteButton;
-    private CircularProgressIndicator progressIndicator;
+    private CircularProgressIndicator deleteProgressIndicator;
+    private SwipeRefreshLayout swipeRefresh;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,19 +88,20 @@ public class ReviewDetailsFragment extends Fragment {
         this.reviewDescriptionTextView = this.binding.reviewDescription;
         this.editButton = this.binding.editButton;
         this.deleteButton = this.binding.deleteButton;
-        this.progressIndicator = this.binding.progressIndicator;
+        this.deleteProgressIndicator = this.binding.deleteProgressIndicator;
+        this.swipeRefresh = this.binding.swipeRefresh;
     }
 
     private void setListeners() {
         this.editButton.setOnClickListener(view -> NavigationUtils.navigate(view, actionGlobalSaveReviewFragment(true)));
         this.deleteButton.setOnClickListener(this::deleteReview);
+        this.swipeRefresh.setOnRefreshListener(this::reloadData);
     }
 
     private void addObservers() {
         this.sharedViewModel.getRecipeData().observe(getViewLifecycleOwner(), this::loadRecipeData);
         this.sharedViewModel.getReviewData().observe(getViewLifecycleOwner(), this::loadReviewData);
         this.sharedViewModel.getUserData().observe(getViewLifecycleOwner(), this::loadUserData);
-
     }
 
     private void loadRecipeData(Recipe recipe) {
@@ -117,7 +120,6 @@ public class ReviewDetailsFragment extends Fragment {
                 this.deleteButton.setVisibility(View.VISIBLE);
             }
         }
-
     }
 
     private void loadUserData(User user) {
@@ -132,7 +134,7 @@ public class ReviewDetailsFragment extends Fragment {
         this.deleteButton.setEnabled(false);
         this.deleteButton.setText("");
         this.editButton.setEnabled(false);
-        this.progressIndicator.show();
+        this.deleteProgressIndicator.show();
         Review review = this.sharedViewModel.getReviewData().getValue();
         if (review != null) {
             ReviewModel.getInstance().deleteReview(review, this.getSuccessListener(), this.getErrorListener(view, deleteButtonText));
@@ -160,7 +162,7 @@ public class ReviewDetailsFragment extends Fragment {
 
     private Consumer<Review> getSuccessListener() {
         return (review) -> {
-            this.progressIndicator.hide();
+            this.deleteProgressIndicator.hide();
             this.sharedViewModel.setReviewData(null);
             NavigationUtils.navigate(requireActivity(), NavController::navigateUp);
         };
@@ -169,10 +171,13 @@ public class ReviewDetailsFragment extends Fragment {
     private Consumer<String> getErrorListener(View view, String deleteButtonText) {
         return errorMessage -> {
             Snackbar.make(view, errorMessage, Snackbar.LENGTH_SHORT).show();
-            this.progressIndicator.hide();
+            this.deleteProgressIndicator.hide();
             this.deleteButton.setEnabled(true);
             this.deleteButton.setText(deleteButtonText);
         };
     }
 
+    public void reloadData() {
+        // TODO
+    }
 }

@@ -9,8 +9,8 @@ import com.example.recipereviews.models.models.UserModel;
 public class EditProfileFragmentViewModel extends ViewModel {
     private LiveData<User> profileUser;
 
-    public EditProfileFragmentViewModel(String userId) {
-        this.profileUser = UserModel.getInstance().getUserById(userId);
+    public EditProfileFragmentViewModel() {
+        this.profileUser = UserModel.getInstance().getLoggedInUser();
     }
 
     public LiveData<User> getProfileUser() {

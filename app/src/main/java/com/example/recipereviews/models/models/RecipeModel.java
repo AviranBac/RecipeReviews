@@ -58,7 +58,7 @@ public class RecipeModel {
         return this.recipeListLoadingState;
     }
 
-    public LiveData<Recipe> getRecipeById(int id) {
+    public MutableLiveData<Recipe> getRecipeById(int id) {
         if (this.recipe.getValue() == null) {
             this.fetchRecipeById(id);
         }
@@ -75,14 +75,13 @@ public class RecipeModel {
         this.recipeApi.getRecipes().enqueue(new Callback<GetRecipesDto>() {
             @Override
             public void onResponse(Call<GetRecipesDto> call, Response<GetRecipesDto> recipesResponse) {
-                if (recipesResponse.isSuccessful()) {
-                    executor.execute(() -> {
-                        if (recipesResponse.isSuccessful()) {
-                            localDb.recipeDao().insertAll(recipesResponse.body().getResults().toArray(new Recipe[0]));
-                            recipeListLoadingState.postValue(LoadingState.NOT_LOADING);
-                        }
-                    });
-                }
+                executor.execute(() -> {
+                    if (recipesResponse.isSuccessful()) {
+                        localDb.recipeDao().insertAll(recipesResponse.body().getResults().toArray(new Recipe[0]));
+                    }
+
+                    recipeListLoadingState.postValue(LoadingState.NOT_LOADING);
+                });
             }
 
             @Override
@@ -101,8 +100,9 @@ public class RecipeModel {
                     if (recipeResponse.isSuccessful()) {
                         localDb.recipeDao().insertAll(recipeResponse.body());
                         recipe.postValue(localDb.recipeDao().getById(id));
-                        recipeDetailsLoadingState.postValue(LoadingState.NOT_LOADING);
                     }
+
+                    recipeDetailsLoadingState.postValue(LoadingState.NOT_LOADING);
                 });
             }
 

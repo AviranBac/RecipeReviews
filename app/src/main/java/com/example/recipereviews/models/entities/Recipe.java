@@ -1,20 +1,15 @@
 package com.example.recipereviews.models.entities;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-
-import com.example.recipereviews.ApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Recipe {
-    private static final String LOCAL_LAST_UPDATE_TIME = "recipeLocalLastUpdateTime";
 
     @PrimaryKey
     @NonNull
@@ -79,18 +74,6 @@ public class Recipe {
 
     public List<String> getInstructions() {
         return this.instructions;
-    }
-
-    public static Long getLocalLastUpdateTime() {
-        return ApplicationContext.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE)
-                .getLong(Recipe.LOCAL_LAST_UPDATE_TIME, 0);
-    }
-
-    public static void setLocalLastUpdateTime(Long localLastUpdateTime) {
-        ApplicationContext.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE)
-                .edit()
-                .putLong(Recipe.LOCAL_LAST_UPDATE_TIME, localLastUpdateTime)
-                .apply();
     }
 
     public void setId(int id) {
