@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.recipereviews.enums.LoadingState;
+import com.example.recipereviews.models.api.ApiKeys;
 import com.example.recipereviews.models.api.GetRecipesDto;
 import com.example.recipereviews.models.api.RecipeApi;
 import com.example.recipereviews.models.api.RecipeTypeAdapter;
@@ -72,7 +73,7 @@ public class RecipeModel {
 
     public void refreshAllRecipes() {
         this.recipeListLoadingState.setValue(LoadingState.LOADING);
-        this.recipeApi.getRecipes().enqueue(new Callback<GetRecipesDto>() {
+        this.recipeApi.getRecipes(ApiKeys.getRandomKey()).enqueue(new Callback<GetRecipesDto>() {
             @Override
             public void onResponse(Call<GetRecipesDto> call, Response<GetRecipesDto> recipesResponse) {
                 executor.execute(() -> {
@@ -93,7 +94,7 @@ public class RecipeModel {
 
     public void fetchRecipeById(int id) {
         this.recipeDetailsLoadingState.setValue(LoadingState.LOADING);
-        this.recipeApi.getRecipeById(id).enqueue(new Callback<Recipe>() {
+        this.recipeApi.getRecipeById(id, ApiKeys.getRandomKey()).enqueue(new Callback<Recipe>() {
             @Override
             public void onResponse(Call<Recipe> call, Response<Recipe> recipeResponse) {
                 executor.execute(() -> {

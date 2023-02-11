@@ -1,0 +1,92 @@
+package com.example.recipereviews.models.api;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+public class ApiKeys {
+    private static List<String> apiKeys = new ArrayList<String>() {{
+        add("a38af7f4344d4180bcb1ab6d46ea65ed");
+        add("74bb33da69374c71aeb95e143aa45562");
+        add("bb11291def1a4c1fa8b149dcada02679");
+        add("d0f64a0bfb054e6b9d991116bc604f8c");
+        add("a32f73cc77b64b0eb465389d77c6f2f1");
+        add("807a061cf98745a08f6f83f4b72f4a60");
+        add("d3fa63c5d1324ab79ec0bc3ba69a02e0");
+        add("c40b2e8f213e4a509732fa56a16ad0a0");
+        add("0cb2e6b94a8a4f1dbed23e3dc6ef748c");
+        add("81ecfe11eaa5430f8071aa08bd9b0850");
+        add("c304f3ee4595434baa2c25004ef72a27");
+        add("ec3342291f4e483a9f6f15a5501d9a4e");
+        add("a4791cbde2b84f5fb0fbee5dddf27378");
+        add("46d63561286d459fa7326b96ace89dbf");
+        add("9f65db63ff924fdda12b1e90abe41d10");
+        add("518256c9a9c245a383a8bd83b43a5a8e");
+        add("21fbe60d80984f73b83cbedda4fd1f9b");
+        add("021bfb3df31940798c045b44ba22006c");
+        add("62e9b57e74ac438a88b00d61bea99723");
+        add("ae8fb287bd7048bea35a4ec3ecd89d6b");
+        add("1e617ebdd2634d93889ce5487eb3b0af");
+        add("7bdc8bbdf95a4a8ea7794671185b6f38");
+        add("e7013f04b2a248e89caba5c036266ef0");
+        add("277c518e90a348ce897a9d58138d804e");
+        add("66768418c4f1421d9c95c04dcd8ced74");
+        add("1f439aa3bc4747b3a8a4696b45962e1b");
+        add("fc5475203a474b7488d9d4f24a702f8f");
+        add("1ea3d5665ad847cb995623176fec9e9b");
+        add("88e0638ed3f04b879e191dcf70dbf831");
+        add("7117365736ca44cf89f6f3f23cc8e776");
+        add("ab65de4372504af28f1a0bf9f22d81f6");
+        add("cd2638170c784f76a509209ab97a310a");
+        add("3fbb3d41f23e461198763f0581c155aa");
+        add("23c7505e0da344058b477025fbe4c75b");
+        add("efa06713ffe44213a55f6f3854519bde");
+        add("834272a220fb43e7829be8d8980744cf");
+        add("aecaff2363a24566a44f8d61465ea170");
+        add("8a55069d18b4413d84b600bf61d4f84b");
+        add("00b88fff881a4e15bd3f34d293bf6aa6");
+        add("d8568bf969f94759b4db72e6bb0b0f9d");
+        add("94884936562a4eb4a30a624bc51f6476");
+        add("01797f9bd180409f9de238bef930a75f");
+        add("5fe90390d1cb41549af364c86b8309bc");
+        add("76744230d96c4c42a0231835ebaeef64");
+        add("a601c61699c0403ba2f5cbb05ec4cb76");
+        add("7d762bb0ddad47f29e01118d48682ded");
+        add("fd816e1a9f3e4087bbf20053cc9b2f22");
+        add("ee21a645933b41248e0bde4e56e81be4");
+        add("0abb3009e93c41b28eb4d2ab8a53b3f6");
+        add("be305ee1d8894f97bee0a6a8362c5ef9");
+        add("ee7366af1c0c4215a54251d6efe1a974");
+        add("e8ea91db7b8e417b863b8f97094a7cd8");
+        add("8bcd2769d8474bdd92c8a44b61a95c00");
+        add("82c5612ad353497d82e18389d928ca6a");
+        add("b640982522524c6aad81e7f0d8f9269f");
+        add("34077f2368b545229c0fd45949b6cdc8");
+        add("cf50c18885dc4a7791f6087fe8185fdb");
+        add("db9dab94fbcd4a9faf4875fa513d037f");
+        add("5bf3adda21e54e6faa52451ba240bafe");
+        add("8837f0bb3d83479684a77cd4288c87e7");
+        add("687164ff10d24054997c9ce12a948742");
+        add("eb5f53f8ca294c91b40727a2436dbd05");
+        add("158af9976b2a4360827dc0177a6a78df");
+        add("7f917292117b4aa497e6b5d787d7f06b");
+        add("a5febf8617b44e00bb2872d9e22e5556");
+        add("389a18683db1459fae103325e6abc816");
+        add("d637232cc1aa4e6193ebcb16c28ea7c8");
+        add("9798baa39e744dae9454b8d2d70e94e5");
+        add("77d0a47b1d3a4ffe9ef9c5238d8d7bd3");
+        add("c11850ec84234db0bc4f1fdddb2400cb");
+        add("298121dcdcb64767bc9927373a26f1d5");
+        add("b98a9f71784f4bdb863381c2dadd34c5");
+        add("4054f770a80c440caea3e4ad57ed00c4");
+        add("d5919ff21cd34f7c9ce4c2569aa7c439");
+        add("d03519579aa04cf7a0970729f381b275");
+        add("8acc3b160fcc40caad9979969cec80e3");
+        add("5ec062ee87bc44cb8c4c50a4b832424d");
+        add("5e85b8de192c48c1bf9bfce483753075");
+    }};
+
+    public static String getRandomKey() {
+        return apiKeys.get(new Random().nextInt(apiKeys.size()));
+    }
+}
