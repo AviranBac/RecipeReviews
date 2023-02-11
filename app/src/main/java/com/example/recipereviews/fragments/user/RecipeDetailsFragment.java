@@ -191,7 +191,7 @@ public class RecipeDetailsFragment extends Fragment {
 
     private void reloadData() {
         RecipeModel.getInstance().fetchRecipeById(this.recipeId);
-        ReviewModel.getInstance().refreshReviewByRecipeId(this.recipeId);
+        ReviewModel.getInstance().refreshReviewsByRecipeId(this.recipeId);
     }
 
     private void loadData(Recipe recipe) {
