@@ -22,7 +22,7 @@ import com.example.recipereviews.models.entities.Recipe;
 import com.example.recipereviews.models.entities.Review;
 import com.example.recipereviews.models.models.ReviewModel;
 import com.example.recipereviews.models.models.UserModel;
-import com.example.recipereviews.utils.ImageUtil;
+import com.example.recipereviews.utils.ImageUtils;
 import com.example.recipereviews.utils.NavigationUtils;
 import com.example.recipereviews.utils.ValidatorListenerUtils;
 import com.example.recipereviews.validators.InputValidator;
@@ -107,7 +107,7 @@ public class SaveReviewFragment extends CameraUtilsFragment {
 
     private void loadReview(Review review) {
         if (review != null) {
-            ImageUtil.loadImage(super.imageView, review.getImageUrl(), R.drawable.blank_review_image);
+            ImageUtils.loadImage(super.imageView, review.getImageUrl(), R.drawable.blank_review_image);
             this.reviewDescriptionEditText.setText(review.getDescription());
             this.ratingBar.setRating((float) review.getRating());
         }

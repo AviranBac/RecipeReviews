@@ -13,12 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.example.recipereviews.ApplicationContext;
 import com.google.android.gms.common.util.Strings;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-public class ImageUtil {
+public class ImageUtils {
 
     public static void loadImage(ImageView imageView, String imageName) {
         if (!Strings.isEmptyOrWhitespace(imageName)) {

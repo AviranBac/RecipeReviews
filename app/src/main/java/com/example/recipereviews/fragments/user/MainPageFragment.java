@@ -30,7 +30,7 @@ import com.example.recipereviews.fragments.user.recycler_adapters.RecipeRecycler
 import com.example.recipereviews.models.entities.Recipe;
 import com.example.recipereviews.models.models.RecipeModel;
 import com.example.recipereviews.models.models.UserModel;
-import com.example.recipereviews.utils.ImageUtil;
+import com.example.recipereviews.utils.ImageUtils;
 import com.example.recipereviews.utils.NavigationUtils;
 import com.example.recipereviews.viewModels.MainPageFragmentViewModel;
 
@@ -151,7 +151,7 @@ public class MainPageFragment extends Fragment {
             MenuItem profileMenuItem = mainPageMenu.findItem(R.id.profile);
 
             if (user != null) {
-                ImageUtil.loadImage(profileMenuItem, user.getImageUrl(), R.drawable.blank_profile_picture);
+                ImageUtils.loadImage(profileMenuItem, user.getImageUrl(), R.drawable.blank_profile_picture);
             } else {
                 profileMenuItem.setIcon(0);
             }

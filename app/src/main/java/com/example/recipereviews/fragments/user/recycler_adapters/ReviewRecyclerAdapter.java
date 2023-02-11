@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import com.example.recipereviews.R;
 import com.example.recipereviews.databinding.ReviewCardRowBinding;
 import com.example.recipereviews.models.entities.ReviewWithUser;
-import com.example.recipereviews.utils.ImageUtil;
+import com.example.recipereviews.utils.ImageUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.List;
@@ -43,12 +43,12 @@ class ReviewViewHolder extends GenericViewHolder<ReviewWithUser> {
     public void bind(ReviewWithUser reviewWithUser) {
         if (reviewWithUser.getReview() != null) {
             this.reviewDescription.setText(reviewWithUser.getReview().getDescription());
-            ImageUtil.loadImage(this.reviewImage, reviewWithUser.getReview().getImageUrl());
+            ImageUtils.loadImage(this.reviewImage, reviewWithUser.getReview().getImageUrl());
             this.ratingBar.setRating((float) reviewWithUser.getReview().getRating());
         }
 
         if (reviewWithUser.getUser() != null) {
-            ImageUtil.loadImage(this.userImage, reviewWithUser.getUser().getImageUrl(), R.drawable.blank_profile_picture);
+            ImageUtils.loadImage(this.userImage, reviewWithUser.getUser().getImageUrl(), R.drawable.blank_profile_picture);
             this.userNameTextView.setText(reviewWithUser.getUser().getFullName());
         }
     }

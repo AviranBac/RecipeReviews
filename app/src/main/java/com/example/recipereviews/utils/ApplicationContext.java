@@ -1,4 +1,4 @@
-package com.example.recipereviews;
+package com.example.recipereviews.utils;
 
 import android.app.Application;
 import android.content.Context;

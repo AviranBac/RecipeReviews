@@ -1,4 +1,4 @@
-package com.example.recipereviews.models.converters;
+package com.example.recipereviews.utils;
 
 import androidx.room.TypeConverter;
 
@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 import java.lang.reflect.Type;
 import java.util.List;
 
-public class Converters {
+public class TypeConverters {
 
     @TypeConverter
     public static List<String> fromString(String value) {

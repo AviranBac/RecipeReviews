@@ -2,7 +2,7 @@ package com.example.recipereviews.utils;
 
 import androidx.annotation.NonNull;
 
-public class FirebaseUtil {
+public class FirebaseUtils {
 
     public static double parseDouble(@NonNull Object data) {
         return data.getClass().equals(Double.class) ?

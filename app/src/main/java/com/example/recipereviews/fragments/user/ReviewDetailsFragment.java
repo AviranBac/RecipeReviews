@@ -35,7 +35,7 @@ import com.example.recipereviews.models.entities.Review;
 import com.example.recipereviews.models.entities.User;
 import com.example.recipereviews.models.models.ReviewModel;
 import com.example.recipereviews.models.models.UserModel;
-import com.example.recipereviews.utils.ImageUtil;
+import com.example.recipereviews.utils.ImageUtils;
 import com.example.recipereviews.utils.NavigationUtils;
 import com.example.recipereviews.viewModels.SharedViewModel;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -121,7 +121,7 @@ public class ReviewDetailsFragment extends Fragment {
 
     private void loadReviewData(Review review) {
         if (review != null) {
-            ImageUtil.loadImage(this.reviewImage, review.getImageUrl());
+            ImageUtils.loadImage(this.reviewImage, review.getImageUrl());
             this.reviewDescriptionTextView.setText(review.getDescription());
             this.ratingBar.setRating((float) review.getRating());
             if (review.getUserId().equals(UserModel.getInstance().getCurrentUserId())) {
@@ -133,7 +133,7 @@ public class ReviewDetailsFragment extends Fragment {
 
     private void loadUserData(User user) {
         if (user != null) {
-            ImageUtil.loadImage(this.userImage, user.getImageUrl(), R.drawable.blank_profile_picture);
+            ImageUtils.loadImage(this.userImage, user.getImageUrl(), R.drawable.blank_profile_picture);
             this.userName.setText(user.getFullName());
         }
     }

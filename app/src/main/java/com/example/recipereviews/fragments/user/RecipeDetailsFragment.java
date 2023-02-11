@@ -2,7 +2,7 @@ package com.example.recipereviews.fragments.user;
 
 import static com.example.recipereviews.fragments.user.RecipeDetailsFragmentDirections.actionGlobalReviewDetailsFragment;
 import static com.example.recipereviews.fragments.user.RecipeDetailsFragmentDirections.actionGlobalSaveReviewFragment;
-import static com.example.recipereviews.utils.BulletListUtil.buildBulletList;
+import static com.example.recipereviews.utils.BulletListUtils.buildBulletList;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -26,6 +26,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.recipereviews.R;
 import com.example.recipereviews.databinding.FragmentRecipeDetailsBinding;
+import com.example.recipereviews.enums.LoadingState;
 import com.example.recipereviews.fragments.user.recycler_adapters.ReviewRecyclerAdapter;
 import com.example.recipereviews.models.entities.Recipe;
 import com.example.recipereviews.models.entities.Review;
@@ -33,7 +34,7 @@ import com.example.recipereviews.models.entities.ReviewWithUser;
 import com.example.recipereviews.models.models.RecipeModel;
 import com.example.recipereviews.models.models.ReviewModel;
 import com.example.recipereviews.models.models.UserModel;
-import com.example.recipereviews.utils.ImageUtil;
+import com.example.recipereviews.utils.ImageUtils;
 import com.example.recipereviews.utils.LiveDataUtils;
 import com.example.recipereviews.utils.NavigationUtils;
 import com.example.recipereviews.viewModels.RecipeDetailsFragmentViewModel;
@@ -145,7 +146,7 @@ public class RecipeDetailsFragment extends Fragment {
         this.reviewListViewModel.getReviewListDataByRecipeId().observe(getViewLifecycleOwner(), list -> {
             if (list == null) {
                 this.reviewsSectionTextView.setText("");
-                this.addReviewButton.setImageResource(R.drawable.transparent);
+                this.addReviewButton.setVisibility(View.GONE);
             } else {
                 this.adapter.setData(list);
                 this.updateCurrentUserReview(list);
@@ -165,6 +166,17 @@ public class RecipeDetailsFragment extends Fragment {
                 RecipeModel.getInstance().getRecipeDetailsLoadingState(),
                 ReviewModel.getInstance().getReviewListLoadingState(),
                 this.swipeRefresh
+        );
+
+        LiveDataUtils.observeRefreshMerger(
+                getViewLifecycleOwner(),
+                RecipeModel.getInstance().getRecipeDetailsLoadingState(),
+                ReviewModel.getInstance().getReviewListLoadingState(),
+                (LoadingState status) -> {
+                    if (status == LoadingState.NOT_LOADING) {
+                        this.addReviewButton.setVisibility(View.VISIBLE);
+                    }
+                }
         );
     }
 
@@ -198,13 +210,14 @@ public class RecipeDetailsFragment extends Fragment {
         if (recipe != null) {
             this.recipeDetailsLinearLayout.setVisibility(View.VISIBLE);
             this.recipeNameTextView.setText(recipe.getName());
-            ImageUtil.loadImage(this.recipeImageView, recipe.getImg(), R.drawable.recipe_background);
+            ImageUtils.loadImage(this.recipeImageView, recipe.getImg(), R.drawable.recipe_background);
             this.preparationTimeTextView.setText(requireContext().getString(R.string.preparation_time, String.valueOf(recipe.getPreparationTime())));
             this.ingredientsTextView.setText(buildBulletList(20, recipe.getIngredients()));
             this.instructionsTextView.setText(buildBulletList(20, recipe.getInstructions()));
             this.sharedViewModel.setRecipeData(recipe);
         } else {
             this.recipeDetailsLinearLayout.setVisibility(View.GONE);
+            this.addReviewButton.setVisibility(View.GONE);
         }
     }
 

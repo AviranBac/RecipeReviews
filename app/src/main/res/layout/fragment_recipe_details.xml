@@ -36,7 +36,8 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/white"
                 android:orientation="vertical"
-                android:paddingTop="20dp">
+                android:paddingTop="20dp"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/recipe_name"
@@ -148,7 +149,9 @@
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/transparent"
-        android:tint="@color/white"
+        android:visibility="gone"
+        app:backgroundTint="#3164f4"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/white" />
 </androidx.constraintlayout.widget.ConstraintLayout>
