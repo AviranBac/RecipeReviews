@@ -26,6 +26,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.recipereviews.R;
 import com.example.recipereviews.databinding.FragmentRecipeDetailsBinding;
+import com.example.recipereviews.enums.LoadingState;
 import com.example.recipereviews.fragments.user.recycler_adapters.ReviewRecyclerAdapter;
 import com.example.recipereviews.models.entities.Recipe;
 import com.example.recipereviews.models.entities.Review;
@@ -145,7 +146,7 @@ public class RecipeDetailsFragment extends Fragment {
         this.reviewListViewModel.getReviewListDataByRecipeId().observe(getViewLifecycleOwner(), list -> {
             if (list == null) {
                 this.reviewsSectionTextView.setText("");
-                this.addReviewButton.setImageResource(R.drawable.transparent);
+                this.addReviewButton.setVisibility(View.GONE);
             } else {
                 this.adapter.setData(list);
                 this.updateCurrentUserReview(list);
@@ -165,6 +166,17 @@ public class RecipeDetailsFragment extends Fragment {
                 RecipeModel.getInstance().getRecipeDetailsLoadingState(),
                 ReviewModel.getInstance().getReviewListLoadingState(),
                 this.swipeRefresh
+        );
+
+        LiveDataUtils.observeRefreshMerger(
+                getViewLifecycleOwner(),
+                RecipeModel.getInstance().getRecipeDetailsLoadingState(),
+                ReviewModel.getInstance().getReviewListLoadingState(),
+                (LoadingState status) -> {
+                    if (status == LoadingState.NOT_LOADING) {
+                        this.addReviewButton.setVisibility(View.VISIBLE);
+                    }
+                }
         );
     }
 
@@ -205,6 +217,7 @@ public class RecipeDetailsFragment extends Fragment {
             this.sharedViewModel.setRecipeData(recipe);
         } else {
             this.recipeDetailsLinearLayout.setVisibility(View.GONE);
+            this.addReviewButton.setVisibility(View.GONE);
         }
     }
 
