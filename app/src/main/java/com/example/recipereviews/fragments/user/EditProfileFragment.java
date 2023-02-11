@@ -20,7 +20,7 @@ import com.example.recipereviews.databinding.FragmentEditProfileBinding;
 import com.example.recipereviews.fragments.common.CameraUtilsFragment;
 import com.example.recipereviews.models.entities.User;
 import com.example.recipereviews.models.models.UserModel;
-import com.example.recipereviews.utils.ImageUtil;
+import com.example.recipereviews.utils.ImageUtils;
 import com.example.recipereviews.utils.NavigationUtils;
 import com.example.recipereviews.validators.InputValidator;
 import com.example.recipereviews.viewModels.EditProfileFragmentViewModel;
@@ -207,7 +207,7 @@ public class EditProfileFragment extends CameraUtilsFragment {
     }
 
     private void setFormData() {
-        ImageUtil.loadImage(this.imageView, this.currentUser.getImageUrl(), R.drawable.blank_profile_picture);
+        ImageUtils.loadImage(this.imageView, this.currentUser.getImageUrl(), R.drawable.blank_profile_picture);
         this.emailTextView.setText(this.currentUser.getEmail());
         this.emailTextView.setPaintFlags(this.emailTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         this.firstNameEditText.setText(this.currentUser.getFirstName());

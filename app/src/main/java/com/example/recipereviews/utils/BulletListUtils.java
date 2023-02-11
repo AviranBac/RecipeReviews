@@ -7,7 +7,7 @@ import android.text.style.BulletSpan;
 
 import java.util.List;
 
-public class BulletListUtil {
+public class BulletListUtils {
 
     public static SpannableStringBuilder buildBulletList(int bulletGap, List<String> lines) {
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();

@@ -2,7 +2,7 @@ package com.example.recipereviews.fragments.user;
 
 import static com.example.recipereviews.fragments.user.RecipeDetailsFragmentDirections.actionGlobalReviewDetailsFragment;
 import static com.example.recipereviews.fragments.user.RecipeDetailsFragmentDirections.actionGlobalSaveReviewFragment;
-import static com.example.recipereviews.utils.BulletListUtil.buildBulletList;
+import static com.example.recipereviews.utils.BulletListUtils.buildBulletList;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -34,7 +34,7 @@ import com.example.recipereviews.models.entities.ReviewWithUser;
 import com.example.recipereviews.models.models.RecipeModel;
 import com.example.recipereviews.models.models.ReviewModel;
 import com.example.recipereviews.models.models.UserModel;
-import com.example.recipereviews.utils.ImageUtil;
+import com.example.recipereviews.utils.ImageUtils;
 import com.example.recipereviews.utils.LiveDataUtils;
 import com.example.recipereviews.utils.NavigationUtils;
 import com.example.recipereviews.viewModels.RecipeDetailsFragmentViewModel;
@@ -210,7 +210,7 @@ public class RecipeDetailsFragment extends Fragment {
         if (recipe != null) {
             this.recipeDetailsLinearLayout.setVisibility(View.VISIBLE);
             this.recipeNameTextView.setText(recipe.getName());
-            ImageUtil.loadImage(this.recipeImageView, recipe.getImg(), R.drawable.recipe_background);
+            ImageUtils.loadImage(this.recipeImageView, recipe.getImg(), R.drawable.recipe_background);
             this.preparationTimeTextView.setText(requireContext().getString(R.string.preparation_time, String.valueOf(recipe.getPreparationTime())));
             this.ingredientsTextView.setText(buildBulletList(20, recipe.getIngredients()));
             this.instructionsTextView.setText(buildBulletList(20, recipe.getInstructions()));

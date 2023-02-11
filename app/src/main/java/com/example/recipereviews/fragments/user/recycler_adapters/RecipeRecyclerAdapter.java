@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import com.example.recipereviews.R;
 import com.example.recipereviews.databinding.RecipeCardRowBinding;
 import com.example.recipereviews.models.entities.Recipe;
-import com.example.recipereviews.utils.ImageUtil;
+import com.example.recipereviews.utils.ImageUtils;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -34,7 +34,7 @@ class RecipeViewHolder extends GenericViewHolder<Recipe> {
     @Override
     public void bind(Recipe recipe) {
         this.recipeNameTv.setText(recipe.getName());
-        ImageUtil.loadImage(this.recipeImageIv, recipe.getImg(), R.drawable.recipe_background);
+        ImageUtils.loadImage(this.recipeImageIv, recipe.getImg(), R.drawable.recipe_background);
     }
 }
 

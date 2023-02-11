@@ -8,7 +8,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.example.recipereviews.utils.ApplicationContext;
-import com.example.recipereviews.utils.FirebaseUtil;
+import com.example.recipereviews.utils.FirebaseUtils;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FieldValue;
 
@@ -121,7 +121,7 @@ public class Review {
                 id,
                 ((Long) Objects.requireNonNull(review.get("recipeId"))).intValue(),
                 Objects.requireNonNull(review.get("userId")).toString(),
-                FirebaseUtil.parseDouble(Objects.requireNonNull(review.get("rating"))),
+                FirebaseUtils.parseDouble(Objects.requireNonNull(review.get("rating"))),
                 imageUrl,
                 Objects.requireNonNull(review.get("description")).toString(),
                 lastUpdateTime,

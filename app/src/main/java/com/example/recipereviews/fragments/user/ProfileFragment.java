@@ -28,7 +28,7 @@ import com.example.recipereviews.databinding.FragmentProfileBinding;
 import com.example.recipereviews.fragments.user.recycler_adapters.ProfileReviewRecyclerAdapter;
 import com.example.recipereviews.models.models.ReviewModel;
 import com.example.recipereviews.models.models.UserModel;
-import com.example.recipereviews.utils.ImageUtil;
+import com.example.recipereviews.utils.ImageUtils;
 import com.example.recipereviews.utils.LiveDataUtils;
 import com.example.recipereviews.utils.NavigationUtils;
 import com.example.recipereviews.viewModels.ProfileFragmentViewModel;
@@ -145,7 +145,7 @@ public class ProfileFragment extends Fragment {
                 this.fullNameTv.setText(user.getFullName());
                 this.emailTv.setText(user.getEmail());
                 this.emailTv.setPaintFlags(this.emailTv.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-                ImageUtil.loadImage(this.profileImageView, user.getImageUrl(), R.drawable.blank_profile_picture);
+                ImageUtils.loadImage(this.profileImageView, user.getImageUrl(), R.drawable.blank_profile_picture);
             }
         });
     }
