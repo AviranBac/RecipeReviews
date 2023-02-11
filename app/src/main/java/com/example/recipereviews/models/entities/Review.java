@@ -7,7 +7,7 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import com.example.recipereviews.ApplicationContext;
+import com.example.recipereviews.utils.ApplicationContext;
 import com.example.recipereviews.utils.FirebaseUtil;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FieldValue;

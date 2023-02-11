@@ -1,4 +1,4 @@
-package com.example.recipereviews;
+package com.example.recipereviews.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,8 +8,7 @@ import android.os.Looper;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.os.HandlerCompat;
 
-import com.example.recipereviews.activities.GuestActivity;
-import com.example.recipereviews.activities.UserActivity;
+import com.example.recipereviews.R;
 import com.example.recipereviews.models.models.UserModel;
 
 public class MainActivity extends AppCompatActivity {

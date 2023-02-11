@@ -2,7 +2,7 @@ package com.example.recipereviews.models.room;
 
 import androidx.room.Room;
 
-import com.example.recipereviews.ApplicationContext;
+import com.example.recipereviews.utils.ApplicationContext;
 
 public class RecipeReviewsLocalDb {
 
