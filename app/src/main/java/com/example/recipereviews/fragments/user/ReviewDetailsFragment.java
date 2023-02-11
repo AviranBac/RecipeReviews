@@ -5,6 +5,8 @@ import static com.example.recipereviews.fragments.user.ReviewDetailsFragmentDire
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +29,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.recipereviews.R;
 import com.example.recipereviews.databinding.FragmentReviewDetailsBinding;
+import com.example.recipereviews.enums.LoadingState;
 import com.example.recipereviews.models.entities.Recipe;
 import com.example.recipereviews.models.entities.Review;
 import com.example.recipereviews.models.entities.User;
@@ -102,6 +105,12 @@ public class ReviewDetailsFragment extends Fragment {
         this.sharedViewModel.getRecipeData().observe(getViewLifecycleOwner(), this::loadRecipeData);
         this.sharedViewModel.getReviewData().observe(getViewLifecycleOwner(), this::loadReviewData);
         this.sharedViewModel.getUserData().observe(getViewLifecycleOwner(), this::loadUserData);
+        this.observeRefresh();
+    }
+
+    private void observeRefresh() {
+        ReviewModel.getInstance().getReviewLoadingState()
+                .observe(getViewLifecycleOwner(), status -> this.binding.swipeRefresh.setRefreshing(status == LoadingState.LOADING));
     }
 
     private void loadRecipeData(Recipe recipe) {
@@ -178,6 +187,18 @@ public class ReviewDetailsFragment extends Fragment {
     }
 
     public void reloadData() {
-        // TODO
+        ReviewModel.getInstance().refreshReview(
+                this.sharedViewModel.getReviewData().getValue(),
+                this.sharedViewModel.getUserData().getValue(),
+                (reviewWithUser -> {
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        if (reviewWithUser.getReview() != null) {
+                            sharedViewModel.setReviewData(reviewWithUser.getReview());
+                        } else {
+                            NavigationUtils.navigate(requireActivity(), NavController::navigateUp);
+                        }
+                        sharedViewModel.setUserData(reviewWithUser.getUser());
+                    });
+                }));
     }
 }

@@ -12,6 +12,7 @@ import com.example.recipereviews.models.room.RecipeReviewsLocalDb;
 import com.example.recipereviews.models.room.RecipeReviewsLocalDbRepository;
 import com.google.android.gms.common.util.Strings;
 
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
@@ -100,7 +101,7 @@ public class UserModel {
         });
     }
 
-    public void refreshUserList(Runnable callback) {
+    public void refreshUserList(Consumer<List<User>> callback) {
         long userLastUpdateTime = User.getLocalLastUpdateTime();
 
         this.modelFirebase.getUsersSince(userLastUpdateTime, list -> {
@@ -112,7 +113,7 @@ public class UserModel {
 
                 list.forEach(user -> this.localDb.userDao().insertAll(user));
                 User.setLocalLastUpdateTime(latestLastUpdateTime);
-                callback.run();
+                callback.accept(list);
             });
         });
     }
